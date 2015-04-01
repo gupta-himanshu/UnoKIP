@@ -1,11 +1,27 @@
 <classpath>
-  <classpathentry kind="src" path="src/main/scala-2.11" output="target/scala-2.11/classes"/>
-  <classpathentry kind="src" path="src/main/scala" output="target/scala-2.11/classes"/>
-  <classpathentry kind="src" path="src/main/java" output="target/scala-2.11/classes"/>
-  <classpathentry kind="src" path="src/test/scala-2.11" output="target/scala-2.11/test-classes"/>
-  <classpathentry kind="src" path="src/test/scala" output="target/scala-2.11/test-classes"/>
-  <classpathentry kind="src" path="src/test/java" output="target/scala-2.11/test-classes"/>
-  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.5.jar"/>
+  <classpathentry kind="src" path="src/main/scala-2.11"/>
+  <classpathentry kind="src" path="src/main/scala"/>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="src" path="src/main/resources"/>
+  <classpathentry kind="src" path="src/test/scala-2.11"/>
+  <classpathentry kind="src" path="src/test/scala"/>
+  <classpathentry kind="src" path="src/test/java"/>
+  <classpathentry kind="src" path="src/test/resources"/>
+  <classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.reactivemongo/reactivemongo_2.11/jars/reactivemongo_2.11-0.10.5.0.akka23.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.reactivemongo/reactivemongo-bson-macros_2.11/jars/reactivemongo-bson-macros_2.11-0.10.5.0.akka23.jar"/>
+  <classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_COMPILER_CONTAINER"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.2.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.2.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.reactivemongo/reactivemongo-bson_2.11/jars/reactivemongo-bson_2.11-0.10.5.0.akka23.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/io.netty/netty/bundles/netty-3.6.5.Final.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/jars/akka-actor_2.11-2.3.6.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/com.typesafe/config/bundles/config-1.2.1.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/com.typesafe.play/play-iteratees_2.11/jars/play-iteratees_2.11-2.3.5.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.scala-stm/scala-stm_2.11/jars/scala-stm_2.11-0.7.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.apache.logging.log4j/log4j-api/jars/log4j-api-2.0.2.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.apache.logging.log4j/log4j-core/jars/log4j-core-2.0.2.jar"/>
+  <classpathentry kind="lib" path="/home/knoldus/.ivy2/cache/org.scalatest/scalatest_2.11/bundles/scalatest_2.11-2.2.4.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="output" path="bin"/>
 </classpath>
