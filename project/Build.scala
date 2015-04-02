@@ -18,11 +18,11 @@ object SbtMultiBuild extends Build {
 
     import BuildSettings._
 
-    lazy val parent = Project(id = "UnoKIP",
-                            base = file(".")) aggregate(DBS)
+    lazy val UnoKIP = Project(id = "UnoKIP",
+                            base = file(".")) aggregate(dbs)
 
-    lazy val DBS = Project(id = "DBS",
-                           base = file("DBS"),
+    lazy val dbs = Project(id = "dbs",
+                           base = file("dbs"),
 			   settings = commonSetting ++ DBSDependency)
 
 }
