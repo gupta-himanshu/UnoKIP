@@ -6,7 +6,7 @@ import org.scalastyle.sbt.ScalastylePlugin
 object BuildSettings {
  
  lazy val commonSetting =
-   Defaults.defaultSettings ++ Seq(ScalastylePlugin.settings: _*) ++
+   Defaults.defaultSettings  ++
      Seq(
        	version := "1.0",
        	scalaVersion in ThisBuild := "2.11.5",
