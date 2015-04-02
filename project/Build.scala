@@ -1,11 +1,12 @@
 import sbt._
 import Keys._
 import Dependencies._
+import org.scalastyle.sbt.ScalastylePlugin
 
 object BuildSettings {
  
  lazy val commonSetting =
-   Defaults.defaultSettings ++ 
+   Defaults.defaultSettings ++ Seq(ScalastylePlugin.settings: _*) ++
      Seq(
        	version := "1.0",
        	scalaVersion in ThisBuild := "2.11.5",
