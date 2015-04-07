@@ -16,7 +16,7 @@ trait Connector {
     val config = ConfigFactory.load
     val driver = new MongoDriver
     val connection = driver.connection(List(location))
-    // Gets a reference to the database 
+    // Gets a reference to the database
     val db = connection(database)
     // Gets a reference to the collection
     val coll = db(collection)
