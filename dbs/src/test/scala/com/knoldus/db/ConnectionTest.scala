@@ -5,11 +5,13 @@ import org.scalatest._
 import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSON
 
-class ConnectorTest extends FlatSpec with Connector{
+import org.scalatest._
 
-    "DB connection table name" should "table1" in{    
-    val res=connector("localhost","rmongo","table1").name
-    val expectedres="table1"
+class ConnectorTest extends FlatSpec with Connector{
+  
+    "DB connection connected database" should "rmongo" in{    
+    val res=connector("localhost","rmongo").name
+    val expectedres= "rmongo" 
     assert(res===expectedres)
   }
 }
