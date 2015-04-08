@@ -16,10 +16,6 @@ dist/*
 target/
 lib_managed/
 src_managed/
-<<<<<<< HEAD
-=======
-bin/
->>>>>>> 0804bb170aefcd9985dab4b833fdcafafe32e9d2
 project/boot/
 project/plugins/project/
 .project
