@@ -1,6 +1,10 @@
 package com.knoldus.db
 
+<<<<<<< HEAD
 import com.knoldus.DBConnection.Connector
+=======
+import com.knoldus.dbconnection.Connector
+>>>>>>> b34110962e200f366cfa3fbdbc5f88f11b874ead
 import org.scalatest._
 import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSON
