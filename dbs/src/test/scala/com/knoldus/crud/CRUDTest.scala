@@ -33,12 +33,12 @@ class CrudTest extends FlatSpec with DBCrud  with BeforeAndAfter{
     assert(finalRes === expectedres)
   }
 
-  "update data" should "true" in {
+  /*"update data" should "true" in {
     val res = update("xyz")
     val finalRes = Await.result(res, 1 second)
     val expectedres = true
     assert(finalRes === expectedres)
-  }
+  }*/
 
   "remove data" should "true" in {
     val res = delete("xyz")

@@ -15,17 +15,16 @@ import reactivemongo.api.collections.default._
 case class People(name:String)
 
 trait convertor {
-     implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
+    implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
     implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
   
 }
 trait DBCrud extends Connector with convertor{  
-  val db = connector("localhost","rmongo","rmongo","pass")
-  val coll=db("table1")
+  
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
   
-  def find (name:String)= {
+  def find (name:String)(implicit coll:BSONCollection)= {
     val query = BSONDocument("name"->name)
     // select only the fields 'lastName' and '_id'
     val filter = BSONDocument(
@@ -35,7 +34,7 @@ trait DBCrud extends Connector with convertor{
     val cursor = coll.find(query, filter).cursor[People]
     val stream = cursor.collect[List]()
       stream.map { x =>
-        x.size
+       x.size
         }      
   }    
   
