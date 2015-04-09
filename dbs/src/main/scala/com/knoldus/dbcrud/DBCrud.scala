@@ -20,7 +20,10 @@ trait convertor {
   
 }
 trait DBCrud extends Connector with convertor{  
+<<<<<<< HEAD
   
+=======
+>>>>>>> 32c7d0237a31bc0747229cd82bd714d524b5b11f
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
   
@@ -38,7 +41,7 @@ trait DBCrud extends Connector with convertor{
         }      
   }    
   
-  def insert(p:People): Future[Boolean] = {
+  def insert(p:People)(implicit coll:BSONCollection): Future[Boolean] = {
     val future = coll.insert(p)
     future.map { lastError =>
       lastError.errMsg match {
@@ -48,7 +51,7 @@ trait DBCrud extends Connector with convertor{
     }
 
   }
-  def update(name:String) = {
+  def update(name:String)(implicit coll:BSONCollection) = {
     val modifier = BSONDocument(
       "name" -> "charlie")
     val selector = BSONDocument("name" -> name)
@@ -63,7 +66,7 @@ trait DBCrud extends Connector with convertor{
     }
 
   }
-  def delete(name:String) = {
+  def delete(name:String)(implicit coll:BSONCollection) = {
     val selectorDelete = BSONDocument(
       "name" -> name)
 

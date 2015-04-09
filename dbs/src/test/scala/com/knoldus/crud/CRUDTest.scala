@@ -9,17 +9,19 @@ import com.knoldus.dbconnection.People
 import com.knoldus.dbconnection.DBCrud
 
 class CrudTest extends FlatSpec with DBCrud  with BeforeAndAfter{
-
- before {
-   insert(People("xyz"))
+  
+val db=connector("localhost", "rmongo","rmongo","pass")
+ implicit val coll=db("table1")
+ before
+ {
+  insert(People("name"))
  }
- 
  after
  {
-   delete("xyz")
+   delete("name")
  }
   "fetch data with find" should "1" in {
-    val res = find("xyz")
+    val res = find("name")
     val finalRes = Await.result(res, 1 second)
 
     val expectedres = 1
