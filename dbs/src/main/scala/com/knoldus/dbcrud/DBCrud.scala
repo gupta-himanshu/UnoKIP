@@ -20,12 +20,10 @@ trait convertor {
   
 }
 trait DBCrud extends Connector with convertor{  
-  val db = connector("localhost","rmongo","rmongo","pass")
-  val coll=db("table1")
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
   
-  def find (name:String)= {
+  def find (name:String)(implicit coll:BSONCollection)= {
     val query = BSONDocument("name"->name)
     // select only the fields 'lastName' and '_id'
     val filter = BSONDocument(
@@ -39,7 +37,7 @@ trait DBCrud extends Connector with convertor{
         }      
   }    
   
-  def insert(p:People): Future[Boolean] = {
+  def insert(p:People)(implicit coll:BSONCollection): Future[Boolean] = {
     val future = coll.insert(p)
     future.map { lastError =>
       lastError.errMsg match {
@@ -49,7 +47,7 @@ trait DBCrud extends Connector with convertor{
     }
 
   }
-  def update(name:String) = {
+  def update(name:String)(implicit coll:BSONCollection) = {
     val modifier = BSONDocument(
       "name" -> "charlie")
     val selector = BSONDocument("name" -> name)
@@ -64,7 +62,7 @@ trait DBCrud extends Connector with convertor{
     }
 
   }
-  def delete(name:String) = {
+  def delete(name:String)(implicit coll:BSONCollection) = {
     val selectorDelete = BSONDocument(
       "name" -> name)
 
