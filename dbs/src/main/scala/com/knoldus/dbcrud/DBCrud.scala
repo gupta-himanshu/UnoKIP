@@ -19,16 +19,14 @@ trait convertor {
     implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
   
 }
-trait DBCrud extends Connector with convertor{  
+trait DBCrud extends Connector with convertor {  
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
   
   def find (name:String)(implicit coll:BSONCollection)= {
     val query = BSONDocument("name"->name)
-    // select only the fields 'lastName' and '_id'
     val filter = BSONDocument(
-      "name" -> 1,
-      "_id" -> 1)
+      "name" -> 1)
 
     val cursor = coll.find(query, filter).cursor[People]
     val stream = cursor.collect[List]()

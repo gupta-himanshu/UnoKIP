@@ -14,12 +14,14 @@ val db=connector("localhost", "rmongo","rmongo","pass")
  implicit val coll=db("table1")
  before
  {
-  insert(People("name"))
+  val res=insert(People("name"))
+   Await.result(res, 1 second)
  }
  after
  {
    delete("name")
  }
+
   "fetch data with find" should "1" in {
     val res = find("name")
     val finalRes = Await.result(res, 1 second)
