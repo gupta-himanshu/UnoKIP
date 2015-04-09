@@ -13,10 +13,34 @@ import scala.concurrent.duration.DurationInt
 
 
 object CRUDSample extends App with DBCrud{
+  /**
+   * finding collection
+   */
+  
   val p =People("sand")
   val datab=connector("localhost","rmongo", "rmongo", "pass")
   implicit val coll1=datab("table1")
   val num =find("xxyz")
   val future = Await.result(num, 1 seconds)
   println(future)
+  /**
+   * insert collection
+   */
+  val isInserted:Future[Boolean] = insert(p)
+  val isInsertedDone = Await.result(isInserted, 1 seconds)
+  println(isInsertedDone)
+  
+  /**
+   * Update collection
+   */
+  val isUpdated = update("First Name")
+  val isUpdatedDone = Await.result(isInserted, 1 seconds)
+  println(isUpdatedDone)
+  
+  /**
+   * Update collection
+   */
+  val isDeleted = delete("First Name")
+  val isDeletedDone = Await.result(isInserted, 1 seconds)
+  println(isDeletedDone)
 }
