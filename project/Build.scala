@@ -19,7 +19,7 @@ object SbtMultiBuild extends Build {
 
     import BuildSettings._
 
-    val dbsDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo)
+    val dbsDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo,lift)
     val exampleDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo)
     val sampleDep =  libraryDependencies ++= Seq(scalaTest,reactiveMongo,DBSjar)
     lazy val UnoKIP = Project(id = "UnoKIP",
