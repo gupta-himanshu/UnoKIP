@@ -14,7 +14,7 @@ val db=connector("localhost", "rmongo","rmongo","pass")
  implicit val coll=db("table1")
  before
  {
-  val res=insert(People("name"))
+  val res=insert("""{"name":"name"}""")
    Await.result(res, 1 second)
  }
  after
@@ -30,19 +30,19 @@ val db=connector("localhost", "rmongo","rmongo","pass")
     assert(finalRes === expectedres)
   }
   "insert data" should "true" in {
-    val p=People("xyz")
+    val p="""{"name":"xyz"}"""
     val res = insert(p)
     val finalRes = Await.result(res, 1 second)
     val expectedres = true
     assert(finalRes === expectedres)
   }
 
-  "update data" should "true" in {
+  /*"update data" should "true" in {
     val res = update("xyz")
     val finalRes = Await.result(res, 1 second)
     val expectedres = true
     assert(finalRes === expectedres)
-  }
+  }*/
 
   "remove data" should "true" in {
     val res = delete("xyz")

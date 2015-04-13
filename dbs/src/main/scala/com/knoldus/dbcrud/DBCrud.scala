@@ -11,6 +11,8 @@ import scala.util.Failure
 import scala.util.Success
 import scala.concurrent.impl.Future
 import reactivemongo.api.collections.default._
+import com.knoldus.converter.JsonToCaseClass
+import org.json4s.JsonInput
 
 case class People(name:String)
 
@@ -19,7 +21,7 @@ trait convertor {
     implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
   
 }
-trait DBCrud extends Connector with convertor {  
+trait DBCrud extends Connector with convertor with JsonToCaseClass{  
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
   
@@ -31,12 +33,13 @@ trait DBCrud extends Connector with convertor {
     val cursor = coll.find(query, filter).cursor[People]
     val stream = cursor.collect[List]()
       stream.map { x =>
-        x.size
+       x.size
         }      
   }    
   
-  def insert(p:People)(implicit coll:BSONCollection): Future[Boolean] = {
-    val future = coll.insert(p)
+  def insert(per:JsonInput)(implicit coll:BSONCollection): Future[Boolean] = {
+    val person=toCaseClass(per)
+    val future = coll.insert(person)
     future.map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -45,7 +48,7 @@ trait DBCrud extends Connector with convertor {
     }
 
   }
-  def update(name:String)(implicit coll:BSONCollection) = {
+  def update(name:String)(implicit coll:BSONCollection) :Future[Boolean]= {
     val modifier = BSONDocument(
       "name" -> "charlie")
     val selector = BSONDocument("name" -> name)
@@ -60,7 +63,7 @@ trait DBCrud extends Connector with convertor {
     }
 
   }
-  def delete(name:String)(implicit coll:BSONCollection) = {
+  def delete(name:String)(implicit coll:BSONCollection) :Future[Boolean] = {
     val selectorDelete = BSONDocument(
       "name" -> name)
 
