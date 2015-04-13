@@ -15,7 +15,7 @@ import reactivemongo.api.collections.default._
 case class People(name:String)
 
 trait convertor {
-     implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
+    implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
     implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
   
 }
