@@ -11,8 +11,8 @@ import scala.util.Failure
 import scala.util.Success
 import scala.concurrent.impl.Future
 import reactivemongo.api.collections.default._
-import com.knoldus.converter.JsonToCaseClass
 import org.json4s.JsonInput
+import com.knoldus.converter.JsonConverter
 
 case class People(name:String)
 
@@ -21,7 +21,7 @@ trait convertor {
     implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
   
 }
-trait DBCrud extends Connector with convertor with JsonToCaseClass{  
+trait DBCrud extends Connector with convertor with JsonConverter{  
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
   
@@ -33,13 +33,13 @@ trait DBCrud extends Connector with convertor with JsonToCaseClass{
     val cursor = coll.find(query, filter).cursor[People]
     val stream = cursor.collect[List]()
       stream.map { x =>
-       x.size
+       x
         }      
   }    
   
-  def insert(per:JsonInput)(implicit coll:BSONCollection): Future[Boolean] = {
-    val person=toCaseClass(per)
-    val future = coll.insert(person)
+  def insert(person:JsonInput)(implicit coll:BSONCollection): Future[Boolean] = {
+    val conPerson=toCaseClass(person)
+    val future = coll.insert(conPerson)
     future.map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false

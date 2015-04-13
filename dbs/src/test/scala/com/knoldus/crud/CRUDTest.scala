@@ -26,7 +26,7 @@ val db=connector("localhost", "rmongo","rmongo","pass")
     val res = find("name")
     val finalRes = Await.result(res, 1 second)
 
-    val expectedres = 1
+    val expectedres = List(People("name"))
     assert(finalRes === expectedres)
   }
   "insert data" should "true" in {
