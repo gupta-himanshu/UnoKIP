@@ -19,9 +19,9 @@ object SbtMultiBuild extends Build {
 
     import BuildSettings._
 
-    val dbsDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo)
+    val dbsDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
     val exampleDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo)
-    val sampleDep =  libraryDependencies ++= Seq(scalaTest,reactiveMongo,DBSjar)
+    val sampleDep =  libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
     lazy val UnoKIP = Project(id = "UnoKIP",
 				base = file(".")) aggregate(dbs,example,samples)
 
