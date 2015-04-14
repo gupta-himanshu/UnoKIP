@@ -48,7 +48,7 @@ trait DBCrud extends Connector with convertor with JsonConverter {
     val modifier = BSONDocument(
       "$set"-> BSONDocument("name" -> "charlie"))
     val selector = BSONDocument("name" -> person.name)
-    coll.update(selector, modifier,multi=true).map { lastError =>
+    coll.update(selector, modifier,multi=true,upsert = true).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
         case None      => true
