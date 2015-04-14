@@ -13,6 +13,5 @@ object JsonParserObj extends App with JsonConverter {
   println(jsonToCaseClass)
   val people = People("Data")
   val caseClassToJson = toJson(people)
-  println(caseClassToJson)
-  
+  println(caseClassToJson) 
 }
