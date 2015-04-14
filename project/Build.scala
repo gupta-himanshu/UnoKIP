@@ -1,11 +1,12 @@
 import sbt._
 import Keys._
 import Dependencies._
+import TestDependencies._
 import org.scalastyle.sbt.ScalastylePlugin
 
 object BuildSettings {
  
- lazy val commonSetting =
+ lazy val commonSetting: Seq[Setting[_]] =
    Defaults.defaultSettings  ++
      Seq(
        	version := "1.0",
@@ -19,21 +20,20 @@ object SbtMultiBuild extends Build {
 
     import BuildSettings._
 
-    val dbsDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
-    val exampleDep = libraryDependencies ++= Seq(scalaTest,reactiveMongo)
-    val sampleDep =  libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
-    lazy val UnoKIP = Project(id = "UnoKIP",
+
+	lazy val UnoKIP = Project(id = "UnoKIP",
 				base = file(".")) aggregate(dbs,example,samples)
 
-	lazy val dbs = Project(id = "dbs",
-                           	base = file("dbs"),
-			   	settings = commonSetting ++ dbsDep)
-    	lazy val example = Project(id = "example",
-				base = file("example"),
-				settings = commonSetting ++ exampleDep
+	lazy val dbs =(project in file("dbs")).settings(
+				commonSetting,
+				libraryDependencies ++=  Seq(scalaTest,reactiveMongo,json4sNative))
+
+    	lazy val example =(project in file("example")).settings(
+				commonSetting,
+				libraryDependencies ++= Seq(scalaTest,reactiveMongo)
 				)
-	lazy val samples = Project(id = "samples",
-				base = file("samples"),
-				settings = commonSetting ++ sampleDep
+	lazy val samples =(project in file("samples")).settings(
+				commonSetting,
+				libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
 				).dependsOn(dbs)
 }
