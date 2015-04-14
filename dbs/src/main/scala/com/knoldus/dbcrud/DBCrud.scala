@@ -14,67 +14,56 @@ import reactivemongo.api.collections.default._
 import org.json4s.JsonInput
 import com.knoldus.converter.JsonConverter
 
-case class People(name:String)
+case class People(name: String)
 
 trait convertor {
-    implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
-    implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
-  
+  implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
+  implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
+
 }
-trait DBCrud extends Connector with convertor with JsonConverter{  
+trait DBCrud extends Connector with convertor with JsonConverter {
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
-  
-  def find (name:String)(implicit coll:BSONCollection)= {
-    val query = BSONDocument("name"->name)
+
+  def find()(implicit coll: BSONCollection) = {
+    val query = BSONDocument()
     val filter = BSONDocument(
       "name" -> 1)
-
     val cursor = coll.find(query, filter).cursor[People]
-    val stream = cursor.collect[List]()
-      stream.map { x =>
-       x
-        }      
-  }    
+    cursor.collect[List]().map { x =>
+      x
+    }
+  }
+
+  def insert(person: People)(implicit coll: BSONCollection): Future[Boolean] = {    
+    coll.insert(person).map { lastError =>
+      lastError.errMsg match {
+        case Some(msg) => false
+        case None      => true
+      }
+    }
+  }
   
-  def insert(person:JsonInput)(implicit coll:BSONCollection): Future[Boolean] = {
-    val conPerson=toCaseClass(person)
-    val future = coll.insert(conPerson)
-    future.map { lastError =>
-      lastError.errMsg match {
-        case Some(msg) => false
-        case None      => true
-      }
-    }
-
-  }
-  def update(name:String)(implicit coll:BSONCollection) :Future[Boolean]= {
+  def update(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
     val modifier = BSONDocument(
-      "name" -> "charlie")
-    val selector = BSONDocument("name" -> name)
-    // get a future update
-    val futureUpdate = coll.update(selector, modifier)
-
-    futureUpdate.map { lastError =>
+      "$set"-> BSONDocument("name" -> "charlie"))
+    val selector = BSONDocument("name" -> person.name)
+    coll.update(selector, modifier,multi=true).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
         case None      => true
       }
     }
-
   }
-  def delete(name:String)(implicit coll:BSONCollection) :Future[Boolean] = {
+  
+  def delete(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
     val selectorDelete = BSONDocument(
-      "name" -> name)
-
-    val futureRemove = coll.remove(selectorDelete)
-
-    futureRemove.map { lastError =>
+      "name" -> person.name)
+    coll.remove(selectorDelete).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
         case None      => true
       }
     }
-
   }
 }
