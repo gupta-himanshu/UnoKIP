@@ -14,7 +14,7 @@ import reactivemongo.api.collections.default._
 import org.json4s.JsonInput
 import com.knoldus.converter.JsonConverter
 
-case class People(name: String)
+case class People(_id: BSONObjectID, name: String)
 
 trait convertor {
   implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
@@ -25,17 +25,16 @@ trait DBCrud extends Connector with convertor with JsonConverter {
   import scala.collection.mutable.ListBuffer
   var l: ListBuffer[String] = new ListBuffer
 
-  def find()(implicit coll: BSONCollection) = {
-    val query = BSONDocument()
+  def find(person:People)(implicit coll: BSONCollection) = {
     val filter = BSONDocument(
       "name" -> 1)
-    val cursor = coll.find(query, filter).cursor[People]
+    val cursor = coll.find(query(person._id.stringify), filter).cursor[People]
     cursor.collect[List]().map { x =>
       x
     }
   }
 
-  def insert(person: People)(implicit coll: BSONCollection): Future[Boolean] = {    
+  def insert(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
     coll.insert(person).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -43,27 +42,22 @@ trait DBCrud extends Connector with convertor with JsonConverter {
       }
     }
   }
-  
+
   def update(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
-    val modifier = BSONDocument(
-      "$set"-> BSONDocument("name" -> "charlie"))
-    val selector = BSONDocument("name" -> person.name)
-    coll.update(selector, modifier,multi=true,upsert = true).map { lastError =>
-      lastError.errMsg match {
-        case Some(msg) => false
-        case None      => true
-      }
+    coll.update(query(person._id.stringify), person).map { lastError =>
+      lastError.updatedExisting
     }
   }
-  
+
   def delete(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
-    val selectorDelete = BSONDocument(
-      "name" -> person.name)
-    coll.remove(selectorDelete).map { lastError =>
+    coll.remove(query(person._id.stringify)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
         case None      => true
       }
     }
   }
+
+  private def query(id: String): BSONDocument =
+    BSONDocument("_id" -> BSONObjectID(id))
 }

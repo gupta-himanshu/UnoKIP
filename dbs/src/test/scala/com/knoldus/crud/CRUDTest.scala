@@ -8,41 +8,44 @@ import org.scalatest.BeforeAndAfter
 import com.knoldus.dbconnection.People
 import com.knoldus.dbconnection.DBCrud
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.knoldus.dbconnection.People
 
 class CrudTest extends FlatSpec with DBCrud with BeforeAndAfter {
+
+  private val objectId = BSONObjectID.generate
 
   val db = connector("localhost", "rmongo", "rmongo", "pass")
   implicit val coll = db("table1")
   before {
-    val res = insert(People("iii"))
+    coll.drop()
+    val res = insert(People(objectId, "iii"))
     Await.result(res, 1 second)
   }
   after {
     coll.drop()
   }
-  
+
   "fetch data with find" should "1" in {
-    val res = find()
+    val res = find(People(objectId,"sss"))
     val finalRes = Await.result(res, 1 second)
-    val expectedres = List(People("iii"))
+    val expectedres = List(People(objectId, "iii"))
     assert(finalRes === expectedres)
   }
   "insert data" should "true" in {
-    val res = insert(People("name"))
+    val res = insert(People(BSONObjectID.generate, "name"))
     val finalRes = Await.result(res, 1 second)
     val expectedres = true
     assert(finalRes === expectedres)
   }
 
   "update data" should "true" in {
-    val res = update(People("xyz"))
+    val res = update(People(objectId, "xyz"))
     val finalRes = Await.result(res, 1 second)
-    val expectedres = true
-    assert(finalRes === expectedres)
+    assert(finalRes === true)
   }
 
   "remove data" should "true" in {
-    val res = delete(People("xyz"))
+    val res = delete(People(BSONObjectID.generate, "xyz"))
     val finalRes = Await.result(res, 1 second)
     val expectedres = true
     assert(finalRes === expectedres)

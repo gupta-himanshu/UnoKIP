@@ -17,30 +17,30 @@ object CRUDSample extends App with DBCrud{
    * finding collection
    */
   
-  val p =People("sand")
+  val p =People(BSONObjectID.generate,"sand")
   val datab=connector("localhost","rmongo", "rmongo", "pass")
   implicit val coll1=datab("table1")
-  val num =find()
+  val num =find(People(BSONObjectID.generate,"pp"))
   val future = Await.result(num, 1 seconds)
   println(future)
   /**
    * insert collection
    */
-  val isInserted:Future[Boolean] = insert(People("xyz"))
+  val isInserted:Future[Boolean] = insert(People(BSONObjectID.generate,"xyz"))
   val isInsertedDone = Await.result(isInserted, 1 seconds)
   println(isInsertedDone)
   
   /**
    * Update collection
    */
-  val isUpdated = update(People("First Name"))
+  val isUpdated = update(People(BSONObjectID.generate,"First Name"))
   val isUpdatedDone = Await.result(isInserted, 1 seconds)
   println(isUpdatedDone)
   
   /**
    * Update collection
    */
-  val isDeleted = delete(People("First Name"))
+  val isDeleted = delete(People(BSONObjectID.generate,"First Name"))
   val isDeletedDone = Await.result(isInserted, 1 seconds)
   println(isDeletedDone)
 }
