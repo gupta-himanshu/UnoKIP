@@ -14,5 +14,4 @@ object FindDocSample extends App with Connector{
   val num =findDoc.find(People(BSONObjectID.generate,"pp"))
   val future = Await.result(num, 1 seconds)
   println(future)
-
 }
