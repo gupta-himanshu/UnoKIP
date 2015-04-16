@@ -15,9 +15,9 @@ case class Knoldus(empId: Int,empName: String, Address : String)
   
 object CRUDSample extends App with Connector{
   
-  implicit val readerKnol: BSONDocumentReader[Knoldus] = Macros.reader[Knoldus]
+  /*implicit val readerKnol: BSONDocumentReader[Knoldus] = Macros.reader[Knoldus]
   implicit val writerKnol: BSONDocumentWriter[Knoldus] = Macros.writer[Knoldus]
-  /*val knoldus = Knoldus(1046,"pushpendu","Jaipur")
+  val knoldus = Knoldus(1046,"pushpendu","Jaipur")
   val isInsertedKnol:Future[Boolean] = insert(knoldus)
   val isInsertedDoneKnol = Await.result(isInsertedKnol, 1 seconds)
   println(isInsertedDoneKnol)*/
