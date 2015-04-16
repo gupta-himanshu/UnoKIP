@@ -7,11 +7,11 @@ import com.knoldus.dbcrud.FindDoc
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-object FindDocSample extends App with FindDoc with Connector{
+object FindDocSample extends App with Connector{
   val p =People(BSONObjectID.generate,"sand")
   val datab=connector("localhost","rmongo", "rmongo", "pass")
-  implicit val coll1=datab("table1")
-  val num =find(People(BSONObjectID.generate,"pp"))
+  val findDoc=new FindDoc(datab,"table1")
+  val num =findDoc.find(People(BSONObjectID.generate,"pp"))
   val future = Await.result(num, 1 seconds)
   println(future)
 

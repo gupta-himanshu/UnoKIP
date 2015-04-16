@@ -19,11 +19,11 @@ case class People(_id: BSONObjectID, name: String)
 trait Convertor {
   implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
   implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
-
 }
-trait DBCrud extends Connector with Convertor with JsonConverter {
+class DBCrud(db:DefaultDB,collection:String) extends Connector with Convertor with JsonConverter {
 
-  def insert(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
+  val coll = db(collection)
+  def insert(person: People): Future[Boolean] = {
     coll.insert(person).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -32,13 +32,13 @@ trait DBCrud extends Connector with Convertor with JsonConverter {
     }
   }
 
-  def update(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
+  def update(person: People): Future[Boolean] = {
     coll.update(query(person._id.stringify), person).map { lastError =>
       lastError.updatedExisting
     }
   }
 
-  def delete(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
+  def delete(person: People): Future[Boolean] = {
     coll.remove(query(person._id.stringify)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false

@@ -9,12 +9,12 @@ import reactivemongo.bson.BSONValue._
 import reactivemongo.api.collections.default._
 import scala.concurrent.ExecutionContext.Implicits.global
 import reactivemongo.bson.BSONObjectID
+import org.jboss.netty.util.DefaultObjectSizeEstimator
+import reactivemongo.api.DefaultDB
 
-trait FindDoc extends Connector with Convertor with JsonConverter {
-
-  
-
-  def find(person: People)(implicit coll: BSONCollection) = {
+class FindDoc(db:DefaultDB,collection:String) extends Connector with Convertor with JsonConverter {
+  val coll=db(collection)
+  def find(person: People)= {
     val filter = BSONDocument(
       "name" -> 1)
     val cursor = coll.find(query(person._id.stringify), filter).cursor[People]
