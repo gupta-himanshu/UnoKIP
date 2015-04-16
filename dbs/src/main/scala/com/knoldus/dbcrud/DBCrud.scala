@@ -16,23 +16,12 @@ import com.knoldus.converter.JsonConverter
 
 case class People(_id: BSONObjectID, name: String)
 
-trait convertor {
+trait Convertor {
   implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
   implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
 
 }
-trait DBCrud extends Connector with convertor with JsonConverter {
-  import scala.collection.mutable.ListBuffer
-  var l: ListBuffer[String] = new ListBuffer
-
-  def find(person:People)(implicit coll: BSONCollection) = {
-    val filter = BSONDocument(
-      "name" -> 1)
-    val cursor = coll.find(query(person._id.stringify), filter).cursor[People]
-    cursor.collect[List]().map { x =>
-      x
-    }
-  }
+trait DBCrud extends Connector with Convertor with JsonConverter {
 
   def insert(person: People)(implicit coll: BSONCollection): Future[Boolean] = {
     coll.insert(person).map { lastError =>

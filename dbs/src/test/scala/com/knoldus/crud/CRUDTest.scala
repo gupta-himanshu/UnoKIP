@@ -24,13 +24,7 @@ class CrudTest extends FlatSpec with DBCrud with BeforeAndAfter {
   after {
     coll.drop()
   }
-
-  "fetch data with find" should "1" in {
-    val res = find(People(objectId,"sss"))
-    val finalRes = Await.result(res, 1 second)
-    val expectedres = List(People(objectId, "iii"))
-    assert(finalRes === expectedres)
-  }
+  
   "insert data" should "true" in {
     val res = insert(People(BSONObjectID.generate, "name"))
     val finalRes = Await.result(res, 1 second)
