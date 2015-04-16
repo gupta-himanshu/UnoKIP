@@ -1,5 +1,3 @@
-
-
 import scala.concurrent.Await
 import reactivemongo.bson.BSONObjectID
 import org.scalatest.BeforeAndAfter

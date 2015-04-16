@@ -16,7 +16,7 @@ import com.knoldus.converter.JsonConverter
 
 case class People(_id: BSONObjectID, name: String)
 
-class DBCrud(db:DefaultDB,collection:String) extends Connector  with JsonConverter {
+class DBCrud[T](db:DefaultDB,collection:String) extends Connector  with JsonConverter {
 
   val coll = db(collection)
   def insert[T](person: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): Future[Boolean] = {
@@ -34,7 +34,7 @@ class DBCrud(db:DefaultDB,collection:String) extends Connector  with JsonConvert
     }
   }
 
-  def delete[T](person: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): Future[Boolean] = {
+  def delete[T](person: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): Future[Boolean] = {
     coll.remove(query(person)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -43,6 +43,6 @@ class DBCrud(db:DefaultDB,collection:String) extends Connector  with JsonConvert
     }
   }
 
-  private def query[T](id: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): BSONDocument =
-    BSONDocument()
+  private def query(id: String): BSONDocument =
+    BSONDocument("_id" -> BSONObjectID(id))
 }
