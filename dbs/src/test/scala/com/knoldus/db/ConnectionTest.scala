@@ -5,8 +5,6 @@ import org.scalatest._
 import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSON
 
-import org.scalatest._
-
 class ConnectorTest extends FlatSpec with Connector{
   
     "DB connection connected databae" should "rmongo" in{    
