@@ -20,7 +20,6 @@ object CRUDSample extends App with DBCrud{
   val p =People(BSONObjectID.generate,"sand")
   val datab=connector("localhost","rmongo", "rmongo", "pass")
   implicit val coll1=datab("table1")
- 
   /**
    * insert collection
    */
