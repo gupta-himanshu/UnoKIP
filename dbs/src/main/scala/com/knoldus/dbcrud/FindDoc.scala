@@ -14,12 +14,12 @@ import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
 
-class FindDoc(db:DefaultDB,collection:String) extends Connector with JsonConverter {
+class FindDoc[T](db:DefaultDB,collection:String) extends Connector with JsonConverter {
   val coll=db(collection)
-  def find[T](person: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T])= {
+  def find[T](id: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T])= {
     
     val filter = BSONDocument()
-    val cursor = coll.find(query("s"), filter).cursor[T]
+    val cursor = coll.find(query(id), filter).cursor[T]
     cursor.collect[List]().map { x =>
       x
     }

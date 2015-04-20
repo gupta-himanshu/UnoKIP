@@ -16,10 +16,15 @@ import com.knoldus.converter.JsonConverter
 
 case class People(_id: BSONObjectID, name: String)
 
-class DBCrud[T](db:DefaultDB,collection:String) extends Connector  with JsonConverter {
+object People {
+  implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
+  implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
+}
+
+class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector with JsonConverter {
 
   val coll = db(collection)
-  def insert[T](person: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): Future[Boolean] = {
+  def insert(person: T): Future[Boolean] = {
     coll.insert(person).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -28,13 +33,13 @@ class DBCrud[T](db:DefaultDB,collection:String) extends Connector  with JsonConv
     }
   }
 
-  def update[T](person: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): Future[Boolean] = {
-    coll.update(query(person), person).map { lastError =>
+  def update[T](id: String, person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+    coll.update(query(id), person).map { lastError =>
       lastError.updatedExisting
     }
   }
 
-  def delete[T](person: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]): Future[Boolean] = {
+  def delete[T](person: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
     coll.remove(query(person)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
