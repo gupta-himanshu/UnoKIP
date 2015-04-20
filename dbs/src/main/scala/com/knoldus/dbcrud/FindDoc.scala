@@ -1,8 +1,6 @@
 package com.knoldus.dbcrud
 
 import com.knoldus.dbconnection.Connector
-import com.knoldus.converter.JsonConverter
-import com.knoldus.dbconnection.People
 import reactivemongo.bson.BSONDocument
 import reactivemongo.bson.BSONValue._
 import reactivemongo.api.collections.default._
@@ -14,7 +12,7 @@ import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
 
-class FindDoc[T](db:DefaultDB,collection:String) extends Connector with JsonConverter {
+class FindDoc[T](db:DefaultDB,collection:String) extends Connector {
   val coll=db(collection)
   def find[T](id: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T])= {
     

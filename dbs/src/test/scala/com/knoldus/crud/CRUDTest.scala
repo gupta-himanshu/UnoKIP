@@ -5,16 +5,18 @@ import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 import reactivemongo.bson.BSONObjectID
 import org.scalatest.BeforeAndAfter
-import com.knoldus.dbconnection.People
 import com.knoldus.dbconnection.DBCrud
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.knoldus.dbconnection.People
 import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.Macros
 import com.knoldus.dbconnection.DBCrud
 
+case class People(_id: BSONObjectID, name: String)
 
 class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
+
+  implicit val read = Macros.reader[People]
+  implicit val write = Macros.writer[People]
 
   private val objectId = BSONObjectID.generate
 
@@ -22,8 +24,6 @@ class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
 
   val dbcrud = new DBCrud[People](db, "table1")
   val coll = db("table1")
-  //  implicit val read = Macros.reader[People]
-  //  implicit val write = Macros.writer[People]
   before {
     coll.drop()
     val res = dbcrud.insert(People(objectId, "iii"))
