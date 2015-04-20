@@ -30,7 +30,7 @@ object SbtMultiBuild extends Build {
 
  	lazy val streaming = (project in file("streaming")).settings(
 				commonSetting,	
-				libraryDependencies ++= Seq(sparkStream,sparkTweet,mongoConnect,reactiveMongo)
+				libraryDependencies ++= Seq(sparkStream,sparkTweet,reactiveMongo)
 				).dependsOn(dbs)
 	lazy val utilities = (project in file("utilities")).settings(
 				commonSetting, 

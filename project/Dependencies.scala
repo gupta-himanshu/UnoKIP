@@ -20,7 +20,7 @@ object Dependencies{
 	val sparkCore = 	"org.apache.spark" 	%% 	"spark-core" 		% 	"1.3.0"
 	val sparkStream=        "org.apache.spark" %% "spark-streaming" % "1.2.1"
         val sparkTweet=         "org.apache.spark" %% "spark-streaming-twitter" % "1.2.1"
-	val mongoConnect=       "org.mongodb" % "mongo-hadoop-core" % "1.3.0"
+	
 }
 
 
