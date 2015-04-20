@@ -35,7 +35,10 @@ object SbtMultiBuild extends Build {
 	lazy val streaming = (project in file("streaming")).settings(
 				commonSetting
 				).dependsOn(dbs)
-
+	lazy val utilities = (project in file("utilities")).settings(
+				commonSetting, 
+				libraryDependencies ++= Seq(json4sNative)
+				).dependsOn(dbs)
 
 
 }

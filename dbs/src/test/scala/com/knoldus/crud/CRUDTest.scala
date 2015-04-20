@@ -11,17 +11,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import com.knoldus.dbconnection.People
 import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.Macros
+import com.knoldus.dbconnection.DBCrud
+
 
 class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
 
   private val objectId = BSONObjectID.generate
 
   val db = connector("localhost", "rmongo", "rmongo", "pass")
-  val dbcrud=new DBCrud(db,"table1")
-  val coll=db("table1")
-    implicit val write=Macros.reader[People]
-    implicit val read=Macros.writer[People]
-  before {   
+
+  val dbcrud = new DBCrud[People](db, "table1")
+  val coll = db("table1")
+  //  implicit val read = Macros.reader[People]
+  //  implicit val write = Macros.writer[People]
+  before {
     coll.drop()
     val res = dbcrud.insert(People(objectId, "iii"))
     Await.result(res, 1 second)
@@ -29,7 +32,7 @@ class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
   after {
     coll.drop()
   }
-  
+
   "insert data" should "true" in {
     val res = dbcrud.insert(People(BSONObjectID.generate, "name"))
     val finalRes = Await.result(res, 1 second)
@@ -38,13 +41,13 @@ class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
   }
 
   "update data" should "true" in {
-    val res = dbcrud.update(People(objectId, "xyz"))
+    val res = dbcrud.update(objectId.stringify, People(objectId, "xyz"))
     val finalRes = Await.result(res, 1 second)
     assert(finalRes === true)
   }
 
   "remove data" should "true" in {
-    val res = dbcrud.delete(People(BSONObjectID.generate, "xyz"))
+    val res = dbcrud.delete(objectId.stringify)
     val finalRes = Await.result(res, 1 second)
     val expectedres = true
     assert(finalRes === expectedres)

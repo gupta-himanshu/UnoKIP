@@ -10,21 +10,14 @@ import reactivemongo.bson._
 import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
-import com.knoldus.dbconnection.Abstract
 
 case class Knoldus(_id: BSONObjectID, empId: Int,empName: String, Address : String)
   
 object CRUDSample extends App with Connector{
   
-  implicit val reader: BSONDocumentReader[Knoldus] = Macros.reader[Knoldus]
-  implicit val writer: BSONDocumentWriter[Knoldus] = Macros.writer[Knoldus]
-  
-  /*val knoldus = Knoldus(1046,"pushpendu","Jaipur")
-  val isInsertedKnol:Future[Boolean] = insert(knoldus)
-  val isInsertedDoneKnol = Await.result(isInsertedKnol, 1 seconds)
-  println(isInsertedDoneKnol)*/
+  implicit val readerKnol: BSONDocumentReader[People] = Macros.reader[People]
+  implicit val writerKnol: BSONDocumentWriter[People] = Macros.writer[People]
 
-  
   /**
    * finding collection
    */
@@ -53,9 +46,11 @@ object CRUDSample extends App with Connector{
   /**
    * Delete collection
    */
+
   //val objID:BSONObjectID = BSONObjectID("552f70085edccedb337af5df")
   
   val isDeleted = dbcrud.delete("knoldus")
   val isDeletedDone = Await.result(isDeleted, 1 seconds)
+
   println(isDeletedDone)
 }

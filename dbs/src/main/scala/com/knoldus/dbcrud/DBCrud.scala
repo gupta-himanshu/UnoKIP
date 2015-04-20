@@ -12,15 +12,18 @@ import scala.util.Success
 import scala.concurrent.impl.Future
 import reactivemongo.api.collections.default._
 import org.json4s.JsonInput
-import com.knoldus.converter.JsonConverter
 
-trait Abstract { val _id: BSONObjectID }
 case class People(_id: BSONObjectID, name: String)
 
-class DBCrud[T](db: DefaultDB, collection: String) extends Connector with JsonConverter {
+object People {
+  implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
+  implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
+}
+
+class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector {
 
   val coll = db(collection)
-  def insert[T](person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+  def insert(person: T): Future[Boolean] = {
     coll.insert(person).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -29,21 +32,21 @@ class DBCrud[T](db: DefaultDB, collection: String) extends Connector with JsonCo
     }
   }
 
-  def update[T](person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
-    coll.update(query("ss"), person).map { lastError =>
+  def update[T](id: String, person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+    coll.update(query(id), person).map { lastError =>
       lastError.updatedExisting
     }
   }
 
-  def delete(id: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
-    coll.remove(query(id)).map { lastError =>
+  def delete[T](person: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+    coll.remove(query(person)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
         case None      => true
       }
     }
   }
+
   private def query(id: String): BSONDocument =
     BSONDocument("_id" -> BSONObjectID(id))
-
 }
