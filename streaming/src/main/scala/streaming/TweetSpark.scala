@@ -9,14 +9,14 @@ import com.knoldus.dbconnection.DBCrud
 
 case class Tweet(tweet: String)
 
-object SparkStore extends App with Connector {
+class SparkStore extends App with Connector {
 
   implicit val read = Macros.reader[Tweet]
   implicit val write = Macros.writer[Tweet]
   val db = connector("localhost", "rmongo", "rmongo", "pass")
 
   val dbcrud = new DBCrud[Tweet](db, "table1")
-  val conf = new SparkConf().setAppName("myStream").setMaster("local")
+  val conf = new SparkConf().setAppName("myStream").setMaster("local[*]")
   val sc = new SparkContext(conf)
   val ssc = new StreamingContext(sc, Seconds(2))
   val client = new TwitterClient()
@@ -26,11 +26,10 @@ object SparkStore extends App with Connector {
   val lines = statuses.flatMap { x => x.split("\n") }
   val words = lines.flatMap { x => x.split(" ") }
   val hastag = words.filter { x => x.startsWith("#") }.map { x => Tweet(x) }
-  val a = hastag.map { x =>
-    dbcrud.insert(x)
-  }
-
+  val a = hastag.foreachRDD(x=>x.foreach {
+    x => dbcrud.insert(x) 
+    })
   hastag.saveAsTextFiles("tweets/tweets")
-  ssc.start()
-  ssc.awaitTermination()
+  def start()=  ssc.start()
+  def stop()=ssc.awaitTermination()
 }
