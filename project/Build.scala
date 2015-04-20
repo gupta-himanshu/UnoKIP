@@ -29,7 +29,8 @@ object SbtMultiBuild extends Build {
 				libraryDependencies ++=  Seq(scalaTest,reactiveMongo,json4sNative))
 
  	lazy val streaming = (project in file("streaming")).settings(
-				commonSetting
+				commonSetting,	
+				libraryDependencies ++= Seq(sparkStream,sparkTweet,mongoConnect,reactiveMongo)
 				).dependsOn(dbs)
 	lazy val utilities = (project in file("utilities")).settings(
 				commonSetting, 
