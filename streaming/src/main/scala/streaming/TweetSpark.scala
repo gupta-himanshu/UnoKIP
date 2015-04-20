@@ -6,10 +6,11 @@ import org.apache.spark.streaming.StreamingContext._
 import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.Macros
 import com.knoldus.dbconnection.DBCrud
+import com.knoldus.db.ConnectorTest
 
 case class Tweet(tweet: String)
 
-class SparkStore extends App with Connector {
+class SparkStore extends Connector{
 
   implicit val read = Macros.reader[Tweet]
   implicit val write = Macros.writer[Tweet]
@@ -26,10 +27,9 @@ class SparkStore extends App with Connector {
   val lines = statuses.flatMap { x => x.split("\n") }
   val words = lines.flatMap { x => x.split(" ") }
   val hastag = words.filter { x => x.startsWith("#") }.map { x => Tweet(x) }
-  val a = hastag.foreachRDD(x=>x.foreach {
-    x => dbcrud.insert(x) 
-    })
+  hastag.foreachRDD { x =>
+    x.foreach { x =>dbcrud.insert(x)}}
   hastag.saveAsTextFiles("tweets/tweets")
-  def start()=  ssc.start()
-  def stop()=ssc.awaitTermination()
+  def start() = ssc.start()
+  def stop() = ssc.awaitTermination()
 }
