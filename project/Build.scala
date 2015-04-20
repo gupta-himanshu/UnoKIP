@@ -22,24 +22,19 @@ object SbtMultiBuild extends Build {
 
 
 	lazy val UnoKIP = Project(id = "UnoKIP",
-				base = file(".")) aggregate(dbs,example,streaming)
+				base = file(".")) aggregate(dbs,streaming)
 
 	lazy val dbs =(project in file("dbs")).settings(
 				commonSetting,
 				libraryDependencies ++=  Seq(scalaTest,reactiveMongo,json4sNative))
 
-    	lazy val example =(project in file("example")).settings(
-				commonSetting,
-				libraryDependencies ++= Seq(scalaTest,reactiveMongo)
-				)
-	lazy val samples =(project in file("samples")).settings(
-				commonSetting,
-				libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
-				).dependsOn(dbs)
-	lazy val streaming = (project in file("streaming")).settings(
+ 	lazy val streaming = (project in file("streaming")).settings(
 				commonSetting
 				).dependsOn(dbs)
-
+	lazy val utilities = (project in file("utilities")).settings(
+				commonSetting, 
+				libraryDependencies ++= Seq(json4sNative)
+				).dependsOn(dbs)
 
 
 }

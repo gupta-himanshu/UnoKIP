@@ -1,20 +1,19 @@
 package com.knoldus.dbconnection
 
 import akka.actor.ActorLogging
-import reactivemongo.api._
+import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSONDocument
-import reactivemongo.bson._
+import reactivemongo.bson
 import scala.concurrent.Future
-import play.api.libs.iteratee.Iteratee
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Failure
 import scala.util.Success
-import scala.concurrent.impl.Future
-import reactivemongo.api.collections.default._
+import reactivemongo.bson.BSONDocumentWriter
+import reactivemongo.bson.BSONDocumentReader
+import reactivemongo.bson.BSONObjectID
 
 
-
-class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T],writer: BSONDocumentWriter[T]) extends Connector{
+class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector{
   val coll = db(collection)
   def insert(person: T): Future[Boolean] = {
     coll.insert(person).map { lastError =>

@@ -3,12 +3,12 @@ import reactivemongo.bson.BSONObjectID
 import org.scalatest.BeforeAndAfter
 import org.scalatest.FlatSpec
 import scala.concurrent.duration.DurationInt
-import com.knoldus.dbconnection.People
 import com.knoldus.dbcrud.FindDoc
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.knoldus.dbconnection.DBCrud
 import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.Macros
+import com.knoldus.crud.People
 
 class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
 
@@ -20,7 +20,7 @@ class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
   implicit val write = Macros.writer[People]
   before {
     coll.drop()
-    val res = new DBCrud(db, "table1").insert(People(objectId, "iii"))
+    val res = new DBCrud[People](db, "table1").insert(People(objectId, "iii"))
     Await.result(res, 1 second)
   }
   after {

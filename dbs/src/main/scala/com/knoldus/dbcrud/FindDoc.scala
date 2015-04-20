@@ -2,8 +2,8 @@ package com.knoldus.dbcrud
 
 import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.BSONDocument
-import reactivemongo.bson.BSONValue._
-import reactivemongo.api.collections.default._
+import reactivemongo.bson.BSONValue
+import reactivemongo.api.collections.default
 import scala.concurrent.ExecutionContext.Implicits.global
 import reactivemongo.bson.BSONObjectID
 import org.jboss.netty.util.DefaultObjectSizeEstimator
@@ -11,11 +11,11 @@ import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
+import scala.concurrent.Future
 
 class FindDoc[T](db:DefaultDB,collection:String) extends Connector {
   val coll=db(collection)
-  def find[T](id: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T])= {
-    
+  def find[T](id: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]):Future[List[T]]= {
     val filter = BSONDocument()
     val cursor = coll.find(query(id), filter).cursor[T]
     cursor.collect[List]().map { x =>
