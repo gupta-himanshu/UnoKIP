@@ -1,27 +1,19 @@
 package com.knoldus.dbconnection
 
 import akka.actor.ActorLogging
-import reactivemongo.api._
+import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSONDocument
-import reactivemongo.bson._
+import reactivemongo.bson
 import scala.concurrent.Future
-import play.api.libs.iteratee.Iteratee
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Failure
 import scala.util.Success
-import scala.concurrent.impl.Future
-import reactivemongo.api.collections.default._
-import org.json4s.JsonInput
+import reactivemongo.bson.BSONDocumentWriter
+import reactivemongo.bson.BSONDocumentReader
+import reactivemongo.bson.BSONObjectID
 
-case class People(_id: BSONObjectID, name: String)
 
-object People {
-  implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
-  implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
-}
-
-class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector {
-
+class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector{
   val coll = db(collection)
   def insert(person: T): Future[Boolean] = {
     coll.insert(person).map { lastError =>
@@ -32,13 +24,13 @@ class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocument
     }
   }
 
-  def update[T](id: String, person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+  def update(id: String, person: T): Future[Boolean] = {
     coll.update(query(id), person).map { lastError =>
       lastError.updatedExisting
     }
   }
 
-  def delete[T](person: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+  def delete(person: String): Future[Boolean] = {
     coll.remove(query(person)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false

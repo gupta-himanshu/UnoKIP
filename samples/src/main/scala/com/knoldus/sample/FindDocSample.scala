@@ -1,6 +1,5 @@
 package com.knoldus.sample
 
-import com.knoldus.dbconnection.People
 import reactivemongo.bson.BSONObjectID
 import com.knoldus.dbconnection.Connector
 import com.knoldus.dbcrud.FindDoc
@@ -15,7 +14,7 @@ object FindDocSample extends App with Connector{
   val findDoc=new FindDoc(datab,"table1")
    implicit val write=Macros.reader[People]
     implicit val read=Macros.writer[People]
-  val num =findDoc.find(People(BSONObjectID.generate, "sss"))
+  val num =findDoc.find("")
   val future = Await.result(num, 1 seconds)
   println(future)
 }
