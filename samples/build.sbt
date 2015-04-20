@@ -11,5 +11,5 @@ libraryDependencies ++= Seq(
                       	"org.apache.spark" %% "spark-streaming" % "1.2.1",
 			"org.json4s" 		%% 	"json4s-native" 	% 	"3.2.10",
 			"org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23",
-			"org.scalatest" %% "scalatest" % scalaTestVer % "test"	
+			"knoldus"		%%	"dbs"			%	"1.0"
 )
