@@ -32,10 +32,6 @@ object SbtMultiBuild extends Build {
 				commonSetting,
 				libraryDependencies ++= Seq(scalaTest,reactiveMongo)
 				)
-	lazy val samples =(project in file("samples")).settings(
-				commonSetting,
-				libraryDependencies ++= Seq(scalaTest,reactiveMongo,json4sNative)
-				).dependsOn(dbs)
 	lazy val streaming = (project in file("streaming")).settings(
 				commonSetting
 				).dependsOn(dbs)

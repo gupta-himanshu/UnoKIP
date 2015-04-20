@@ -1,7 +1,6 @@
 package com.knoldus.dbcrud
 
 import com.knoldus.dbconnection.Connector
-import com.knoldus.dbconnection.Convertor
 import com.knoldus.converter.JsonConverter
 import com.knoldus.dbconnection.People
 import reactivemongo.bson.BSONDocument
@@ -13,12 +12,14 @@ import org.jboss.netty.util.DefaultObjectSizeEstimator
 import reactivemongo.api.DefaultDB
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
+import reactivemongo.bson.Macros
 
-class FindDoc(db:DefaultDB,collection:String) extends Connector with Convertor with JsonConverter {
+class FindDoc(db:DefaultDB,collection:String) extends Connector with JsonConverter {
   val coll=db(collection)
   def find[T](person: T)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T])= {
+    
     val filter = BSONDocument()
-    val cursor = coll.find(BSONDocument(), filter).cursor[T]
+    val cursor = coll.find(query("s"), filter).cursor[T]
     cursor.collect[List]().map { x =>
       x
     }

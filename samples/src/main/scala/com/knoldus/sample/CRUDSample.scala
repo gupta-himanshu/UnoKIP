@@ -10,14 +10,16 @@ import reactivemongo.bson._
 import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
+import com.knoldus.dbconnection.Abstract
 
-case class Knoldus(empId: Int,empName: String, Address : String)  
+case class Knoldus(_id: BSONObjectID, empId: Int,empName: String, Address : String)
   
 object CRUDSample extends App with Connector{
   
-  /*implicit val readerKnol: BSONDocumentReader[Knoldus] = Macros.reader[Knoldus]
-  implicit val writerKnol: BSONDocumentWriter[Knoldus] = Macros.writer[Knoldus]
-  val knoldus = Knoldus(1046,"pushpendu","Jaipur")
+  implicit val reader: BSONDocumentReader[Knoldus] = Macros.reader[Knoldus]
+  implicit val writer: BSONDocumentWriter[Knoldus] = Macros.writer[Knoldus]
+  
+  /*val knoldus = Knoldus(1046,"pushpendu","Jaipur")
   val isInsertedKnol:Future[Boolean] = insert(knoldus)
   val isInsertedDoneKnol = Await.result(isInsertedKnol, 1 seconds)
   println(isInsertedDoneKnol)*/
@@ -27,26 +29,33 @@ object CRUDSample extends App with Connector{
    * finding collection
    */
   val p =People(BSONObjectID.generate,"sand")
+  val knoldus = Knoldus(BSONObjectID.generate,1047,"pushpendu","Jaipur")
   val datab=connector("localhost","rmongo", "rmongo", "pass")
   val dbcrud=new DBCrud(datab,"table1")
+  
+  
+  
+  
   /**
    * insert collection
    */
-  val isInserted:Future[Boolean] = dbcrud.insert(People(BSONObjectID.generate,"xyz"))
+  val isInserted:Future[Boolean] = dbcrud.insert(knoldus)
   val isInsertedDone = Await.result(isInserted, 1 seconds)
   println(isInsertedDone)
   
   /**
    * Update collection
    */
-  val isUpdated = dbcrud.update(People(BSONObjectID.generate,"First Name"))
-  val isUpdatedDone = Await.result(isInserted, 1 seconds)
+  val isUpdated = dbcrud.update(knoldus)
+  val isUpdatedDone = Await.result(isUpdated, 1 seconds)
   println(isUpdatedDone)
   
   /**
-   * Update collection
+   * Delete collection
    */
-  val isDeleted = dbcrud.delete(People(BSONObjectID.generate,"First Name"))
-  val isDeletedDone = Await.result(isInserted, 1 seconds)
+  //val objID:BSONObjectID = BSONObjectID("552f70085edccedb337af5df")
+  
+  val isDeleted = dbcrud.delete("knoldus")
+  val isDeletedDone = Await.result(isDeleted, 1 seconds)
   println(isDeletedDone)
 }

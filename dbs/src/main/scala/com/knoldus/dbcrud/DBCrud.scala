@@ -14,16 +14,13 @@ import reactivemongo.api.collections.default._
 import org.json4s.JsonInput
 import com.knoldus.converter.JsonConverter
 
+trait Abstract { val _id: BSONObjectID }
 case class People(_id: BSONObjectID, name: String)
 
-trait Convertor {
-  implicit val reader: BSONDocumentReader[People] = Macros.reader[People]
-  implicit val writer: BSONDocumentWriter[People] = Macros.writer[People]
-}
-class DBCrud(db:DefaultDB,collection:String) extends Connector with Convertor with JsonConverter {
+class DBCrud[T](db: DefaultDB, collection: String) extends Connector with JsonConverter {
 
   val coll = db(collection)
-  def insert(person: People): Future[Boolean] = {
+  def insert[T](person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
     coll.insert(person).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -32,21 +29,21 @@ class DBCrud(db:DefaultDB,collection:String) extends Connector with Convertor wi
     }
   }
 
-  def update(person: People): Future[Boolean] = {
-    coll.update(query(person._id.stringify), person).map { lastError =>
+  def update[T](person: T)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+    coll.update(query("ss"), person).map { lastError =>
       lastError.updatedExisting
     }
   }
 
-  def delete(person: People): Future[Boolean] = {
-    coll.remove(query(person._id.stringify)).map { lastError =>
+  def delete(id: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]): Future[Boolean] = {
+    coll.remove(query(id)).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
         case None      => true
       }
     }
   }
-
   private def query(id: String): BSONDocument =
     BSONDocument("_id" -> BSONObjectID(id))
+
 }

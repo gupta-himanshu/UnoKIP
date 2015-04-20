@@ -10,6 +10,7 @@ import com.knoldus.dbconnection.DBCrud
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.knoldus.dbconnection.People
 import com.knoldus.dbconnection.Connector
+import reactivemongo.bson.Macros
 
 class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
 
@@ -18,6 +19,8 @@ class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
   val db = connector("localhost", "rmongo", "rmongo", "pass")
   val dbcrud=new DBCrud(db,"table1")
   val coll=db("table1")
+    implicit val write=Macros.reader[People]
+    implicit val read=Macros.writer[People]
   before {   
     coll.drop()
     val res = dbcrud.insert(People(objectId, "iii"))
