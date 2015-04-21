@@ -1,6 +1,6 @@
 package com.knoldus.samples.test
 
-import org.scalatest._
+/*import org.scalatest._
 import com.knoldus.sample.JsonParserObj
 import com.knoldus.converter.JsonConverter
 import com.knoldus.dbconnection.People
@@ -13,4 +13,4 @@ class JsonParserTest extends FlatSpec with JsonConverter {
     val expectedres = People(BSONObjectID.generate,"pushpendu")
     assert(res === expectedres)
   }
-}
+}*/

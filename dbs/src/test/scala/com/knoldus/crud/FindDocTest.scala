@@ -28,7 +28,7 @@ class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
   }
 
   "fetch data with find" should "1" in {
-    val res = findDoc.find[People](objectId.stringify)(read, write)
+    val res = findDoc.find[People](objectId.stringify)
     val finalRes = Await.result(res, 1 second)
     val expectedres = List(People(objectId, "iii"))
     assert(finalRes === expectedres)

@@ -11,7 +11,7 @@ object BuildSettings {
      Seq(
        	version := "1.0",
        	scalaVersion in ThisBuild := "2.11.5",
-	organization := "knoldus",
+	organization := "com.knoldus",
        	parallelExecution in ThisBuild := false
 	)
  
@@ -35,6 +35,12 @@ object SbtMultiBuild extends Build {
 	lazy val utilities = (project in file("utilities")).settings(
 				commonSetting, 
 				libraryDependencies ++= Seq(json4sNative)
+				).dependsOn(dbs)
+	lazy val samples = project
+
+	lazy val dataProcess = (project in file("dataProcess")).settings(
+				commonSetting,
+				libraryDependencies ++= Seq()				
 				).dependsOn(dbs)
 
 

@@ -1,4 +1,5 @@
 package com.knoldus.streaming
+
 import org.apache.spark._
 import org.apache.spark.SparkContext._
 import org.apache.spark.streaming._
@@ -10,7 +11,7 @@ import com.knoldus.dbconnection.DBCrud
 
 case class Tweet(tweet: String)
 
-class SparkStore extends Connector{
+object SparkStore extends Connector with App{
 
   implicit val read = Macros.reader[Tweet]
   implicit val write = Macros.writer[Tweet]
@@ -33,5 +34,11 @@ class SparkStore extends Connector{
   hastag.saveAsTextFiles("tweets/tweets")
   def start() = ssc.start()
   def stop() = ssc.awaitTermination()
- 
+   hastag.foreachRDD{ tweetRDD =>
+    tweetRDD.foreach { x =>
+      dbcrud.insert(x)
+    }
+  } 
+  ssc.start()
+  ssc.stop()
 }
