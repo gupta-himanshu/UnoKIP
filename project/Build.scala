@@ -38,5 +38,10 @@ object SbtMultiBuild extends Build {
 				).dependsOn(dbs)
 	lazy val samples = project
 
+	lazy val dataProcess = (project in file("dataProcess")).settings(
+				commonSetting,
+				libraryDependencies ++= Seq()				
+				).dependsOn(dbs)
+
 
 }

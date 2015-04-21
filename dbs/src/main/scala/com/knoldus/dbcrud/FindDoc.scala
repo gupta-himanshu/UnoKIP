@@ -12,6 +12,7 @@ import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
 import scala.concurrent.Future
+import reactivemongo.api.Cursor
 
 class FindDoc[T](db:DefaultDB,collection:String) extends Connector {
   val coll=db(collection)
@@ -22,6 +23,11 @@ class FindDoc[T](db:DefaultDB,collection:String) extends Connector {
       x
     }
   }
+   def findWholeDoc[T]()(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]):Cursor[T]= {
+    val filter = BSONDocument()
+    coll.find(BSONDocument(), filter).cursor[T]    
+  }
+
   private def query(id: String): BSONDocument =
     BSONDocument("_id" -> BSONObjectID(id))
 }
