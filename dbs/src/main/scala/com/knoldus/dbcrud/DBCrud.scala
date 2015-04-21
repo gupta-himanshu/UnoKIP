@@ -12,15 +12,14 @@ import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONObjectID
 
-
-class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector{
+class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocumentReader[T], writer: BSONDocumentWriter[T]) extends Connector {
   val coll = db(collection)
   def insert(person: T): Future[Boolean] = {
+
     coll.insert(person).map { lastError =>
-      lastError.errMsg match {
-        case Some(msg) => false
-        case None      => true
-      }
+      lastError.ok
+      
+
     }
   }
 
@@ -32,10 +31,7 @@ class DBCrud[T](db: DefaultDB, collection: String)(implicit reader: BSONDocument
 
   def delete(person: String): Future[Boolean] = {
     coll.remove(query(person)).map { lastError =>
-      lastError.errMsg match {
-        case Some(msg) => false
-        case None      => true
-      }
+      lastError.ok
     }
   }
 

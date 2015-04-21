@@ -13,13 +13,12 @@ import com.knoldus.crud.People
 class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
 
   private val objectId = BSONObjectID.generate
-    implicit val read = Macros.reader[People]
+  implicit val read = Macros.reader[People]
   implicit val write = Macros.writer[People]
   val db = connector("localhost", "rmongo", "rmongo", "pass")
   val findDoc = new FindDoc[People](db, "table1")
   val coll = db("table1")
   before {
-    coll.drop()
     val res = new DBCrud[People](db, "table1").insert(People(objectId, "iii"))
     Await.result(res, 1 second)
   }

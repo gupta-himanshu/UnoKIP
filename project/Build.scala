@@ -12,7 +12,8 @@ object BuildSettings {
        	version := "1.0",
        	scalaVersion in ThisBuild := "2.11.5",
 	organization := "com.knoldus",
-       	parallelExecution in ThisBuild := false
+       	parallelExecution in ThisBuild := false,
+	parallelExecution in Test := false
 	)
  
 }
