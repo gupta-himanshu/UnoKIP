@@ -11,14 +11,14 @@ import com.knoldus.dbconnection.DBCrud
 
 case class Tweet(tweet: String)
 
-object SparkStore extends App with Connector {
+class SparkStore extends Connector {
 
   implicit val read = Macros.reader[Tweet]
   implicit val write = Macros.writer[Tweet]
   val db = connector("localhost", "rmongo", "rmongo", "pass")
 
   val dbcrud = new DBCrud[Tweet](db, "table1")
-  val conf = new SparkConf().setAppName("myStream").setMaster("local[2]")
+  val conf = new SparkConf().setAppName("myStream").setMaster("local[4]")
   val sc = new SparkContext(conf)
   val ssc = new StreamingContext(sc, Seconds(2))
   val client = new TwitterClient()
@@ -33,6 +33,6 @@ object SparkStore extends App with Connector {
       dbcrud.insert(x)
     }
   }  
-  ssc.start()
-  ssc.awaitTermination()
+  def start =  ssc.start()
+  def stop =   ssc.awaitTermination()
 }
