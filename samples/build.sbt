@@ -2,6 +2,7 @@ name := """samples"""
 
 version := "1.0"
 
+parallelExecution in ThisBuild := false
 
 scalaVersion := "2.11.5"
 
