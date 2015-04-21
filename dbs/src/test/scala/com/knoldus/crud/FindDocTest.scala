@@ -13,11 +13,11 @@ import com.knoldus.crud.People
 class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
 
   private val objectId = BSONObjectID.generate
-  val db = connector("localhost", "rmongo", "rmongo", "pass")
-  val findDoc = new FindDoc(db, "table1")
-  val coll = db("table1")
-  implicit val read = Macros.reader[People]
+    implicit val read = Macros.reader[People]
   implicit val write = Macros.writer[People]
+  val db = connector("localhost", "rmongo", "rmongo", "pass")
+  val findDoc = new FindDoc[People](db, "table1")
+  val coll = db("table1")
   before {
     coll.drop()
     val res = new DBCrud[People](db, "table1").insert(People(objectId, "iii"))
@@ -28,7 +28,7 @@ class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
   }
 
   "fetch data with find" should "1" in {
-    val res = findDoc.find[People](objectId.stringify)
+    val res = findDoc.find(objectId.stringify)
     val finalRes = Await.result(res, 1 second)
     val expectedres = List(People(objectId, "iii"))
     assert(finalRes === expectedres)

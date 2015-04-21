@@ -14,16 +14,16 @@ import reactivemongo.bson.Macros
 import scala.concurrent.Future
 import reactivemongo.api.Cursor
 
-class FindDoc[T](db:DefaultDB,collection:String) extends Connector {
+class FindDoc[T](db:DefaultDB,collection:String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]) extends Connector {
   val coll=db(collection)
-  def find[T](id: String)(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]):Future[List[T]]= {
+  def find(id: String):Future[List[T]]= {
     val filter = BSONDocument()
     val cursor = coll.find(query(id), filter).cursor[T]
     cursor.collect[List]().map { x =>
       x
     }
   }
-  def findWholeDoc[T]()(implicit reader: BSONDocumentReader[T], writer:BSONDocumentWriter[T]):Cursor[T]= {
+  def findWholeDoc():Cursor[T]= {
     val filter = BSONDocument()
     coll.find(BSONDocument(), filter).cursor[T]    
   }

@@ -11,7 +11,7 @@ import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.Macros
 import com.knoldus.dbconnection.DBCrud
 
-case class People(_id: BSONObjectID, name: String)
+
 
 class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
 

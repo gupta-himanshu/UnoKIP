@@ -1,4 +1,5 @@
-package com.knoldus.streaming
+package com.knoldus.dataprocess
+
 
 import com.knoldus.dbconnection.Connector
 import com.knoldus.dbconnection.DBCrud
@@ -7,6 +8,7 @@ import com.knoldus.dbcrud.FindDoc
 import play.api.libs.iteratee._
 import scala.concurrent.ExecutionContext.Implicits.global
 import reactivemongo.bson.BSONDocument
+import com.knoldus.streaming.Tweet
 /**
  * @author knoldus
  */

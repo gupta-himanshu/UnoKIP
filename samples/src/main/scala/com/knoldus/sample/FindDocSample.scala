@@ -22,7 +22,6 @@ object FindDocSample extends App with Connector{
   val isInserted=db.insert(People(objId,"ss"))
    val isInsertedDone = Await.result(isInserted, 1 seconds)
   val num =findDoc.find(objId.stringify)
-  
   val future = Await.result(num, 1 seconds)
   println(future)
 }

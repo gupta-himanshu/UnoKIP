@@ -41,7 +41,7 @@ object SbtMultiBuild extends Build {
 	lazy val dataProcess = (project in file("dataProcess")).settings(
 				commonSetting,
 				libraryDependencies ++= Seq()				
-				).dependsOn(dbs)
+				).dependsOn(dbs,streaming)
 
 
 }
