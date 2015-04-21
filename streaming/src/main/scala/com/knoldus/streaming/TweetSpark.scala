@@ -11,7 +11,7 @@ import com.knoldus.dbconnection.DBCrud
 
 case class Tweet(tweet: String)
 
-object SparkStore extends Connector with App{
+class SparkStore extends Connector with App{
 
   implicit val read = Macros.reader[Tweet]
   implicit val write = Macros.writer[Tweet]
@@ -36,6 +36,4 @@ object SparkStore extends Connector with App{
   }  
   def start =  ssc.start()
   def stop =   ssc.awaitTermination()
-  start
-  stop
 }
