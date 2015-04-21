@@ -13,7 +13,9 @@ object TestDependencies{
 }
 object Dependencies{
 
-	val reactiveMongo = 	"org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23"
+	val reactiveMongo ="org.reactivemongo" 	%% 	"reactivemongo" % "0.10.5.0.akka23" exclude("org.apache.logging.log4j",    "log4j-to-slf4j")
+	val logback	=	"ch.qos.logback" % "logback-classic" % "1.1.3"
+
 	val DBSjar = 		"com.knoldus" 		%%	"dbs"			%	"1.0"
 	val Streamingjar=	"com.knoldus"		%%	"streaming"		%	"1.0"
 	val json4sNative = 	"org.json4s" 		%% 	"json4s-native" 	% 	"3.2.10"

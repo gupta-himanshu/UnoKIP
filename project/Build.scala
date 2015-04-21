@@ -12,7 +12,8 @@ object BuildSettings {
        	version := "1.0",
        	scalaVersion in ThisBuild := "2.11.5",
 	organization := "com.knoldus",
-       	parallelExecution in ThisBuild := false
+       	parallelExecution in ThisBuild := false,
+	 javaOptions in ThisBuild += "-Dlogback.configurationFile=src/main/resources/logback.xml"
 	)
  
 }
@@ -26,7 +27,7 @@ object SbtMultiBuild extends Build {
 
 	lazy val dbs =(project in file("dbs")).settings(
 				commonSetting,
-				libraryDependencies ++=  Seq(scalaTest,reactiveMongo,json4sNative))
+				libraryDependencies ++=  Seq(scalaTest,reactiveMongo,json4sNative,logback))
 
  	lazy val streaming = (project in file("streaming")).settings(
 				commonSetting,	

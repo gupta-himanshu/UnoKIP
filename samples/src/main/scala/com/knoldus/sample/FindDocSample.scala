@@ -6,6 +6,7 @@ import com.knoldus.dbcrud.FindDoc
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 import reactivemongo.bson.Macros
+import com.knoldus.dbconnection.DBCrud
 
 
 object FindDocSample extends App with Connector{
@@ -14,7 +15,11 @@ object FindDocSample extends App with Connector{
   val findDoc=new FindDoc(datab,"table1")
    implicit val write=Macros.reader[People]
     implicit val read=Macros.writer[People]
-  val num =findDoc.find("")
+  val db=new DBCrud[People](datab,"table1")
+  val objId=BSONObjectID.generate
+  val isInserted=db.insert(People(objId,"ss"))
+   val isInsertedDone = Await.result(isInserted, 1 seconds)
+  val num =findDoc.find(objId.stringify)
   val future = Await.result(num, 1 seconds)
   println(future)
 }

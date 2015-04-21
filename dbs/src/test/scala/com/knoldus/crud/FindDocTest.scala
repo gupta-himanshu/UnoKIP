@@ -19,7 +19,6 @@ class FindDocTest extends FlatSpec with Connector with BeforeAndAfter {
   implicit val read = Macros.reader[People]
   implicit val write = Macros.writer[People]
   before {
-    coll.drop()
     val res = new DBCrud[People](db, "table1").insert(People(objectId, "iii"))
     Await.result(res, 1 second)
   }
