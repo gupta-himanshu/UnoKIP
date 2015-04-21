@@ -6,8 +6,8 @@ object TwitterMongo extends App with Serializable {
   val sparkStore = new SparkStore
   
   
-  sparkStore.start
-  sparkStore.stop
+  sparkStore.ssc.start
+//  sparkStore.stop
   
 
 }

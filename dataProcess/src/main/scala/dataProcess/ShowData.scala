@@ -21,7 +21,7 @@ object ShowData extends App with Connector {
     Iteratee.foreach { people =>
       println(s"$people")
     }
-  enumerator.apply(processDocuments)
+  //enumerator.apply(processDocuments)
   
 }      
 

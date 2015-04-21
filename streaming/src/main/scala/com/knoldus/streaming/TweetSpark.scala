@@ -11,7 +11,7 @@ import com.knoldus.dbconnection.DBCrud
 
 case class Tweet(tweet: String)
 
-class SparkStore extends Connector {
+object SparkStore extends Connector with App{
 
   implicit val read = Macros.reader[Tweet]
   implicit val write = Macros.writer[Tweet]
@@ -28,6 +28,7 @@ class SparkStore extends Connector {
   val lines = statuses.flatMap { x => x.split("\n") }
   val words = lines.flatMap { x => x.split(" ") }
   val hastag = words.filter { x => x.startsWith("#") }.map { x => Tweet(x) }
+  
   hastag.foreachRDD{ tweetRDD =>
     tweetRDD.foreach { x =>
       dbcrud.insert(x)
@@ -35,4 +36,6 @@ class SparkStore extends Connector {
   }  
   def start =  ssc.start()
   def stop =   ssc.awaitTermination()
+  start
+  stop
 }
