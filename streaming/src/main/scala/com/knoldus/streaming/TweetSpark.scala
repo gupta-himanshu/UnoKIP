@@ -1,3 +1,4 @@
+package com.knoldus.streaming
 import org.apache.spark._
 import org.apache.spark.SparkContext._
 import org.apache.spark.streaming._
@@ -6,7 +7,6 @@ import org.apache.spark.streaming.StreamingContext._
 import com.knoldus.dbconnection.Connector
 import reactivemongo.bson.Macros
 import com.knoldus.dbconnection.DBCrud
-import com.knoldus.db.ConnectorTest
 
 case class Tweet(tweet: String)
 
@@ -22,7 +22,8 @@ class SparkStore extends Connector{
   val ssc = new StreamingContext(sc, Seconds(2))
   val client = new TwitterClient()
   val tweetauth = client.start()
-  val inputDstream = TwitterUtils.createStream(ssc, Option(tweetauth.getAuthorization))
+  val filter=Array("en")
+  val inputDstream = TwitterUtils.createStream(ssc, Option(tweetauth.getAuthorization),filter)
   val statuses = inputDstream.map { x => x.getText }
   val lines = statuses.flatMap { x => x.split("\n") }
   val words = lines.flatMap { x => x.split(" ") }
@@ -32,4 +33,5 @@ class SparkStore extends Connector{
   hastag.saveAsTextFiles("tweets/tweets")
   def start() = ssc.start()
   def stop() = ssc.awaitTermination()
+ 
 }
