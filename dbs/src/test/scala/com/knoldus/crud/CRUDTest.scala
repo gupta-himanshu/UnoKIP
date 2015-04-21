@@ -15,9 +15,6 @@ import com.knoldus.dbconnection.DBCrud
 
 class CrudTest extends FlatSpec with Connector with BeforeAndAfter {
 
-  implicit val read = Macros.reader[People]
-  implicit val write = Macros.writer[People]
-
   private val objectId = BSONObjectID.generate
 
   val db = connector("localhost", "rmongo", "rmongo", "pass")
