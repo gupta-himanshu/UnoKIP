@@ -1,10 +1,10 @@
 package com.knoldus.tweetstreaming
 
 import com.typesafe.config.ConfigFactory
-
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
 import twitter4j.auth.AccessToken
+import twitter4j.Query
 /**
  * @author knoldus
 
@@ -18,6 +18,7 @@ class TwitterClient {
   val ACCESS_TOKEN_SECRET = config.getString("twitter4j.oauth.accessTokenSecret")
   
   def tweetCredantials() = {
+    
     val twitter:Twitter = new TwitterFactory().getInstance
     twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_KEY_SECRET)
     twitter.setOAuthAccessToken(new AccessToken(ACCESS_TOKEN,ACCESS_TOKEN_SECRET))
