@@ -23,29 +23,18 @@ case class Tweet(id: Long, source: String, content: String, retweet: Boolean, au
  * @author knoldus
  */
 trait SparkStreaming extends Connector {
-  val db = connector("localhost", "rmongo", "rmongo", "pass")
-  val dbcrud = new DBCrud(db, "table1")
-  def startStream(appName: String, master: String): Unit = {
-    val sparkConf: SparkConf = new SparkConf().setAppName(appName).setMaster(master).set("spark.driver.port", "8080").set("spark.driver.host", "localhost") //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+
+  def startStream(appName: String, master: String): StreamingContext = {
+    val db = connector("localhost", "rmongo", "rmongo", "pass")
+    val dbcrud = new DBCrud(db, "table1")
+    val sparkConf: SparkConf = new SparkConf().setAppName(appName).setMaster(master).set(" spark.driver.allowMultipleContexts", "true")
     //  .set("spark.kryo.registrator", "HelloKryoRegistrator")
     //    sparkConf.registerKryoClasses(Array(classOf[DBCrud]))
     val sc: SparkContext = new SparkContext(sparkConf)
-    val ssc: StreamingContext = new StreamingContext(sc, Seconds(2))
-    val twitterauth = new TwitterClient().tweetCredantials()
-    val tweetDstream = TwitterUtils.createStream(ssc, Option(twitterauth.getAuthorization))
-    val tweets = tweetDstream.filter { x => x.getUser.getLang == "en" }.map { x => Tweet(x.getId, x.getSource, x.getText, x.isRetweet(), x.getUser.getName, x.getUser.getScreenName, x.getUser.getURL, x.getUser.getId, x.getUser.getLang) }
-
-    tweets.foreachRDD { x => x.foreach { x => dbcrud.insert(x) } }
-    //tweets.saveAsTextFiles("tweets/tweets")
-    ssc.start()
-//    ssc
+    val ssc: StreamingContext = new StreamingContext(sc, Seconds(10))
+    ssc
   }
 }
-//class HelloKryoRegistrator extends KryoRegistrator {
-//    override def registerClasses(kryo: Kryo) = {
-//        kryo.register(classOf[DBCrud])
-//    }
-//}
 
 object SparkStreaming extends SparkStreaming
 

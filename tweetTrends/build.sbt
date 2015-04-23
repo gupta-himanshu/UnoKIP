@@ -10,5 +10,6 @@ resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositor
 
 libraryDependencies ++= Seq(
   						"org.reactivemongo" 	%% 	"reactivemongo" % "0.10.5.0.akka23",
-						"org.scalatest" % "scalatest_2.11" % "3.0.0-SNAP4"
+						"org.scalatest" % "scalatest_2.11" % "3.0.0-SNAP4",
+						"com.knoldus" % "spark-services_2.11" % "1.0"
 )
