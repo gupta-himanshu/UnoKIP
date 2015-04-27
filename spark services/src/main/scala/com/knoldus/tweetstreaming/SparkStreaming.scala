@@ -27,7 +27,7 @@ trait SparkStreaming extends Connector {
   def startStream(appName: String, master: String): StreamingContext = {
     val db = connector("localhost", "rmongo", "rmongo", "pass")
     val dbcrud = new DBCrud(db, "table1")
-    val sparkConf: SparkConf = new SparkConf().setAppName(appName).setMaster(master).set(" spark.driver.allowMultipleContexts", "true")
+    val sparkConf: SparkConf = new SparkConf().setAppName(appName).setMaster(master).set(" spark.driver.allowMultipleContexts", "true").set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     //  .set("spark.kryo.registrator", "HelloKryoRegistrator")
     //    sparkConf.registerKryoClasses(Array(classOf[DBCrud]))
     val sc: SparkContext = new SparkContext(sparkConf)
@@ -35,6 +35,4 @@ trait SparkStreaming extends Connector {
     ssc
   }
 }
-
 object SparkStreaming extends SparkStreaming
-

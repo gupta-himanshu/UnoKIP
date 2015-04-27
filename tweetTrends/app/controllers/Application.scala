@@ -1,23 +1,30 @@
 package controllers
 
 import scala.concurrent.duration.DurationInt
+import java.io.File
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.rdd.RDD
+import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
+import org.apache.spark.streaming.StreamingContext
+import org.apache.spark.streaming.twitter.TwitterUtils
+import com.knoldus.db.Connector
+import com.knoldus.tweetstreaming.SparkStreaming
+import com.knoldus.tweetstreaming.Tweet
+import com.knoldus.tweetstreaming.TwitterClient
+import com.knoldus.twittertrends
+import models.DBCrud
 import models.User
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
+import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import reactivemongo.bson.BSONDocumentReader
-import reactivemongo.bson.Macros
 import reactivemongo.bson.BSONDocumentWriter
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import scala.util.Failure
-import scala.util.Success
-import models.FindDoc
-import play.api.mvc.AnyContent
-import com.knoldus.tweetstreaming.SparkStreaming
-import com.knoldus.tweetstreaming.TwitterClient
-import org.apache.spark.streaming.twitter.TwitterUtils
-import com.knoldus.tweetstreaming.Tweet
-import com.knoldus.db.Connector
-import models.DBCrud
+import reactivemongo.bson.Macros
+import com.knoldus.twittertrends.BirdTweet
+
 
 object Application extends Controller with Connector {
 
@@ -51,9 +58,17 @@ object Application extends Controller with Connector {
     val twitterauth = new TwitterClient().tweetCredantials()
     val tweetDstream = TwitterUtils.createStream(a, Option(twitterauth.getAuthorization))
     val tweets = tweetDstream.filter { x => x.getUser.getLang == "en" }.map { x => Tweet(x.getId, x.getSource, x.getText, x.isRetweet(), x.getUser.getName, x.getUser.getScreenName, x.getUser.getURL, x.getUser.getId, x.getUser.getLang) }
-    //tweets.foreachRDD { x => x.foreach { x => dbcrud.insert(x) } }
-    tweets.saveAsTextFiles("tweets/tweets")
+    //  tweets.foreachRDD { x => x.foreach { x => dbcrud.insert(x) } }
+    tweets.saveAsTextFiles("/home/knoldus/sentiment project/spark services/tweets/tweets")
+    //    val s=new BirdTweet() 
+    //    s.hastag(a.sparkContext)
     a.start()
     Ok("start streaming")
+  }
+ 
+  def trending=Action{
+    val s=new BirdTweet()
+    s.trending()
+    Ok("trend")
   }
 }

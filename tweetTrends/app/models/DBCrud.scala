@@ -22,5 +22,6 @@ trait DBCrud extends Connector{
         case None      => true
       }
     }
-    
+  }
+}
 object DBCrud extends DBCrud
