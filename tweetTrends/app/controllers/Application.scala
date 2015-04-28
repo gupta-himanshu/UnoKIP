@@ -1,19 +1,19 @@
 package controllers
 
 import scala.concurrent.duration.DurationInt
-import java.io.File
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
+
 import org.apache.spark.SparkContext._
-import org.apache.spark.rdd.RDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.twitter.TwitterUtils
+
 import com.knoldus.db.Connector
 import com.knoldus.tweetstreaming.SparkStreaming
 import com.knoldus.tweetstreaming.Tweet
 import com.knoldus.tweetstreaming.TwitterClient
 import com.knoldus.twittertrends
+import com.knoldus.twittertrends.BirdTweet
+
 import models.DBCrud
 import models.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -23,7 +23,6 @@ import play.api.mvc.Controller
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
-import com.knoldus.twittertrends.BirdTweet
 
 
 object Application extends Controller with Connector {
