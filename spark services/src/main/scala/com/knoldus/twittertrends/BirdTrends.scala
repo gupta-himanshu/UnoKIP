@@ -12,7 +12,7 @@ import org.apache.spark.sql.types.StringType
 import org.apache.spark.sql.types.StructField
 import org.apache.spark.sql.types.StructType
 
-class BirdTweet {
+trait BirdTweet {
   
   val sparkConf: SparkConf = new SparkConf().setAppName("bird").setMaster("local[2]").set(" spark.driver.allowMultipleContexts", "true").set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
   val sc: SparkContext = new SparkContext(sparkConf)
@@ -28,6 +28,7 @@ class BirdTweet {
   }
   def trending() = {
     val sqlContext = new SQLContext(sc)
+    import sqlContext.implicits._
     val tree = getListOfSubDirectories("tweets")
     val RDDList = tree.toList.map(x => sc.textFile("tweets/" + x)) //getting List of RDD of collected Hashtags
     val RDDFinal = reduceRDDList(RDDList) //getting union of all RDD
@@ -42,3 +43,5 @@ class BirdTweet {
     top.foreach(x => println("----------------------------------Hashtag----------------------------------------------------------------------------------------------------------------------------------------  " + x._1 + " is used " + x._2 + " times."))
   }
 }
+
+object BirdTweet extends BirdTweet
