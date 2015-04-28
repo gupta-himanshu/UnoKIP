@@ -2,31 +2,29 @@ package models
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import reactivemongo.api.Cursor
 import reactivemongo.bson.BSONDocument
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.bson.Producer.nameValue2Producer
+import com.knoldus.tweetstreaming.SparkStreaming
+import com.knoldus.tweetstreaming.Tweet
 
 trait FindDoc extends Connector {
   val db = connector("localhost", "rmongo", "username", "Password")
-  val coll=db("table1")
+  val coll=db("tweets")
   
-  def find(id: String)(implicit reader: BSONDocumentReader[User], writer:BSONDocumentWriter[User]):Future[List[User]]= {
+   def findWholeDoc()(implicit reader: BSONDocumentReader[Tweet], writer:BSONDocumentWriter[Tweet]):Cursor[Tweet]= {
     val filter = BSONDocument()
-    val cursor = coll.find(query(id), filter).cursor[User]
-    cursor.collect[List]().map { x =>
-      x
-    }
-  }
-   def findWholeDoc()(implicit reader: BSONDocumentReader[User], writer:BSONDocumentWriter[User]):Cursor[User]= {
-    val filter = BSONDocument()
-    coll.find(BSONDocument(), filter).cursor[User]    
+    coll.find(BSONDocument(), filter).cursor[Tweet]    
   }
 
+  def getTweet:List[Tweet] ={
+    List(Tweet(1223, "ss","ss",true,"ss","ss","ss",1234,"ss"),Tweet(1223, "ss","ss",true,"ss","ss","ss",1234,"ss"))
+  }
   private def query(id: String): BSONDocument =
     BSONDocument("_id" -> BSONObjectID(id))
 }
+
 object FindDoc extends FindDoc

@@ -1,4 +1,4 @@
-package models
+package com.knoldus.db
 
 import reactivemongo.api.{ collections, MongoDriver }
 import scala.concurrent.ExecutionContext.Implicits.global

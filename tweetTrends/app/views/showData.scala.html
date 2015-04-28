@@ -1,5 +1,6 @@
 @* showData Template File *@
-@(user: List[User])
+@import com.knoldus.tweetstreaming.Tweet
+@(tweet: List[Tweet])
 
 @main("Data") {
 	<div class = "container">
@@ -8,17 +9,16 @@
 		<div class = "row">
 			<div class="col-md-8">
 				<table class="table table-hover">
-					@for(data <- user){
+					@for(data <- tweet){
 						<tr>
-							<td>@data.Name	</td>
-							<td>@data.LName	</td>
-							<td>@data.Age	</td>
+							<td>@data.username	</td>
+							<td>@data.content	</td>
 						</tr>
 					}
 				</table>
 			</div>
 			<div class="col-md-4" style="color:blue">Place for Graph
-			@chart()
+			
 			</div>
 		</div>
 		@footer()

@@ -8,13 +8,14 @@ import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.bson.Producer.nameValue2Producer
+import com.knoldus.tweetstreaming.Tweet
 
 
 trait DBCrud extends Connector{
   val db = connector("localhost", "rmongo", "username", "Password")
   val coll=db("table1")
   
-  def insert(person: User)(implicit reader: BSONDocumentReader[User], writer:BSONDocumentWriter[User]): Future[Boolean] = {
+  def insert(person: Tweet)(implicit reader: BSONDocumentReader[Tweet], writer:BSONDocumentWriter[Tweet]): Future[Boolean] = {
     coll.insert(person).map { lastError =>
       lastError.errMsg match {
         case Some(msg) => false
@@ -22,23 +23,5 @@ trait DBCrud extends Connector{
       }
     }
   }
-
-  def update(id: String, person: User)(implicit reader: BSONDocumentReader[User], writer:BSONDocumentWriter[User]): Future[Boolean] = {
-    coll.update(query(id), person).map { lastError =>
-      lastError.updatedExisting
-    }
-  }
-
-  def delete(person: String): Future[Boolean] = {
-    coll.remove(query(person)).map { lastError =>
-      lastError.errMsg match {
-        case Some(msg) => false
-        case None      => true
-      }
-    }
-  }
-
-  private def query(id: String): BSONDocument =
-    BSONDocument("_id" -> BSONObjectID(id))
 }
 object DBCrud extends DBCrud
