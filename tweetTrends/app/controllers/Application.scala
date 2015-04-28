@@ -37,7 +37,7 @@ object Application extends Controller {
   def show:Action[AnyContent] = Action.async {
     val show = findDoc.findWholeDoc().collect[List]()
     show.map { x =>
-      Ok(x.toString())
+      Ok(views.html.showData(x))
     }
   }
 }

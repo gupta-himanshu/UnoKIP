@@ -1,0 +1,26 @@
+@* showData Template File *@
+@(user: List[User])
+
+@main("Data") {
+	<div class = "container">
+		@header("head")
+		@menubar("menu")
+		<div class = "row">
+			<div class="col-md-8">
+				<table class="table table-hover">
+					@for(data <- user){
+						<tr>
+							<td>@data.Name	</td>
+							<td>@data.LName	</td>
+							<td>@data.Age	</td>
+						</tr>
+					}
+				</table>
+			</div>
+			<div class="col-md-4" style="color:blue">Place for Graph
+			@chart()
+			</div>
+		</div>
+		@footer()
+	</div>
+}
