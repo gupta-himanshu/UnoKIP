@@ -12,13 +12,12 @@
 					@for(data <- tweet){
 						<tr>
 							<td>@data.username	</td>
-							<td>@data.content	</td>
 						</tr>
 					}
 				</table>
 			</div>
-			<div class="col-md-4" style="color:blue">Place for Graph
-			
+			<div class="col-md-4">
+			@chart("{tweets: [22000,16000,23000,25000,14000,12000]}")
 			</div>
 		</div>
 		@footer()

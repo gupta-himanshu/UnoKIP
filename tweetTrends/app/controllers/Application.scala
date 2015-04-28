@@ -1,19 +1,16 @@
 package controllers
 
 import scala.concurrent.duration.DurationInt
-
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.twitter.TwitterUtils
-
 import com.knoldus.db.Connector
 import com.knoldus.tweetstreaming.SparkStreaming
 import com.knoldus.tweetstreaming.Tweet
 import com.knoldus.tweetstreaming.TwitterClient
 import com.knoldus.twittertrends
 import com.knoldus.twittertrends.BirdTweet
-
 import models.DBCrud
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
@@ -23,12 +20,13 @@ import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
 import models.FindDoc
+import play.api.Logger
 
 object Application extends Controller  with Application {
   val findDoc = FindDoc
 }
 
-trait Application extends Connector {
+trait Application {
   this: Controller =>
   
   val findDoc: FindDoc
@@ -42,7 +40,7 @@ trait Application extends Connector {
   def streamstart = Action {
     val stream = SparkStreaming
     val a = stream.startStream("ss", "local[2]")
-    val db = connector("localhost", "rmongo", "rmongo", "pass")
+//    val db = connector("localhost", "rmongo", "rmongo", "pass")
     val dbcrud = DBCrud
     val twitterauth = new TwitterClient().tweetCredantials()
     val tweetDstream = TwitterUtils.createStream(a, Option(twitterauth.getAuthorization))
@@ -63,7 +61,8 @@ trait Application extends Connector {
   }
 
   def show: Action[AnyContent] = Action.async {
-    val show = findDoc.findWholeDoc().collect[List]()
+    val show = findDoc.findWholeDoc()
+    Logger.info("Data arriving is ::::::::::: " + show)
     show.map { x =>
       Ok(views.html.showData(x))
     }

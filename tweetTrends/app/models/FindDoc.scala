@@ -15,9 +15,9 @@ trait FindDoc extends Connector {
   val db = connector("localhost", "rmongo", "username", "Password")
   val coll=db("tweets")
   
-   def findWholeDoc()(implicit reader: BSONDocumentReader[Tweet], writer:BSONDocumentWriter[Tweet]):Cursor[Tweet]= {
+   def findWholeDoc()(implicit reader: BSONDocumentReader[Tweet], writer:BSONDocumentWriter[Tweet]):Future[List[Tweet]]= {
     val filter = BSONDocument()
-    coll.find(BSONDocument(), filter).cursor[Tweet]    
+    coll.find(BSONDocument(), filter).cursor[Tweet].collect[List]()    
   }
 
   def getTweet:List[Tweet] ={
