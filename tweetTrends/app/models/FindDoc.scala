@@ -9,13 +9,15 @@ import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.bson.Producer.nameValue2Producer
 import com.knoldus.tweetstreaming.SparkStreaming
+import com.knoldus.tweetstreaming.Tweet
 
 trait FindDoc extends Connector {
   val db = connector("localhost", "rmongo", "username", "Password")
   val coll=db("table1")
-   def findWholeDoc()(implicit reader: BSONDocumentReader[User], writer:BSONDocumentWriter[User]):Cursor[User]= {
+  
+   def findWholeDoc()(implicit reader: BSONDocumentReader[Tweet], writer:BSONDocumentWriter[Tweet]):Cursor[Tweet]= {
     val filter = BSONDocument()
-    coll.find(BSONDocument(), filter).cursor[User]    
+    coll.find(BSONDocument(), filter).cursor[Tweet]    
   }
 
   private def query(id: String): BSONDocument =

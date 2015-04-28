@@ -28,6 +28,7 @@ class BirdTweet {
   }
   def trending() = {
     val sqlContext = new SQLContext(sc)
+    import sqlContext.implicits._
     val tree = getListOfSubDirectories("tweets")
     val RDDList = tree.toList.map(x => sc.textFile("tweets/" + x)) //getting List of RDD of collected Hashtags
     val RDDFinal = reduceRDDList(RDDList) //getting union of all RDD
@@ -40,5 +41,12 @@ class BirdTweet {
     val top = result.map(t => (t(0), 1)).reduceByKey((a, b) => a + b).sortBy(_._2, false).take(10)
     //result.map(t => "Tweets: " + t(0)).collect().foreach(println)
     top.foreach(x => println("----------------------------------Hashtag----------------------------------------------------------------------------------------------------------------------------------------  " + x._1 + " is used " + x._2 + " times."))
+  }
+}
+
+object test{
+   def main(args: Array[String]): Unit = {
+   val s=new BirdTweet
+   s.trending()
   }
 }

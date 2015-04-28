@@ -9,9 +9,11 @@ import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
 import com.knoldus.tweetstreaming.Tweet
 
-class DBCrud(db: DefaultDB, collection: String) extends Connector {
+trait DBCrud extends Connector {
   
-  val coll = db(collection)
+  val db = connector("localhost", "rmongo", "username", "Password")
+  val coll = db("table1")
+
   def insert(person: Tweet): Future[Boolean] = {
     implicit val read = Macros.reader[Tweet]
     implicit val write = Macros.writer[Tweet]
@@ -20,3 +22,5 @@ class DBCrud(db: DefaultDB, collection: String) extends Connector {
     }
   }
 }
+
+object DBCrud extends DBCrud 
