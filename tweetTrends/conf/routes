@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 #GET		/save						controllers.Application.save
-#GET		/show						controllers.Application.show
+GET		/show						controllers.Application.show
 GET		/stream						controllers.Application.streamstart
 GET		/trend						controllers.Application.trending
 # Map static resources from the /public folder to the /assets URL path
