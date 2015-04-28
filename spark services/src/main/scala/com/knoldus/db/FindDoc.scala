@@ -1,21 +1,23 @@
-package models
+package com.knoldus.db
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
+import com.knoldus.tweetstreaming.Tweet
+
 import reactivemongo.api.Cursor
 import reactivemongo.bson.BSONDocument
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.bson.Producer.nameValue2Producer
-import com.knoldus.tweetstreaming.SparkStreaming
 
 trait FindDoc extends Connector {
   val db = connector("localhost", "rmongo", "username", "Password")
-  val coll=db("table1")
-   def findWholeDoc()(implicit reader: BSONDocumentReader[User], writer:BSONDocumentWriter[User]):Cursor[User]= {
+  val coll = db("table1")
+
+  def findWholeDoc()(implicit reader: BSONDocumentReader[Tweet], writer: BSONDocumentWriter[Tweet]): Cursor[Tweet] = {
     val filter = BSONDocument()
-    coll.find(BSONDocument(), filter).cursor[User]    
+    coll.find(BSONDocument(), filter).cursor[Tweet]
   }
 
   private def query(id: String): BSONDocument =

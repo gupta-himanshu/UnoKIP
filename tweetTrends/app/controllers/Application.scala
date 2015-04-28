@@ -1,27 +1,37 @@
-import com.knoldus.tweetstreaming.SparkStreaming
-import com.knoldus.tweetstreaming.TwitterClient
-import reactivemongo.bson.BSONDocumentReader
-import com.knoldus.twittertrends.BirdTweet
-import org.apache.spark.streaming.twitter.TwitterUtils
-import com.knoldus.tweetstreaming.Tweet
-import reactivemongo.bson.BSONDocumentWriter
-import com.knoldus.db.DBCrud
-import play.api.mvc.Controller
-import com.knoldus.db.Connector
-import models.FindDoc
-import play.api.mvc.Action
-import reactivemongo.bson.Macros
-import play.api.mvc.AnyContent
+package controllers
 
-object Application extends Controller  with Application {
+import java.util.concurrent.TimeoutException
+
+import com.knoldus.db.Connector
+import com.knoldus.db.FindDoc
+import com.knoldus.tweetstreaming.Tweet
+import com.knoldus.tweetstreaming.Tweet
+import com.knoldus.tweetstreaming.TwitterClient
+import com.knoldus.twittertrends
+import com.knoldus.twittertrends.BirdTweet
+import com.knoldus.twittertrends.BirdTweet
+import com.knoldus.twittertrends.BirdTweet
+
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.Action
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.AnyContent
+import play.api.mvc.Controller
+import play.api.mvc.Controller
+import reactivemongo.bson.BSONDocumentReader
+import reactivemongo.bson.BSONDocumentWriter
+import reactivemongo.bson.Macros
+
+object Application extends Controller with Application {
   val findDoc = FindDoc
 }
 
 trait Application extends Connector {
   this: Controller =>
- 
+
   val findDoc: FindDoc
- 
+
   implicit val reader: BSONDocumentReader[Tweet] = Macros.reader[Tweet]
   implicit val writer: BSONDocumentWriter[Tweet] = Macros.writer[Tweet]
 
@@ -29,21 +39,15 @@ trait Application extends Connector {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  def trending = Action {
-    val s = new BirdTweet()
-    s.trending()
-    Ok("trend")
-
-  }
-
-  def show: Action[AnyContent] = Action.async {
-    val show = findDoc.findWholeDoc().collect[List]()
-    show.map { x =>
-      Ok(views.html.showData(x))
-    }
-  }
-
   def chart: Action[AnyContent] = Action {
     Ok(views.html.chart("chart"))
+  }
+
+  def trending: Action[AnyContent] = Action.async {
+    val show = findDoc.findWholeDoc().collect[List]()
+    val res = show.map { x => BirdTweet.trending(x) }
+    res.map { r => Ok(views.html.showData(r)) }.recover {
+      case t: TimeoutException => InternalServerError(t.getMessage)
+    }
   }
 }
