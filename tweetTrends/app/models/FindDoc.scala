@@ -19,10 +19,7 @@ trait FindDoc extends Connector {
     val filter = BSONDocument()
     coll.find(BSONDocument(), filter).cursor[Tweet].collect[List]()    
   }
-
-  def getTweet:List[Tweet] ={
-    List(Tweet(1223, "ss","ss",true,"ss","ss","ss",1234,"ss"),Tweet(1223, "ss","ss",true,"ss","ss","ss",1234,"ss"))
-  }
+  
   private def query(id: String): BSONDocument =
     BSONDocument("_id" -> BSONObjectID(id))
 }

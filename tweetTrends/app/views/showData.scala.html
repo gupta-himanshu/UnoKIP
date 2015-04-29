@@ -7,7 +7,7 @@
 		@header("head")
 		@menubar("menu")
 		<div class = "row">
-			<div class="col-md-8">
+			<div class="col-md-6">
 				<table class="table table-hover">
 					@for(data <- tweet){
 						<tr>
@@ -16,8 +16,8 @@
 					}
 				</table>
 			</div>
-			<div class="col-md-4">
-			@chart("[22000,16000,23000,25000,14000,12000]")
+			<div class="col-md-6">
+			@chart("""[{"x": 0,"y": 0,"w":"20","h": 38,"color": "green"}]""")
 			</div>
 		</div>
 		@footer()

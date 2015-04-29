@@ -1,17 +1,15 @@
 package controllers
 
-import scala.concurrent.duration.DurationInt
-import org.apache.spark.SparkContext._
-import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
-import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.twitter.TwitterUtils
-import com.knoldus.db.Connector
+
 import com.knoldus.tweetstreaming.SparkStreaming
 import com.knoldus.tweetstreaming.Tweet
 import com.knoldus.tweetstreaming.TwitterClient
-import com.knoldus.twittertrends
 import com.knoldus.twittertrends.BirdTweet
+
 import models.DBCrud
+import models.FindDoc
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
@@ -19,8 +17,6 @@ import play.api.mvc.Controller
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
-import models.FindDoc
-import play.api.Logger
 
 object Application extends Application {
   val findDoc = FindDoc
@@ -30,7 +26,6 @@ trait Application extends Controller{
   this: Controller =>
   
   val findDoc: FindDoc
-  
   implicit val reader: BSONDocumentReader[Tweet] = Macros.reader[Tweet]
   implicit val writer: BSONDocumentWriter[Tweet] = Macros.writer[Tweet]
 
@@ -70,6 +65,6 @@ trait Application extends Controller{
   }
 
   def chart: Action[AnyContent] = Action {
-    Ok(views.html.chart("chart"))
+    Ok("chart")
   }
 }
