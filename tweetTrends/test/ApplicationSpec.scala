@@ -28,27 +28,26 @@ import scala.concurrent.duration._
  */
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends PlaySpecification with Mockito {
-  
-  override implicit def defaultAwaitTimeout:Timeout = 20.seconds
-  
+
+  //override implicit def defaultAwaitTimeout: Timeout = 20.seconds
+
   val tweet = List(Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss"), Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss"))
+
   val mockfindDoc: FindDoc = mock[FindDoc]
-  
-  object TestObj extends Application with Controller {
+
+  object TestObj extends Application {
     val findDoc: FindDoc = mockfindDoc
   }
 
   "Application" should {
-    "find all collection" in new WithApplication {
-      implicit val reader: BSONDocumentReader[Tweet] = Macros.reader[Tweet]
-      implicit val writer: BSONDocumentWriter[Tweet] = Macros.writer[Tweet]
-      
-      mockfindDoc.findWholeDoc() returns Future.successful(tweet)
-      
+    "find all collection" in  new WithApplication(new FakeApplication) {
+
+      mockfindDoc.findWholeDoc()(any[BSONDocumentReader[Tweet]], any[BSONDocumentWriter[Tweet]]) returns Future.successful(tweet)
+
       //when(mockfindDoc.findWholeDoc()) thenReturn( Future.successful(tweet))
-      
-      val result = await(TestObj.show()(FakeRequest(GET, "/show")))
-      result must equalTo(OK)
+
+      val result = await(TestObj.show().apply(FakeRequest(GET, "/show")))
+      result.header.status must equalTo(OK)
 
     }
   }

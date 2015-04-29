@@ -22,14 +22,15 @@ import reactivemongo.bson.Macros
 import models.FindDoc
 import play.api.Logger
 
-object Application extends Controller  with Application {
+object Application extends Application {
   val findDoc = FindDoc
 }
 
-trait Application {
+trait Application extends Controller{
   this: Controller =>
   
   val findDoc: FindDoc
+  
   implicit val reader: BSONDocumentReader[Tweet] = Macros.reader[Tweet]
   implicit val writer: BSONDocumentWriter[Tweet] = Macros.writer[Tweet]
 
