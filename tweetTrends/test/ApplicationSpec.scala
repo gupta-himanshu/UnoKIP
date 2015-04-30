@@ -19,8 +19,6 @@ import play.api.test.WithApplication
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends PlaySpecification with Mockito {
 
-  val tweet = List(Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss"), Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss"))
-
   val mockDbService: DBServices = mock[DBServices]
   val mockBirdTweet:BirdTweet=mock[BirdTweet]
   
@@ -30,11 +28,12 @@ class ApplicationSpec extends PlaySpecification with Mockito {
   }
 
   "Application" should {
-    "find all collection" in new WithApplication(new FakeApplication) {
-     val tweets= mockDbService.findWholeDoc() returns Future.successful(tweet)
-      mockBirdTweet.trending(tweets) returns Map("#worldcup"->100)
-      val result = await(TestObj.trending.apply(FakeRequest(GET, "/trend")))   
-      result.header.status must equalTo(OK)
+    "trending" in new WithApplication(new FakeApplication) {
+     val tweets= mockDbService.findWholeDoc() returns Future.successful(List(Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss")))
+      val trend = mockBirdTweet.trending(tweets) returns List(("#worldcup", 100))
+       //val result = await(TestObj.trending.apply(FakeRequest(GET, "/")))
+        val home = route(FakeRequest(GET, "/")).get
+      home must equalTo(OK)
     }
   }
 }

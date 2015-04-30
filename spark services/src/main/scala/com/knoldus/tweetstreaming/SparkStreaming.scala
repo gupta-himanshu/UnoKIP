@@ -1,11 +1,13 @@
 package com.knoldus.tweetstreaming
 
+import org.apache.log4j.Level
+import org.apache.log4j.Logger
 import org.apache.spark.streaming.Seconds
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.twitter.TwitterUtils
 import com.knoldus.core.Global.sc
 import com.knoldus.db.DBServices
-import com.knoldus.model.Models.Tweet
+import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.streamInterval
 
 /**
@@ -13,6 +15,7 @@ import com.knoldus.utils.ConstantUtil.streamInterval
  */
 
 private object TweetCollect extends App {
+  Logger.getLogger("org").setLevel(Level.OFF)
   val ssc: StreamingContext = new StreamingContext(sc, Seconds(streamInterval))
   val client = new TwitterClient()
   val twitterauth = new TwitterClient().tweetCredantials()

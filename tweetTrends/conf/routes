@@ -3,7 +3,9 @@
 # ~~~~
 
 # Home page
-GET		/trend						controllers.Application.trending
+GET		/       					controllers.Application.trending
+GET		/ins						controllers.Application.ins
+#GET		/chunk						controllers.Application.chunk
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /webjars/*file              controllers.WebJarAssets.at(file)

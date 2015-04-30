@@ -1,5 +1,6 @@
 @* showData Template File *@
-@(tweet: List[(String,Int)])
+@import com.knoldus.model.Tweet
+@(tweet: List[Tweet])
 
 @main("Data") {
 	<div class = "container">
@@ -10,8 +11,8 @@
 				<table class="table table-hover">
 					@for(data <- tweet){
 						<tr>
-							<td>@data._1	</td>
-							<td>@data._2	</td>
+							<td>@data.username	</td>
+							<td>@data.id	</td>
 						</tr>
 					}
 				</table>

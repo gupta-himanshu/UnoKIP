@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug=true>
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern> [%thread] - [%logger]  %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>/home/knoldus/sparklog.log</file>
+		<encoder>
+			<pattern>%highlight([%level]) - [%date]  - [%logger]  %msg%n</pattern>
+		</encoder>
+	</appender>
+	<root level="info">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration> 
