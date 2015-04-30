@@ -5,7 +5,7 @@ $(document).ready(function() {
 var ajaxCallBar = (function() {
     $(document).ready(function() {
         $.ajax({
-            url : "/ajaxCall",
+            url : "/ajaxcall",
             type : "GET",
             success : function(jsonData) {
                 top_data = jsonData;

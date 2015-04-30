@@ -44,5 +44,11 @@ class ApplicationSpec extends PlaySpecification with Mockito {
 
       result.header.status must equalTo(OK)
     }
+    "Ajax Call" in new WithApplication(new FakeApplication){
+      mockDbService.findWholeDoc() returns Future.successful(tweet)
+      mockBirdTweet.trending(tweet) returns List()
+      val result = await(TestObj.ajaxCall.apply(FakeRequest(GET, "/ajaxcall")))
+      result.header.status must equalTo(200)
+    }
   }
 }
