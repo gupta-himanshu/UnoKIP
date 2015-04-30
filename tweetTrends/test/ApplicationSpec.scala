@@ -1,22 +1,21 @@
+
+import org.junit.runner.RunWith
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-import models._
+import org.specs2.mock.Mockito
+import scala.concurrent.Future
+import com.knoldus.db.DBServices
+import com.knoldus.model.Models.Tweet
+import com.knoldus.twittertrends.BirdTweet
+import play.api.mvc.Results
+import controllers.Application
 import play.api.test._
 import play.api.test.Helpers._
-import scala.concurrent.Future
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-import org.specs2.mock
-import org.specs2.mock.Mockito
-import play.api.mvc.Controller
-import controllers.Application
-import reactivemongo.bson.BSONDocumentReader
-import com.knoldus.tweetstreaming.Tweet
-import reactivemongo.bson.BSONDocumentWriter
-import org.specs2.execute.Results
-import akka.util.Timeout
-import scala.concurrent.duration._
+import play.api.test.FakeRequest
+import play.api.test.FakeApplication
+import play.api.test.PlaySpecification
+import play.api.test.WithApplication
 
 /**
  *
@@ -28,17 +27,21 @@ import scala.concurrent.duration._
 class ApplicationSpec extends PlaySpecification with Mockito {
 
   val tweet = List(Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss"), Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss"))
-  val mockfindDoc: FindDoc = mock[FindDoc]
 
+  val mockDbService: DBServices = mock[DBServices]
+  val mockBirdTweet:BirdTweet=mock[BirdTweet]
+  
   object TestObj extends Application {
-    val findDoc: FindDoc = mockfindDoc
+    val dbService: DBServices = mockDbService
+    val birdTweet:BirdTweet=mockBirdTweet
   }
 
   "Application" should {
-    "find all collection" in  new WithApplication(new FakeApplication) {
-      
-      mockfindDoc.findWholeDoc()(any[BSONDocumentReader[Tweet]], any[BSONDocumentWriter[Tweet]]) returns Future.successful(tweet)
-      val result = await(TestObj.show().apply(FakeRequest(GET, "/show")))
+    "find all collection" in new WithApplication(new FakeApplication) {
+      mockDbService.findWholeDoc() returns Future.successful(tweet)
+      mockBirdTweet.trending(tweet) returns List()
+      val result = await(TestObj.trending.apply(FakeRequest(GET, "/trend")))   
+
       result.header.status must equalTo(OK)
     }
   }
