@@ -1,36 +1,69 @@
-var data = 	[
-			{"x": 0,"y": 0,"w":20,"h": 380,"color": "green"},
-			{"x": 0,"y": 40,"w":200,"h": 308,"color": "#121212"},
-			{"x": 0,"y": 80,"w":120,"h": 238,"color": "purple"},
-			{"x": 0,"y": 0,"w":20,"h": 353,"color": "yellow"},
-			{"x": 0,"y": 40,"w":200,"h": 308,"color": "red"},
-			{"x": 0,"y": 120,"w":140,"h": 138,"color": "grey"}
-		];
-		
-        var width = 420,
-            barHeight = 25;
+$(document).ready(function() {
+    ajaxCallBar();
+})
 
-        var x = d3.scale.linear()
-            .domain([0, d3.max(data)])
-            .range([0, width]);
+var ajaxCallBar = (function() {
+    $(document).ready(function() {
+        $.ajax({
+            url : "/ajaxCall",
+            type : "GET",
+            success : function(jsonData) {
+                top_data = jsonData;
+                barChart(top_data);
+            },
+            dataType : "json"
+        });
+    });
+});
 
-        var chart = d3.select(".chart")
-            .attr("width", width)
-            .attr("height", barHeight * data.length);
-
-        var bar = chart.selectAll("g")
-            .data(data)
-            .enter().append("g")
-            .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
-
-        bar.append("rect")
-            .attr("width",  function (d) { return d.h; })
-            .attr("height", barHeight - 1)
-            .style("fill", function(d) { return d.color; });
-        	
-
-        bar.append("text")
-        .attr("x", function(d) { return d.h -3; })
-        .attr("y", barHeight / 2)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.color; });
+var barChart =	function (top_data) {
+	    $('#container').highcharts({
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: 'Top 10 Trends in Twitter'
+	        },
+	        subtitle: {
+	            text: 'Source:Twitter'
+	        },
+	        xAxis: {
+	            type: 'category',
+	            labels: {
+	                rotation: -45,
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'HashTags'
+	            }
+	        },
+	        legend: {
+	            enabled: false
+	        },
+	        tooltip: {
+	            pointFormat: 'Frequency: <b>{point.y:.0f}</b>'
+	        },
+	        series: [{
+	            name: 'HashTags',
+	            data: top_data,
+	            dataLabels: {
+	                enabled: true,
+	                rotation: -90,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                format: '{point.y:.0f}', // Zero decimal
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        }]
+	    });
+	}

@@ -1,6 +1,6 @@
 @* showData Template File *@
 @import play.api.libs.json.Json
-@(jsonData: play.api.libs.json.JsObject, data:List[(String,Int)])
+@(data:List[(String,Int)])
 @main("Data") {
 	<div class = "container">
 		@header("head")
@@ -17,7 +17,8 @@
 				</table>
 			</div>
 			<div class="col-md-6">
-			@chart(jsonData)
+
+			@chart()
 			
 			</div>
 		</div>

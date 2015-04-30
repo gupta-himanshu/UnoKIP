@@ -23,34 +23,29 @@ trait Application extends Controller {
   val dbService: DBServices
   val birdTweet: BirdTweet
 
-  def trending: Action[AnyContent] = Action.async {
-    
-    implicit val userFormat = Json.format[Tweet]
+ /**
+ * This is for ajax call
+ */
+  
+  def ajaxCall: Action[AnyContent] = Action.async {
     implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
     val tweets = dbService.findWholeDoc()
     val res = tweets.map(x => birdTweet.trending(x))
-    res.map { r => 
-      val(cat, catValue) = r.unzip
-      val js = Json.obj("cat" -> cat, "value" -> catValue)
-      Ok(views.html.showData(Json.obj("cat" -> cat, "value" -> catValue),r))
+    res.map { r =>
+      Ok(play.api.libs.json.Json.toJson(r))
     }.recover {
       case t: TimeoutException => InternalServerError(t.getMessage)
     }
   }
-
-  def convert: Action[AnyContent] = Action.async {
-    implicit val userFormat = Json.format[Tweet]
- 		implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
- 
+  
+  def trending: Action[AnyContent] = Action.async {
     val tweets = dbService.findWholeDoc()
     val res = tweets.map(x => birdTweet.trending(x))
-    res.map { r => 
-      val(cat, catValue) = r.unzip
-      Ok(views.html.convert(Json.obj("cat" -> cat, "value" -> catValue)))
+    res.map { r =>
+//      val (cat, catValue) = r.unzip
+      Ok(views.html.showData(r))
     }.recover {
       case t: TimeoutException => InternalServerError(t.getMessage)
     }
-
   }
-
 }
