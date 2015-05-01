@@ -2,10 +2,11 @@ package com.knoldus.db
 
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
+
 import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSuite
-import com.knoldus.model.Models.Tweet
-import reactivemongo.api.Cursor
+
+import com.knoldus.model.Tweet
 
 class DBStoreTest extends FunSuite with DBConnector with BeforeAndAfter {
 
@@ -16,10 +17,10 @@ class DBStoreTest extends FunSuite with DBConnector with BeforeAndAfter {
     val expectedres = true
     assert(finalRes === expectedres)
   }
-  test("fetching tweets from mongodb"){
-     val res = dbcrud.findWholeDoc()
-     val fres=Await.result(res, 5 second)
-     val exprectedres=12104
-     assert(fres.size===exprectedres)
+  test("fetching tweets from mongodb") {
+    val res = dbcrud.findWholeDoc()
+    val fres = Await.result(res, 5 second)
+    val exprectedres = 12104
+    assert(fres.size === exprectedres)
   }
 }

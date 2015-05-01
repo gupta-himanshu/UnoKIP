@@ -19,7 +19,7 @@ private object TweetCollect extends App {
   val ssc: StreamingContext = new StreamingContext(sc, Seconds(streamInterval))
   val client = new TwitterClient()
   val twitterauth = new TwitterClient().tweetCredantials()
-  val tweetDstream = TwitterUtils.createStream(ssc, Option(twitterauth.getAuthorization))
+  val tweetDstream = TwitterUtils.createStream(ssc, Option(twitterauth.getAuthorization), Seq("scala"))
   val tweets = tweetDstream.filter { x => x.getUser.getLang == "en" }.map { x =>
     Tweet(x.getId, x.getSource, x.getText, x.isRetweet(), x.getUser.getName,
       x.getUser.getScreenName, x.getUser.getURL, x.getUser.getId, x.getUser.getLang)

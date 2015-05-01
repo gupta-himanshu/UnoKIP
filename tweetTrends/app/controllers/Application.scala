@@ -1,7 +1,7 @@
 package controllers
 
 import java.util.concurrent.TimeoutException
-
+import scala.concurrent.Future
 import com.knoldus.db.DBServices
 import com.knoldus.twittertrends.BirdTweet
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -15,32 +15,34 @@ object Application extends Application {
   val birdTweet = BirdTweet
 }
 
-trait Application extends Controller{
+trait Application extends Controller {
   this: Controller =>
 
   val dbService: DBServices
   val birdTweet: BirdTweet
 
   def trending: Action[AnyContent] = Action.async {
-  //  val pageNum=dbService.findTrends().map{ x => x.head.pageNum }
-    val tweets = dbService.findWholeDoc()
-    val trends = dbService.findTrends() 
-    val res = tweets.flatMap { x => trends.map { y => birdTweet.trending(x, y,1) } }
+    val trends = dbService.findTrends()
+    val pageNum = trends.map { x =>
+      x.headOption match {
+        case None        => 1
+        case Some(trend) => trend.pageNum + 1
+      }
+    }
+
+    val tweets = for {
+      pgNo <- pageNum
+      tweets <- dbService.filterQuery(pgNo, ConstantUtil.pageSize)
+    } yield (tweets, pgNo)
+
+    val res = tweets.flatMap {
+      case (listOfTweets, pgNo) => trends.map { y =>
+        if (listOfTweets.size > 0) birdTweet.trending(listOfTweets, y, pgNo)
+        else y.map(trend => (trend.hashtag, trend.trend))
+      }
+    }
     res.map { r => Ok(views.html.showData(r)) }.recover {
       case t: TimeoutException => InternalServerError(t.getMessage)
     }
   }
-  
-  def ins=Action.async{
-    val ins=dbService.filterQuery(2, ConstantUtil.pageSize)
-    ins.map { x => Ok(views.html.showData1(x)) }.recover {
-      case t: TimeoutException => InternalServerError(t.getMessage)
-    }  
-  }
-  
-//  def chunk=Action{
-//    val s=dbService.findchunk(1, 100)
-//     s.map { r => Ok(views.html.showData1(r)) }
-//    Ok("ss")
-//  }
 }

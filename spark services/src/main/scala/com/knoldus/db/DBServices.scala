@@ -31,16 +31,14 @@ trait DBServices extends DBConnector {
   }
 
   def insertTrends(trends: Trends): Future[Boolean] = {
-    collTrends.insert(BSONDocument("hashtag" -> trends.hashtag, "trend" -> trends.trend))
-      .map { lastError => lastError.ok
-      }
+    collTrends.insert(trends).map { lastError => lastError.ok }
   }
 
   def removeTrends() = {
     collTrends.remove(BSONDocument())
   }
 
-  def filterQuery(pageNumber: Int=0, pageSize: Int): Future[List[Tweet]] = {
+  def filterQuery(pageNumber: Int, pageSize: Int): Future[List[Tweet]] = {
     collTweet.find(BSONDocument()).options(QueryOpts((pageNumber - 1) * pageSize, pageSize)).cursor[Tweet].collect[List](pageSize)
   }
 }
