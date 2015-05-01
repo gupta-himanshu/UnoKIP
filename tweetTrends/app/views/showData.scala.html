@@ -1,23 +1,19 @@
 @* showData Template File *@
-@(tweet: List[(String,Int)])
 
 @main("Data") {
-	<div class = "container">
+	<div class = "container-fluid">
 		@header("head")
 		@menubar("menu")
-		<div class = "row">
-			<div class="col-md-8">
-				<table class="table table-hover">
-					@for(data <- tweet){
-						<tr>
-							<td>@data._1	</td>
-							<td>@data._2	</td>
-						</tr>
-					}
-				</table>
-			</div>
-			<div class="col-md-4" style="color:blue">Place for Graph
-			
+		<div class = "container">
+			<div class = "row" style="	min-height: 400px;">
+				<div class="col-md-6">
+					<table id="table-body" class="table table-hover">
+						<img class="LoadingImage" src="@routes.Assets.at("images/loading-circle.gif")">
+					</table>
+				</div>
+				<div class="col-md-6">
+					@chart()
+				</div>
 			</div>
 		</div>
 		@footer()

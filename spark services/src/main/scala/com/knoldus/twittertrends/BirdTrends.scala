@@ -10,6 +10,7 @@ import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.topTrending
 
 trait BirdTweet {
+<<<<<<< HEAD
   def trending(tweets: List[Tweet], trend: List[Trends], pageNum: Int): List[(String, Int)] = {
     /*val pageNum=trend.headOption match{
       case None=>0
@@ -29,6 +30,15 @@ trait BirdTweet {
       case Failure(e)      =>
     }
     topTenTrends
+=======
+  def trending(tweets: List[Tweet]): List[(String, Int)] = {
+    val createRDD = Global.sc parallelize (tweets)
+    val hashtags = createRDD flatMap { tweet => tweet.content split (" ") } filter { word => word.startsWith("#") }
+    val pair = hashtags.map { hashtag => (hashtag, 1) } reduceByKey (_ + _)
+    val trends = pair sortBy ({ case (key, value) => value }, false)
+    val topTenTrends = trends take (topTrending)
+    topTenTrends toList
+>>>>>>> 1da243a207e1e40e64cfa05550a0e74e35f666de
   }
 }
 
