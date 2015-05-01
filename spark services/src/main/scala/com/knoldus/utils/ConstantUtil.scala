@@ -8,4 +8,5 @@ object ConstantUtil {
   val numOfChannels = 5
   val streamInterval = 10
   val topTrending = 10
+  val pageSize=1000
 }

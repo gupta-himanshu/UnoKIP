@@ -1,17 +1,17 @@
 @* showData Template File *@
-@import play.api.libs.json.Json
+
 @main("Data") {
 	<div class = "container-fluid">
 		@header("head")
 		@menubar("menu")
 		<div class = "container">
 			<div class = "row" style="	min-height: 400px;">
-				<div class="col-md-6">
+				<div class="col-md-6 col-xs-12">
 					<table id="table-body" class="table table-hover">
 						<img class="LoadingImage" src="@routes.Assets.at("images/loading-circle.gif")">
 					</table>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6 col-xs-12">
 					@chart()
 				</div>
 			</div>
