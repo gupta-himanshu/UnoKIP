@@ -15,7 +15,6 @@ import com.knoldus.utils.ConstantUtil.streamInterval
  */
 
 private object TweetCollect extends App {
-  Logger.getLogger("org").setLevel(Level.OFF)
   val ssc: StreamingContext = new StreamingContext(sc, Seconds(streamInterval))
   val client = new TwitterClient()
   val twitterauth = new TwitterClient().tweetCredantials()

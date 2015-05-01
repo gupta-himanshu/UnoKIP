@@ -13,11 +13,7 @@ trait DBServices extends DBConnector {
   //  Logger.getLogger("org").setLevel(Level.OFF)
 
   val db = connector("localhost", "rmongo", "username", "Password")
-<<<<<<< HEAD
-  val collTweet = db("table1")
-=======
-  val coll = db("tweets")
->>>>>>> 1da243a207e1e40e64cfa05550a0e74e35f666de
+  val collTweet = db("tweets")
   def insert(tweet: Tweet): Future[Boolean] = {
     collTweet.insert(tweet).map { lastError =>
       lastError.ok
