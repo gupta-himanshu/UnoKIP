@@ -4,8 +4,9 @@ $(document).ready(function() {
 
 var ajaxCallBar = (function() {
     $(document).ready(function() {
-    	$("#LoadingImage").show();
+    	$(".LoadingImage").show();
     	$('#table-body').hide();
+    	$('#container').hide();
         $.ajax({
             url : "/ajaxcall",
             type : "GET",
@@ -23,8 +24,9 @@ var ajaxCallBar = (function() {
             },
             dataType : "json",
             complete: function(){
-                $("#LoadingImage").hide();
+                $(".LoadingImage").hide();
                 $('#table-body').show();
+                $('#container').show();
               }
         });
     });

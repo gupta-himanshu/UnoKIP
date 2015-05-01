@@ -19,10 +19,11 @@
   	background-color: aqua;
   	border-radius: 0 10px 10px 0;
 	}
-#LoadingImage{
+.LoadingImage{
 	position:absolute;
 	left:40%;
 	top: 90px;
 	width: 100px;
 	height: 100px;
+	z-index:3;
 }
