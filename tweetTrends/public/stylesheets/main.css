@@ -9,3 +9,20 @@
 		dy:.35em;
 		text-anchor: middle;
        }
+ #fixed-menubar {
+  	position: fixed;
+  	left: 0;
+  	top: 25%;
+  	width: 40px;
+  	margin-top: -2.5em;
+  	z-index:1;
+  	background-color: aqua;
+  	border-radius: 0 10px 10px 0;
+	}
+#LoadingImage{
+	position:absolute;
+	left:40%;
+	top: 90px;
+	width: 100px;
+	height: 100px;
+}

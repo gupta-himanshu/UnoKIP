@@ -37,13 +37,7 @@ trait Application extends Controller {
 /**
  * This is to render page.
  */
-  def trending: Action[AnyContent] = Action.async {
-    val tweets = dbService.findWholeDoc()
-    val res = tweets.map(x => birdTweet.trending(x))
-    res.map { r =>
-      Ok(views.html.showData(r))
-    }.recover {
-      case t: TimeoutException => InternalServerError(t.getMessage)
-    }
+  def trending: Action[AnyContent] = Action {
+      Ok(views.html.showData())
   }
 }

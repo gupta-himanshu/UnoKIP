@@ -1,25 +1,19 @@
 @* showData Template File *@
 @import play.api.libs.json.Json
-@(data:List[(String,Int)])
 @main("Data") {
-	<div class = "container">
+	<div class = "container-fluid">
 		@header("head")
 		@menubar("menu")
-		<div class = "row">
-			<div class="col-md-6">
-				<table class="table table-hover">
-					@for(d <- data){
-						<tr>
-							<td>@d._1	</td>
-							<td>@d._2	</td>
-						</tr>
-					}
-				</table>
-			</div>
-			<div class="col-md-6">
-
-			@chart()
-			
+		<div class = "container">
+			<div class = "row" style="	min-height: 400px;">
+				<div class="col-md-6">
+					<table id="table-body" class="table table-hover">
+						<img id="LoadingImage" src="@routes.Assets.at("images/loading-circle.gif")">
+					</table>
+				</div>
+				<div class="col-md-6">
+					@chart()
+				</div>
 			</div>
 		</div>
 		@footer()

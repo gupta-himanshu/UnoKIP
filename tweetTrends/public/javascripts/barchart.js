@@ -4,18 +4,32 @@ $(document).ready(function() {
 
 var ajaxCallBar = (function() {
     $(document).ready(function() {
+    	$("#LoadingImage").show();
+    	$('#table-body').hide();
         $.ajax({
             url : "/ajaxcall",
             type : "GET",
             success : function(jsonData) {
                 top_data = jsonData;
                 barChart(top_data);
+                $('#table-body tr').remove();
+                for (i in top_data){
+                    $('#table-body').append(
+                        "<tr>" +
+                        "<td>" + top_data[i][0] + "</td>" +
+                        "<td>" + top_data[i][1] + "</td>" +
+                        "</tr>");
+                    };
             },
-            dataType : "json"
+            dataType : "json",
+            complete: function(){
+                $("#LoadingImage").hide();
+                $('#table-body').show();
+              }
         });
     });
 });
-
+setInterval(ajaxCallBar, 5000);
 var barChart =	function (top_data) {
 	    $('#container').highcharts({
 	        chart: {
