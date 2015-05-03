@@ -32,7 +32,7 @@ var ajaxCallBar = (function() {
 				});
 			});
 });
-setInterval(ajaxCallBar, 5000);
+setInterval(ajaxCallBar, 10000);
 var barChart = function(top_data) {
 	$('#container').highcharts({
 		chart : {
