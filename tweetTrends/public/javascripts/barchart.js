@@ -15,13 +15,13 @@ var ajaxCallBar = (function() {
 						top_data = jsonData;
 						barChart(top_data);
 						$('#table-body tr').remove();
+						$('#table-body').append("<tr><th>HashTags</th><th>Number</th></tr>");
 						for (i in top_data) {
 							$('#table-body').append(
 									"<tr>" + "<td>" + top_data[i][0] + "</td>"
 											+ "<td>" + top_data[i][1] + "</td>"
 											+ "</tr>");
-						}
-						;
+						};
 					},
 					dataType : "json",
 					complete : function() {
