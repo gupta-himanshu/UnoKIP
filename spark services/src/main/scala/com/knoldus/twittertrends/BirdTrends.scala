@@ -19,7 +19,7 @@ trait BirdTweet {
     val createRDDTweet = Global.sc parallelize (tweets)
     val trendsList = trend.map { trends => (trends.hashtag, trends.trend) }
     val trendsRDD = Global.sc.parallelize(trendsList)
-    val hashtags = createRDDTweet flatMap { tweet => tweet.content split (" ") } filter { word => word.startsWith("#") }
+    val hashtags = createRDDTweet flatMap { tweet => tweet.content split (" ") } filter { word => word.startsWith("#") } filter{ !_.contains("#ass","#porn","#sex")}
     val pair = hashtags.map((_, 1))
     val aggPair = pair.union(trendsRDD)
     val trends = aggPair reduceByKey (_ + _) sortBy ({ case (_, value) => value }, false)
