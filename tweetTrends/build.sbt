@@ -14,3 +14,5 @@ libraryDependencies ++= Seq(
   						"org.webjars" 			%	"bootstrap" 		% "3.1.1-2",
 						"com.knoldus"          %%   "spark-services"  %   "1.0"
 )
+
+ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;controllers.ref.*;controllers.javascript.*;"

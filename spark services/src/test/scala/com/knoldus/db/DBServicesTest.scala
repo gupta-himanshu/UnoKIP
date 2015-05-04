@@ -2,13 +2,12 @@ package com.knoldus.db
 
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
-
 import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSuite
-
 import com.knoldus.model.Tweet
+import com.knoldus.utils.ConstantUtil
 
-class DBStoreTest extends FunSuite with DBConnector with BeforeAndAfter {
+class DBServicesTest extends FunSuite with DBConnector with BeforeAndAfter {
 
   val dbcrud = DBServices
   test("insertion of tweets") {
@@ -18,9 +17,9 @@ class DBStoreTest extends FunSuite with DBConnector with BeforeAndAfter {
     assert(finalRes === expectedres)
   }
   test("fetching tweets from mongodb") {
-    val res = dbcrud.findWholeDoc()
+    val res = dbcrud.filterQuery(1, ConstantUtil.pageSize)
     val fres = Await.result(res, 5 second)
-    val exprectedres = 12104
-    assert(fres.size === exprectedres)
+    val exprectedres = 100
+    assert(fres.size === 100)
   }
 }

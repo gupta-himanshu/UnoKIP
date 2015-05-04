@@ -6,7 +6,6 @@ import org.junit.runner._
 import org.specs2.mock.Mockito
 import scala.concurrent.Future
 import com.knoldus.db.DBServices
-import com.knoldus.model.Models.Tweet
 import com.knoldus.twittertrends.BirdTweet
 import play.api.mvc.Results
 import controllers.Application
@@ -16,6 +15,12 @@ import play.api.test.FakeRequest
 import play.api.test.FakeApplication
 import play.api.test.PlaySpecification
 import play.api.test.WithApplication
+import com.knoldus.model.Trends
+import com.knoldus.utils.ConstantUtil
+import com.knoldus.model.Tweet
+import twitter4j.Trend
+import java.util.concurrent.TimeoutException
+import com.knoldus.db.DBTrendServices
 
 /**
  *
@@ -27,33 +32,25 @@ import play.api.test.WithApplication
 class ApplicationSpec extends PlaySpecification with Mockito {
 
   val mockDbService: DBServices = mock[DBServices]
-  val mockBirdTweet:BirdTweet=mock[BirdTweet]
-  
+  val mockBirdTweet: BirdTweet = mock[BirdTweet]
+  val mockDbTrend: DBTrendServices = mock[DBTrendServices]
+
   object TestObj extends Application {
     val dbService: DBServices = mockDbService
-    val birdTweet:BirdTweet=mockBirdTweet
+    val birdTweet: BirdTweet = mockBirdTweet
+    val dbTrendService: DBTrendServices = mockDbTrend
   }
 
   "Application" should {
-<<<<<<< HEAD
     "trending" in new WithApplication(new FakeApplication) {
-     val tweets= mockDbService.findWholeDoc() returns Future.successful(List(Tweet(1223, "ss", "ss", true, "ss", "ss", "ss", 1234, "ss")))
-      val trend = mockBirdTweet.trending(tweets) returns List(("#worldcup", 100))
-       //val result = await(TestObj.trending.apply(FakeRequest(GET, "/")))
-        val home = route(FakeRequest(GET, "/")).get
-      home must equalTo(OK)
-=======
-    "find all collection" in new WithApplication(new FakeApplication) {
-      mockDbService.findWholeDoc() returns Future.successful(tweet)
-      mockBirdTweet.trending(tweet) returns List()
-      val result = await(TestObj.trending.apply(FakeRequest(GET, "/trend")))   
-
-      result.header.status must equalTo(OK)
->>>>>>> 1da243a207e1e40e64cfa05550a0e74e35f666de
+      val home = await(route(FakeRequest(GET, "/")).get)
+      home.header.status must equalTo(OK)
     }
-    "Ajax Call" in new WithApplication(new FakeApplication){
-      mockDbService.findWholeDoc() returns Future.successful(tweet)
-      mockBirdTweet.trending(tweet) returns List()
+
+    "Ajax Call" in new WithApplication(new FakeApplication) {
+      mockDbTrend.findTrends() returns Future(List(Trends("#source content", 5, 1)))
+      mockDbService.getChunckOfTweet(2, ConstantUtil.pageSize) returns Future(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")))
+      mockBirdTweet.trending(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")), List(Trends("#source content", 5, 1)), 2) returns List(("", 1))
       val result = await(TestObj.ajaxCall.apply(FakeRequest(GET, "/ajaxcall")))
       result.header.status must equalTo(200)
     }

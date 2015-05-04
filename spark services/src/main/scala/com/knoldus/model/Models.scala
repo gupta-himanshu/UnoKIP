@@ -15,6 +15,7 @@ import reactivemongo.bson.Macros
 case class Tweet(id: Long, source: String, content: String, retweet: Boolean, authName: String,
                  username: String, url: String, authId: Long, language: String)
 
+
 object Tweet {
   implicit val reader: BSONDocumentReader[Tweet] = Macros.reader[Tweet]
   implicit val writer: BSONDocumentWriter[Tweet] = Macros.writer[Tweet]
