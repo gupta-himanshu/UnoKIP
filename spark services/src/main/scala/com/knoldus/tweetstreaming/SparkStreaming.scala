@@ -13,6 +13,7 @@ import com.knoldus.utils.ConstantUtil.streamInterval
  */
 
 private object TweetCollect extends App {
+  
   val ssc: StreamingContext = new StreamingContext(sc, Seconds(streamInterval))
   val client = new TwitterClient()
   val twitterauth = new TwitterClient().tweetCredantials()

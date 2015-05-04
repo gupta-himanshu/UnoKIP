@@ -1,21 +1,21 @@
 @* showData Template File *@
 
-@main("Data") {
+@main("Show Data") {
 	<div class = "container-fluid">
-		@header("head")
-		@menubar("menu")
+		@header()
+		@menubar()
 		<div class = "container">
 			<div class = "row" style="	min-height: 400px;">
-				<div class="col-md-6 col-xs-12">
+				<div class="col-md-5 col-xs-12">
 					<table id="table-body" class="table table-hover">
 						<img class="LoadingImage" src="@routes.Assets.at("images/loading-circle.gif")">
 					</table>
 				</div>
 				<div class="col-md-6 col-xs-12">
-					@chart()
+					@chart()<br><br>
 				</div>
 			</div>
-		</div>
+		</div><br><br><br><br><br><br>
 		@footer()
 	</div>
 }

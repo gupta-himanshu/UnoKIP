@@ -18,6 +18,10 @@ object Application extends Application {
   val birdTweet = BirdTweet
 }
 
+/**
+ * @author knoldus
+ *
+ */
 trait Application extends Controller {
   this: Controller =>
 
@@ -25,6 +29,10 @@ trait Application extends Controller {
   val birdTweet: BirdTweet
   val dbTrendService: DBTrendServices
 
+ /**
+ * @return ajaxCall is used for fetching data as json from mongoDb collection
+ * and use it to render chart and table.
+ */
   def ajaxCall: Action[AnyContent] = Action.async {
     val trends = dbTrendService.findTrends()
     val pageNum = trends.map { listOfTrends =>
@@ -33,7 +41,6 @@ trait Application extends Controller {
         case None        => 1
       }
     }
-
     val tweets = for {
       pgNo <- pageNum
       tweets <- dbService.getChunckOfTweet(pgNo, ConstantUtil.pageSize)
@@ -49,13 +56,12 @@ trait Application extends Controller {
       Ok(play.api.libs.json.Json.toJson(r))
     }.recover {
       case t: TimeoutException => InternalServerError(t.getMessage)
-
     }
   }
-  /**
-   * This is to render page.
-   */
-  def trending: Action[AnyContent] = Action {
+ /**
+ * @return This is to render showData page.
+ */
+def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
   }
 }

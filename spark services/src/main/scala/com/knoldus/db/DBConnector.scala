@@ -24,4 +24,5 @@ trait DBConnector {
       authentications = credentials)
     connection(dbName)
   }
+  
 }
