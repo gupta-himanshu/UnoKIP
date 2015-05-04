@@ -3,7 +3,6 @@ package com.knoldus.core
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import com.typesafe.config.ConfigFactory
-import org.slf4j.LoggerFactory
 
 /**
  * @author knoldus

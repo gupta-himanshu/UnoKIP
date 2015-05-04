@@ -12,7 +12,7 @@ import com.knoldus.db.DBTrendServices
 class BirdTrendTest extends FunSuite with DBConnector {
   
   test("Test for top trends") {
-    val lisOfTweets = DBServices.filterQuery(2, ConstantUtil.pageSize)
+    val lisOfTweets = DBServices.getChunckOfTweet(2, ConstantUtil.pageSize)
     val listOfTrends=DBTrendServices.findTrends()
     val tweets=Await.result(lisOfTweets, 1 second)
     val trends=Await.result(listOfTrends, 1 second)

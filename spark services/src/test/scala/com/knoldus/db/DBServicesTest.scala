@@ -17,7 +17,7 @@ class DBServicesTest extends FunSuite with DBConnector with BeforeAndAfter {
     assert(finalRes === expectedres)
   }
   test("fetching tweets from mongodb") {
-    val res = dbcrud.filterQuery(1, ConstantUtil.pageSize)
+    val res = dbcrud.getChunckOfTweet(1, ConstantUtil.pageSize)
     val fres = Await.result(res, 5 second)
     val exprectedres = 100
     assert(fres.size === 100)
