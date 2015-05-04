@@ -1,18 +1,15 @@
 package controllers
 
-import play.api.libs.json.Json
-import play.api.libs.json.Writes
 import java.util.concurrent.TimeoutException
 import scala.concurrent.Future
-import scala.concurrent.Future
 import com.knoldus.db.DBServices
+import com.knoldus.db.DBTrendServices
 import com.knoldus.twittertrends.BirdTweet
 import com.knoldus.utils.ConstantUtil
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
-import com.knoldus.db.DBTrendServices
 import utils.JsonParserUtility.tuple2
 
 object Application extends Application {
@@ -27,11 +24,11 @@ trait Application extends Controller {
   val dbService: DBServices
   val birdTweet: BirdTweet
   val dbTrendService: DBTrendServices
-  
+
   def ajaxCall: Action[AnyContent] = Action.async {
     val trends = dbTrendService.findTrends()
-    val pageNum = trends.map { x =>
-      x.headOption match {
+    val pageNum = trends.map { listOfTrends =>
+      listOfTrends.headOption match {
         case Some(trend) => trend.pageNum + 1
         case None        => 1
       }
@@ -43,9 +40,9 @@ trait Application extends Controller {
     } yield (tweets, pgNo)
 
     val res = tweets.flatMap {
-      case (listOfTweets, pgNo) => trends.map { y =>
-        if (listOfTweets.size > 0) { birdTweet.trending(listOfTweets, y, pgNo) }
-        else { y.map(trend => (trend.hashtag, trend.trend)).sortBy({ case (hashtag, trend) => trend }).reverse }
+      case (listOfTweets, pgNo) => trends.map { listOfTrends =>
+        if (listOfTweets.size > 0) { birdTweet.trending(listOfTweets, listOfTrends, pgNo) }
+        else { listOfTrends.map(trend => (trend.hashtag, trend.trend)).sortBy({ case (hashtag, trend) => trend }).reverse }
       }
     }
     res.map { r =>

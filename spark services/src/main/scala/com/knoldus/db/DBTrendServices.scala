@@ -10,7 +10,7 @@ trait DBTrendServices extends DBConnector {
   val collTrends = db("trend")
   val query = BSONDocument()
   val filter = BSONDocument()
-
+  
   def insertTrends(trends: Trends): Future[Boolean] = {
     collTrends.insert(trends).map { lastError => lastError.ok }
   }

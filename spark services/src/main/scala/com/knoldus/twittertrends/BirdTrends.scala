@@ -13,7 +13,6 @@ import com.knoldus.utils.ConstantUtil.topTrending
 trait BirdTweet {
   this: BirdTweet =>
 
-  val dbService: DBServices
   val dbTrendService: DBTrendServices
 
   def trending(tweets: List[Tweet], trend: List[Trends], pageNum: Int): List[(String, Int)] = {
@@ -34,6 +33,5 @@ trait BirdTweet {
 }
 
 object BirdTweet extends BirdTweet {
-  val dbService = DBServices
   val dbTrendService = DBTrendServices
 }
