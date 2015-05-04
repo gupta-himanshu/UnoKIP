@@ -30,7 +30,6 @@ trait Application extends Controller {
   val dbService: DBServices
   val birdTweet: BirdTweet
   val dbTrendService: DBTrendServices
-  
  /**
  * @return ajaxCall is used for fetching data as json from mongoDb collection
  * and use it to render chart and table.
@@ -62,8 +61,6 @@ def ajaxCall: Action[AnyContent] = Action.async {
       case t: TimeoutException => InternalServerError(t.getMessage)
     }
   }
-  
-  
  /**
  * @return This is to render showData page.
  */
