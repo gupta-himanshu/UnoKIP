@@ -11,21 +11,17 @@ import com.knoldus.utils.ConstantUtil.topTrending
 
 trait BirdTweet {
   def trending(tweets: List[Tweet], trend: List[Trends], pageNum: Int): List[(String, Int)] = {
-    /*val pageNum=trend.headOption match{
-      case None=>0
-      case Some(trend)=>trend.pageNum
-    }*/
     val dbservices = DBServices
     val createRDDTweet = Global.sc parallelize (tweets)
     val trendsList = trend.map { x => (x.hashtag, x.trend) }
     val trendsRDD = Global.sc.parallelize(trendsList)
     val hashtags = createRDDTweet flatMap { tweet => tweet.content split (" ") } filter { word => word.startsWith("#") }
-    val pair = hashtags.map { hashtag => (hashtag, 1) }
+    val pair = hashtags.map((_, 1))
     val aggPair = pair.union(trendsRDD)
-    val trends = aggPair reduceByKey (_ + _) sortBy ({ case (key, value) => value }, false)
+    val trends = aggPair reduceByKey (_ + _) sortBy ({ case (_, value) => value }, false)
     val topTenTrends = trends take (topTrending) toList;
     dbservices.removeTrends() onComplete {
-      case Success(result) => topTenTrends.map({ case (hashtag, trend) => Trends(hashtag, trend,pageNum)}) map { x => dbservices.insertTrends(x) }
+      case Success(result) => topTenTrends.map({ case (hashtag, trend) => Trends(hashtag, trend, pageNum) }) map { trends => dbservices.insertTrends(trends) }
       case Failure(e)      =>
     }
     topTenTrends

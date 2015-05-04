@@ -26,7 +26,6 @@ trait Application extends Controller {
   val birdTweet: BirdTweet
 
   def ajaxCall: Action[AnyContent] = Action.async {
-
     val trends = dbService.findTrends()
     val pageNum = trends.map { x =>
       x.headOption match {
@@ -34,7 +33,6 @@ trait Application extends Controller {
         case Some(trend) => trend.pageNum + 1
       }
     }
-
     val tweets = for {
       pgNo <- pageNum
       tweets <- dbService.filterQuery(pgNo, ConstantUtil.pageSize)
@@ -51,9 +49,9 @@ trait Application extends Controller {
       Ok(play.api.libs.json.Json.toJson(r))
     }.recover {
       case t: TimeoutException => InternalServerError(t.getMessage)
-
     }
   }
+  
   /**
    * This is to render page.
    */
