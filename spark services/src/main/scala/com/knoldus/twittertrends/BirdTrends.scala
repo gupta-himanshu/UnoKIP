@@ -5,17 +5,19 @@ import scala.util.Failure
 import scala.util.Success
 import com.knoldus.core.Global
 import com.knoldus.db.DBServices
+import com.knoldus.db.DBTrendServices
 import com.knoldus.model.Trends
 import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.topTrending
-import com.knoldus.db.DBTrendServices
 
 trait BirdTweet {
+  this: BirdTweet =>
+
+  val dbTrendService: DBTrendServices
+
   def trending(tweets: List[Tweet], trend: List[Trends], pageNum: Int): List[(String, Int)] = {
-    val dbservices = DBServices
-    val dbTrendService = DBTrendServices
     val createRDDTweet = Global.sc parallelize (tweets)
-    val trendsList = trend.map { x => (x.hashtag, x.trend) }
+    val trendsList = trend.map { trends => (trends.hashtag, trends.trend) }
     val trendsRDD = Global.sc.parallelize(trendsList)
     val hashtags = createRDDTweet flatMap { tweet => tweet.content split (" ") } filter { word => word.startsWith("#") }
     val pair = hashtags.map((_, 1))
@@ -31,4 +33,6 @@ trait BirdTweet {
   }
 }
 
-object BirdTweet extends BirdTweet
+object BirdTweet extends BirdTweet {
+  val dbTrendService = DBTrendServices
+}

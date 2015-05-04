@@ -2,17 +2,15 @@ package controllers
 
 import java.util.concurrent.TimeoutException
 import scala.concurrent.Future
-import scala.concurrent.Future
 import com.knoldus.db.DBServices
+import com.knoldus.db.DBTrendServices
 import com.knoldus.twittertrends.BirdTweet
 import com.knoldus.utils.ConstantUtil
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
-import play.api.libs.json.Writes
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
-import com.knoldus.db.DBTrendServices
+import utils.JsonParserUtility.tuple2
 
 object Application extends Application {
   val dbService = DBServices
@@ -30,17 +28,17 @@ trait Application extends Controller {
   val dbService: DBServices
   val birdTweet: BirdTweet
   val dbTrendService: DBTrendServices
+
  /**
  * @return ajaxCall is used for fetching data as json from mongoDb collection
  * and use it to render chart and table.
  */
-def ajaxCall: Action[AnyContent] = Action.async {
-
+  def ajaxCall: Action[AnyContent] = Action.async {
     val trends = dbTrendService.findTrends()
-    val pageNum = trends.map { x =>
-      x.headOption match {
-        case None        => 1
+    val pageNum = trends.map { listOfTrends =>
+      listOfTrends.headOption match {
         case Some(trend) => trend.pageNum + 1
+        case None        => 1
       }
     }
     val tweets = for {
@@ -49,12 +47,11 @@ def ajaxCall: Action[AnyContent] = Action.async {
     } yield (tweets, pgNo)
 
     val res = tweets.flatMap {
-      case (listOfTweets, pgNo) => trends.map { y =>
-        if (listOfTweets.size > 0) birdTweet.trending(listOfTweets, y, pgNo)
-        else y.map(trend => (trend.hashtag, trend.trend)).sortBy({ case (hashtag, trend) => trend }).reverse
+      case (listOfTweets, pgNo) => trends.map { listOfTrends =>
+        if (listOfTweets.size > 0) { birdTweet.trending(listOfTweets, listOfTrends, pgNo) }
+        else { listOfTrends.map(trend => (trend.hashtag, trend.trend)).sortBy({ case (hashtag, trend) => trend }).reverse }
       }
     }
-    implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
     res.map { r =>
       Ok(play.api.libs.json.Json.toJson(r))
     }.recover {
