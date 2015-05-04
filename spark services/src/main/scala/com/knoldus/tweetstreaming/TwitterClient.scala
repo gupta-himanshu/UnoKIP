@@ -17,7 +17,7 @@ class TwitterClient {
   private val ACCESS_TOKEN_SECRET = config.getString("twitter4j.oauth.accessTokenSecret")
 
   /**
- * Method for authorize application and user to communicate with twitter 
+ * Method for authorize application and user to communicate with twitter
  * @return Twitter
  */
 def tweetCredantials(): Twitter = {

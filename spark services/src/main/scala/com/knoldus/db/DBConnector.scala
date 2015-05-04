@@ -9,7 +9,6 @@ import com.typesafe.config.ConfigFactory
 
 trait DBConnector {
 
- 
   val config = ConfigFactory.load()
   val host: String = config.getString("db.hostName")
   val dbName:String=config.getString("db.dbName")
@@ -18,7 +17,7 @@ trait DBConnector {
   val db = connector(host, dbName, username, pass)
 
  /**
- * This function create a connection to a mongoDB database using reactive mongo driver 
+ * This function create a connection to a mongoDB database using reactive mongo driver
  * @param host
  * @param dbName
  * @param userName
@@ -32,5 +31,4 @@ def connector(host: String, dbName: String, userName: String, password: String):
       authentications = credentials)
     connection(dbName)
   }
-  
 }
