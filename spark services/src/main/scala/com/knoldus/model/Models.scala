@@ -7,6 +7,7 @@ import reactivemongo.bson.Macros
 /**
  * @author knoldus
  */
+
 // Domain for Tweets
 case class Tweet(id: Long, source: String, content: String, retweet: Boolean, authName: String,
                  username: String, url: String, authId: Long, language: String)

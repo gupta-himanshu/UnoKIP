@@ -12,6 +12,7 @@ import com.knoldus.utils.ConstantUtil.streamInterval
  * @author knoldus
  */
 
+//This is main object which is collect tweets from twitter stream and perist in mongoDB
 private object TweetCollect extends App {
   
   val ssc: StreamingContext = new StreamingContext(sc, Seconds(streamInterval))
