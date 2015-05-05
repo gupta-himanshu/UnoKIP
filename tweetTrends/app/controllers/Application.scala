@@ -59,7 +59,7 @@ trait Application extends Controller {
     }
   }
  /**
- * @return This is to render showData page.
+ * @return This is to render showData template page.
  */
 def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
