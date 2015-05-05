@@ -16,7 +16,11 @@ class TwitterClient {
   private val ACCESS_TOKEN = config.getString("twitter4j.oauth.accessToken")
   private val ACCESS_TOKEN_SECRET = config.getString("twitter4j.oauth.accessTokenSecret")
 
-  def tweetCredantials(): Twitter = {
+  /**
+ * Method for authorize application and user to communicate with twitter
+ * @return Twitter
+ */
+def tweetCredantials(): Twitter = {
     val twitter: Twitter = new TwitterFactory().getInstance
     twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_KEY_SECRET)
     twitter.setOAuthAccessToken(new AccessToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET))

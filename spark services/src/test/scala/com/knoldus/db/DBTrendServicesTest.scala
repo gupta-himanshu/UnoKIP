@@ -8,7 +8,7 @@ import org.scalatest.FunSuite
 import scala.concurrent.duration.DurationInt
 import com.knoldus.model.Trends
 
-class DBTrendServicesTest extends FunSuite with DBConnector with BeforeAndAfter with DBTrendServices{
+class DBTrendServicesTest extends FunSuite with BeforeAndAfter with DBTrendServices{
 
   test("insertion of trends") {
     val res = insertTrends(Trends("#source content", 5, 1))

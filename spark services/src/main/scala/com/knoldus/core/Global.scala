@@ -8,6 +8,8 @@ import com.typesafe.config.ConfigFactory
  * @author knoldus
  */
 
+//Global spark context
+
 object Global {
   private val config = ConfigFactory.load()
   private val appName = config.getString("spark.conf.appName")

@@ -30,7 +30,7 @@ trait Application extends Controller {
   val dbTrendService: DBTrendServices
 
  /**
- * @return ajaxCall is used for fetching data as json from mongoDb collection
+ * @return ajaxCall is used for fetching data as JSON from mongoDb collection
  * and use it to render chart and table.
  */
   def ajaxCall: Action[AnyContent] = Action.async {

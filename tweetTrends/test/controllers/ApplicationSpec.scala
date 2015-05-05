@@ -1,26 +1,19 @@
-package controllers
+package controllers;
 
-import org.junit.runner.RunWith
-import org.specs2.mutable._
-import org.specs2.runner._
-import org.junit.runner._
-import org.specs2.mock.Mockito
 import scala.concurrent.Future
+import org.junit.runner.RunWith
+import org.specs2.mock.Mockito
 import com.knoldus.db.DBServices
+import com.knoldus.db.DBTrendServices
+import com.knoldus.model.Trends
+import com.knoldus.model.Tweet
 import com.knoldus.twittertrends.BirdTweet
-import play.api.mvc.Results
-import play.api.test._
-import play.api.test.Helpers._
-import play.api.test.FakeRequest
+import com.knoldus.utils.ConstantUtil
 import play.api.test.FakeApplication
+import play.api.test.FakeRequest
 import play.api.test.PlaySpecification
 import play.api.test.WithApplication
-import com.knoldus.model.Trends
-import com.knoldus.utils.ConstantUtil
-import com.knoldus.model.Tweet
-import twitter4j.Trend
-import java.util.concurrent.TimeoutException
-import com.knoldus.db.DBTrendServices
+import org.specs2.runner.JUnitRunner
 
 /**
  *
@@ -43,17 +36,42 @@ class ApplicationSpec extends PlaySpecification with Mockito {
 
   "Application" should {
     "trending" in new WithApplication(new FakeApplication) {
-      val result = await(route(FakeRequest()).get)
-      result.header.status must equalTo(OK)
+      val home = await(route(FakeRequest(GET, "/")).get)
+      home.header.status must equalTo(OK)
     }
 
-    "Ajax Call" in new WithApplication(new FakeApplication) {
+    "Ajax Call when we get chunck of tweets" in new WithApplication(new FakeApplication) {
       mockDbTrend.findTrends() returns Future(List(Trends("#source content", 5, 1)))
       mockDbService.getChunckOfTweet(2, ConstantUtil.pageSize) returns Future(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")))
       mockBirdTweet.trending(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")), List(Trends("#source content", 5, 1)), 2) returns List(("", 1))
-      
-      val result = await(TestObj.ajaxCall.apply(FakeRequest()))
+      val result = await(TestObj.ajaxCall.apply(FakeRequest(GET, "/ajaxcall")))
       result.header.status must equalTo(200)
+    }
+    
+   
+    "Ajax Call when we get Nil tweet list" in new WithApplication(new FakeApplication) {
+      mockDbTrend.findTrends() returns Future(List(Trends("#source content", 5, 1)))
+      mockDbService.getChunckOfTweet(2, ConstantUtil.pageSize) returns Future(List())
+      val result = await(TestObj.ajaxCall.apply(FakeRequest(GET, "/ajaxcall")))
+      result.header.status must equalTo(200)
+    }
+    
+    
+    "Ajax Call when we get Nil trends list" in new WithApplication(new FakeApplication) {
+      mockDbTrend.findTrends() returns Future(Nil)
+      mockDbService.getChunckOfTweet(1, ConstantUtil.pageSize) returns Future(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")))
+      mockBirdTweet.trending(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")), Nil, 1) returns List(("", 1))
+      val result = await(TestObj.ajaxCall.apply(FakeRequest(GET, "/ajaxcall")))
+      result.header.status must equalTo(200)
+    }
+    
+      "Ajax Call when timeout happen" in new WithApplication(new FakeApplication) {
+      mockDbTrend.findTrends() returns Future(Nil)
+      mockDbService.getChunckOfTweet(1, ConstantUtil.pageSize) returns Future(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")))
+      //mockBirdTweet.trending(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")), Nil, 1) returns (throw new TimeoutException)
+      val result = await(TestObj.ajaxCall.apply(FakeRequest(GET, "/ajaxcall")))
+      result.header.status must equalTo(200)
+      
     }
   }
 }

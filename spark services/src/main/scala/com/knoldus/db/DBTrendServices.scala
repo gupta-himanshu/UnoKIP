@@ -10,16 +10,29 @@ trait DBTrendServices extends DBConnector {
   val collTrends = db("trend")
   val query = BSONDocument()
   val filter = BSONDocument()
-  
-  def insertTrends(trends: Trends): Future[Boolean] = {
+
+  /**
+ * Method to insert Trends object into mongoDB
+ * @param trends
+ * @return Future[Boolean]
+ */
+def insertTrends(trends: Trends): Future[Boolean] = {
     collTrends.insert(trends).map { lastError => lastError.ok }
   }
 
-  def findTrends(): Future[List[Trends]] = {
+  /**
+ * Fetch the list of Trends object from mongoDB
+ * @return List[Trends]
+ */
+def findTrends(): Future[List[Trends]] = {
     collTrends.find(query, filter).cursor[Trends].collect[List]()
   }
 
-  def removeTrends(): Future[Boolean] = {
+  /**
+ * Remove all documents from MongoDB
+ * @return
+ */
+def removeTrends(): Future[Boolean] = {
     collTrends.remove(query).map { lastError => lastError.ok }
   }
 }

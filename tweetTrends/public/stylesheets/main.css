@@ -16,7 +16,7 @@
   	border-radius: 10px 10px 10px 10px;
 	}
 	
-#icon {
+.icon {
   	width: 40px;
   	height:40px;
   	margin-left: 5px;
@@ -24,16 +24,6 @@
   	z-index:1;
   	border-radius: 5px 5px 5px 5px;
   	opacity: .5;
-	}
-	
-#icon:hover {
-  	width: 40px;
-  	height:40px;
-  	margin-left: 15px;
-  	margin-bottom:5px;
-  	z-index:1;
-  	border-radius: 5px 5px 5px 5px;
-  	opacity: 1;
 	}
 	
 .LoadingImage{
