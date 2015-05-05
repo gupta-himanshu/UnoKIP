@@ -19,9 +19,32 @@ $(document).ready(function() {
 		$( ".icon" ).animate({
 			    width: 40,
 			    height: 40,
-			    opacity: .5
+			    opacity: .6
 			  }, {duration: 'slow',
 				  easing: 'easeOutBounce'
 				});
+		});
+	$(window).scroll(function() {
+		var top = $(this).scrollTop();
+		if(top >30){
+			$(".logo").stop(true);	
+			$(".logo").clearQueue();
+			$(".logo").animate({
+				    width: 30,
+				    height: 30
+				  }, {duration: 'fast',
+					  easing: 'easeInSine'
+					});	
+		}
+		else{
+			$(".logo").stop(true);	
+			$(".logo").clearQueue();
+			$( ".logo" ).animate({
+			    width: 50,
+			    height: 50
+			  }, {duration: 'slow',
+				  easing: 'easeOutBounce'
+				});
+		}
 		});
 });

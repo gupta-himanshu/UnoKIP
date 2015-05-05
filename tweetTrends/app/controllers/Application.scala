@@ -45,7 +45,8 @@ trait Application extends Controller {
       pgNo <- pageNum
       tweets <- dbService.getChunckOfTweet(pgNo, ConstantUtil.pageSize)
     } yield (tweets, pgNo)
-
+    //if listOfTweets.size > 0 then it will aggregate the trend and tweet collection
+    //otherwise it will take trends from tweets.
     val res = tweets.flatMap {
       case (listOfTweets, pgNo) => trends.map { listOfTrends =>
         if (listOfTweets.size > 0) { birdTweet.trending(listOfTweets, listOfTrends, pgNo) }
@@ -59,7 +60,7 @@ trait Application extends Controller {
     }
   }
  /**
- * @return This is to render showData template page.
+ * This is to render showData template page.
  */
 def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())

@@ -27,15 +27,16 @@ trait BirdTweet {
     val trendsList = trend.map { trends => (trends.hashtag, trends.trend) }
     val trendsRDD = Global.sc.parallelize(trendsList)
     val hashtags = createRDDTweet.flatMap { tweet => tweet.content split (" ") }.filter { word => word.startsWith("#") }.
-      filter { ! _.contains("ass")}
+      filter { !_.contains("ass") }
     val pair = hashtags.map((_, 1))
     val aggPair = pair.union(trendsRDD)
     val trends = aggPair reduceByKey (_ + _) sortBy ({ case (_, value) => value }, false)
     val topTenTrends = trends take (topTrending) toList
 
     dbTrendService.removeTrends() onComplete {
-      case Success(result) => topTenTrends.map({ case (hashtag, trend) => Trends(hashtag, trend, pageNum) }) map { trends => dbTrendService.insertTrends(trends) }
-      case Failure(e)      =>
+      case Success(result) => topTenTrends.map({ case (hashtag, trend) => Trends(hashtag, trend, pageNum) }).
+        map { trends => dbTrendService.insertTrends(trends) }
+      case Failure(e) =>
     }
     topTenTrends
   }
