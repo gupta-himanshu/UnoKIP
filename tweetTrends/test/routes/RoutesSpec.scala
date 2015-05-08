@@ -20,7 +20,7 @@ class RoutesSpec extends PlaySpecification{
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
-      contentAsString(result) must contain("Tweet Trends")
+      contentAsString(result) must contain("Twitter Trends")
     }
 
     "respond to the /ajaxcall route" in new WithApplication(new FakeApplication) {

@@ -14,7 +14,7 @@ class ViewsSpec extends PlaySpecification {
     "render showData template" in new WithApplication {
       val html = views.html.showData()
 
-      contentAsString(html) must contain("Show Data")
+      contentAsString(html) must contain("Twitter Trends")
     }
     
     "render menubar template" in new WithApplication {
@@ -38,7 +38,7 @@ class ViewsSpec extends PlaySpecification {
     "render header template" in new WithApplication {
       val html = views.html.header()
 
-      contentAsString(html) must contain("Tweet Trends")
+      contentAsString(html) must contain("images/twitter.jpg")
     }
     
     "render sidebar template" in new WithApplication {

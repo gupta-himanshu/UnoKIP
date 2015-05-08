@@ -9,6 +9,8 @@ import com.knoldus.db.DBTrendServices
 import com.knoldus.model.Trends
 import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.topTrending
+import org.slf4j.Logger
+import org.apache.log4j.Logger
 
 trait BirdTweet {
   this: BirdTweet =>

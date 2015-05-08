@@ -1,7 +1,13 @@
 @* header Template File *@
-<div class="row">
-	<div id="header" class="navbar navbar-default navbar-fixed-top">
-		<h1>Tweet Trends</h1>
-	</div><br><br><br><br>
+<div class="row" style="margin-top: 30px;">
+	<nav id="header" class="navbar navbar-default navbar-fixed-top box-shadow-effect">
+		<div class="container-fluid">
+    		<div class="navbar-header">
+    			<img class ="logo" alt="Logo" src="@routes.Assets.at("images/twitter.jpg")" width="45px;">
+    		</div>
+    	</div>
+		@menubar()
+	</nav>
+	<br><br><br><br>
 	@sidebar()
 </div>
