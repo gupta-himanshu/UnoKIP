@@ -11,8 +11,7 @@ import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.topTrending
 
 trait BirdTweet {
-  this: BirdTweet =>
-
+  
   val dbTrendService: DBTrendServices
 
   /**

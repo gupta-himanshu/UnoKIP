@@ -12,7 +12,7 @@ import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import utils.JsonParserUtility.tuple2
 
-object Application extends Application {
+object Application extends Controller with Application{
   val dbService = DBServices
   val dbTrendService = DBTrendServices
   val birdTweet = BirdTweet
@@ -22,7 +22,7 @@ object Application extends Application {
  * @author knoldus
  *
  */
-trait Application extends Controller {
+trait Application {
   this: Controller =>
 
   val dbService: DBServices

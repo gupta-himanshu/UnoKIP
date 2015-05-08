@@ -14,6 +14,7 @@ import play.api.test.FakeRequest
 import play.api.test.PlaySpecification
 import play.api.test.WithApplication
 import org.specs2.runner.JUnitRunner
+import play.api.mvc.Controller
 
 /**
  *
@@ -28,7 +29,7 @@ class ApplicationSpec extends PlaySpecification with Mockito {
   val mockBirdTweet: BirdTweet = mock[BirdTweet]
   val mockDbTrend: DBTrendServices = mock[DBTrendServices]
 
-  object TestObj extends Application {
+  object TestObj extends Application with Controller {
     val dbService: DBServices = mockDbService
     val birdTweet: BirdTweet = mockBirdTweet
     val dbTrendService: DBTrendServices = mockDbTrend
