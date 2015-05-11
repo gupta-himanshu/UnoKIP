@@ -85,4 +85,8 @@ trait Application {
     out =>
       MyWebSocketActor.props(out)
   }
+  
+  def datepicker:Action[AnyContent] =Action{
+    Ok(views.html.datepicker())
+  } 
 }

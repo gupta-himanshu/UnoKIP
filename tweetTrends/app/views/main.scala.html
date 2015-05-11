@@ -16,7 +16,43 @@
         @content
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </body>
+    	<script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+    	<script src="@routes.Assets.at("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
+    	<script src="@routes.Assets.at("javascripts/bootstrap-datetimepicker.fr.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/highcharts.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/highcharts-3d.js")" type="text/javascript"></script>
+        <script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+	$('.form_date').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
+	$('.form_time').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
+</script>
          
 </html>
