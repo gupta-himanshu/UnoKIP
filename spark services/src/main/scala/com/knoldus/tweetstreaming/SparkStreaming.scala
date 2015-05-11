@@ -27,6 +27,6 @@ private object TweetCollect extends App {
     Tweet(status.getId, status.getSource, status.getText, status.isRetweet(), status.getUser.getName,
       status.getUser.getScreenName, status.getUser.getURL, status.getUser.getId, status.getUser.getLang)
   }
-  tweets.foreachRDD { x => x.foreach { x => dbService.insert(x) } }
+  tweets.foreachRDD { tweet => tweet.foreach { x => dbService.insert(x) } }
   ssc.start()
 }
