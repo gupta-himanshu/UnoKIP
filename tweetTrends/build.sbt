@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
 						"org.webjars" 			%% 	"webjars-play" 		% "2.3.0-2",
   						"org.webjars" 			%	"bootstrap" 		% "3.1.1-2",
 						"com.knoldus"          %%   "spark-services"  %   "1.0",
-						     "joda-time" % "joda-time" % "2.7"
+						     "joda-time" % "joda-time" % "2.7"		
 )
 
 ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;controllers.ref.*;controllers.javascript.*;"

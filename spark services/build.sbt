@@ -13,7 +13,8 @@ libraryDependencies ++= Seq(
                       "org.scalatest"	 	%% 	"scalatest" % "2.2.4" 	%       "test",
                       "org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23",
     		      "org.apache.spark" 	%% 	"spark-sql" 		% 	"1.3.1",
-		      "org.mockito" 		% 	"mockito-all" 		% 	"1.8.4"
+		      "org.mockito" 		% 	"mockito-all" 		% 	"1.8.4",
+		      "joda-time" % "joda-time" % "2.7"
 		       )
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"

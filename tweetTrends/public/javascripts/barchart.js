@@ -13,9 +13,14 @@ var ajaxCallBar = (function() {
 				$(".LoadingImage").show();
 				$('#table-body').hide();
 				$('#container').hide();
+				var start = $('#datetimepicker1').data('datetimepicker').getDate();
+				alert(start)
 				$.ajax({
 					url : "/ajaxcall",
 					type : "GET",
+					data:{
+						start:start
+					},
 					success : function(jsonData) {
 						top_data = jsonData;
 						barChart(top_data);

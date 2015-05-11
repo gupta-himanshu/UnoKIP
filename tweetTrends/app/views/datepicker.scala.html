@@ -1,21 +1,10 @@
 @* datepicker Template File *@
-@main("date picker") {
             
 <div class="container">
     <div class="row">
         <div class='col-sm-3'>
             <div class="form-group">
-                <div class='input-group date' id='datetimepicker5'>
-                    <input type='text' class="form-control" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class='col-sm-3'>
-            <div class="form-group">
-                <div class='input-group date' id='datetimepicker6'>
+                <div class='input-group date' id='datetimepicker1'>
                     <input type='text' class="form-control" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
@@ -24,15 +13,20 @@
             </div>
         </div>
         <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker5').datetimepicker({
-                    defaultDate: "11/1/2013"
-                });
-                $('#datetimepicker6').datetimepicker({
-                    defaultDate: "11/1/2013"
-                });
-            });
-        </script>
+									$(function() {
+										$('#datetimepicker1').datetimepicker()										
+										$('#datetimepicker1').change(
+														function() {
+															var start = $('#datetimepicker1').data('datetimepicker').getDate();
+															$.ajax({
+																		url : "/ajaxcall",
+																		type : "GET",
+																		data : {
+																			start : start	
+																		}
+																	});
+															});
+								});
+								</script>
     </div>
 </div>
-}
