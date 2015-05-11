@@ -1,23 +1,24 @@
 package controllers
 
 import java.util.concurrent.TimeoutException
-import scala.concurrent.Future
+
 import com.knoldus.db.DBServices
 import com.knoldus.db.DBTrendServices
 import com.knoldus.twittertrends.BirdTweet
 import com.knoldus.utils.ConstantUtil
+import models.MyWebSocketActor
+import models.WebOut
+import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.iteratee.Enumerator
+import play.api.libs.iteratee.Iteratee
+import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
-import utils.JsonParserUtility.tuple2
-import play.api.mvc._
-import play.api.libs.iteratee._
-import play.api.Play.current
-import models.MyWebSocketActor
-import play.api.libs.json._
+import play.api.mvc.WebSocket
 import play.api.mvc.WebSocket.FrameFormatter
-import models.WebOut
+import utils.JsonParserUtility.tuple2
 
 object Application extends Controller with Application {
   val dbService = DBServices
@@ -74,16 +75,15 @@ trait Application {
   }
 
   //With Iteratee
-  def websocket = WebSocket.using[String] { request =>
+  def websocket: WebSocket[String, String] = WebSocket.using[String] { request =>
     val in = Iteratee.ignore[String]
     val out = Enumerator("Hello! Guys")
     (in, out)
   }
-  
   implicit val outEventFormat = Json.format[WebOut]
   implicit val outEventFrameFormatter = FrameFormatter.jsonFrame[WebOut]
   //With future
-  def socket = WebSocket.acceptWithActor[String, WebOut] { request =>
+  def socket: WebSocket[String, WebOut] = WebSocket.acceptWithActor[String, WebOut] { request =>
     out =>
       MyWebSocketActor.props(out)
   }
@@ -91,8 +91,8 @@ trait Application {
   def datepicker: Action[AnyContent] = Action {
     Ok(views.html.datepicker())
   }
-  
-  def socketPage = Action{
+
+  def socketPage: Action[AnyContent] = Action {
     Ok(views.html.socket())
   }
 }
