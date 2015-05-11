@@ -64,4 +64,8 @@ trait Application extends Controller {
 def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
   }
+
+def datepick=Action{
+  Ok(views.html.datepicker())
+}
 }
