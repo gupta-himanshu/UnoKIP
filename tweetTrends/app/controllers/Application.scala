@@ -11,8 +11,15 @@ import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import utils.JsonParserUtility.tuple2
+import play.api.mvc._
+import play.api.libs.iteratee._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.Play.current
+import models.MyWebSocketActor
+import play.api.libs.json._
+import play.api.mvc.WebSocket.FrameFormatter
 
-object Application extends Controller with Application{
+object Application extends Controller with Application {
   val dbService = DBServices
   val dbTrendService = DBTrendServices
   val birdTweet = BirdTweet
@@ -29,10 +36,10 @@ trait Application {
   val birdTweet: BirdTweet
   val dbTrendService: DBTrendServices
 
- /**
- * @return ajaxCall is used for fetching data as JSON from mongoDb collection
- * and use it to render chart and table.
- */
+  /**
+   * @return ajaxCall is used for fetching data as JSON from mongoDb collection
+   * and use it to render chart and table.
+   */
   def ajaxCall: Action[AnyContent] = Action.async {
     val trends = dbTrendService.findTrends()
     val pageNum = trends.map { listOfTrends =>
@@ -59,10 +66,23 @@ trait Application {
       case t: TimeoutException => InternalServerError(t.getMessage)
     }
   }
- /**
- * This is to render showData template page.
- */
-def trending: Action[AnyContent] = Action {
+  /**
+   * This is to render showData template page.
+   */
+  def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
+  }
+
+  //With Iteratee
+  def websocket = WebSocket.using[String] { request =>
+    val in = Iteratee.ignore[String]
+    val out = Enumerator("Hello! Guys")
+    (in, out)
+  }
+
+  //With future
+  def socket = WebSocket.acceptWithActor[JsValue, JsValue] { request =>
+    out =>
+      MyWebSocketActor.props(out)
   }
 }

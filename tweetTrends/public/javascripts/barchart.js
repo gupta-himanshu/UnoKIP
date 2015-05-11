@@ -1,5 +1,10 @@
 $(document).ready(function() {
 	ajaxCallBar();
+	var socket = new WebSocket('ws://localhost:9000/websocket');
+	socket.onopen = function(event) {
+		alert("opened");
+		socket.send("ss");
+	};
 })
 
 var ajaxCallBar = (function() {
