@@ -13,11 +13,11 @@ import play.api.mvc.Controller
 import utils.JsonParserUtility.tuple2
 import play.api.mvc._
 import play.api.libs.iteratee._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.Play.current
 import models.MyWebSocketActor
 import play.api.libs.json._
 import play.api.mvc.WebSocket.FrameFormatter
+import models.WebOut
 
 object Application extends Controller with Application {
   val dbService = DBServices
@@ -79,14 +79,20 @@ trait Application {
     val out = Enumerator("Hello! Guys")
     (in, out)
   }
-
+  
+  implicit val outEventFormat = Json.format[WebOut]
+  implicit val outEventFrameFormatter = FrameFormatter.jsonFrame[WebOut]
   //With future
-  def socket = WebSocket.acceptWithActor[JsValue, JsValue] { request =>
+  def socket = WebSocket.acceptWithActor[String, WebOut] { request =>
     out =>
       MyWebSocketActor.props(out)
   }
-  
-  def datepicker:Action[AnyContent] =Action{
+
+  def datepicker: Action[AnyContent] = Action {
     Ok(views.html.datepicker())
-  } 
+  }
+  
+  def socketPage = Action{
+    Ok(views.html.socket())
+  }
 }
