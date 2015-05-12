@@ -39,13 +39,12 @@ trait Application extends Controller {
    */
   def ajaxCall(start: String): Action[AnyContent] = Action.async {
     val trends = dbTrendService.removeTrends()
-    val date = new DateTime();
-    println(date+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    val formatter = DateTimeFormat.forPattern("EEE MMM dd yyyy kk:mm:ss zZ (zzzz)");
-    val dtf = DateTimeFormat.forPattern("E MM/dd/yyyy HH:mm:ss.SSS");
-    val startDate = formatter.parseDateTime(start);
-    val dt1 = date.toString()
-    val end = dtf.parseDateTime(dt1)
+    val date = new DateTime()
+    val formatter = DateTimeFormat.forPattern("dd/MM/yyyy kk:mm:ss");
+    val endDate = formatter.print(date)
+    println(endDate)
+    val startDate = formatter.parseDateTime(start)
+    val end = formatter.parseDateTime(endDate)
     val tweets = dbService.getTimeOfTweet(startDate.getMillis, end.getMillis)
     tweets.map { x => println(x) }
     val res = tweets.map { x => birdTweet.trending(x) }
