@@ -1,21 +1,58 @@
 @* datepicker Template File *@
-    <div class='col-md-5'>
-        <div class="form-group"> From
-            <div class='input-group date' id='datetimepicker6'>
-                <input type='text' class="form-control" />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
+<div class="container">
+    <div class="row">
+        <div class='col-sm-3'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
         </div>
+        <script type="text/javascript">
+									$(function() {
+										$('#datetimepicker1').datetimepicker();										
+										$('#datetimepicker1').change(
+														function() {
+															var start = $('#datetimepicker1').data('datetimepicker').getDate();
+															var startDate = formatDate(start);
+															$.ajax({
+																		url : "/ajaxcall",
+																		type : "GET",
+																		data : {
+																			start : startDate
+																		}
+																	});
+															});
+								});
+													
+function formatDate(d)
+{
+    var month = d.getMonth();
+    var day = d.getDate();
+    var hh = d.getHours();
+    var mm = d.getMinutes();
+    var ss = d.getSeconds();
+    month = month + 1;
+
+    month = month + "";
+
+    if (month.length == 1)
+    {
+        month = "0" + month;
+    }
+
+    day = day + "";
+
+    if (day.length == 1)
+    {
+        day = "0" + day;
+    }
+
+    return   day + '/'  +month + '/' + d.getFullYear() +' '+ hh+':'+mm+':'+ss;
+}
+</script>
     </div>
-    <div class='col-md-5'>
-        <div class="form-group"> To
-            <div class='input-group date' id='datetimepicker7'>
-                <input type='text' class="form-control" />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </div>
-    </div>
+</div>

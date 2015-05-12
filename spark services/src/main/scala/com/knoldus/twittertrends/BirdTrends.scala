@@ -13,7 +13,8 @@ import org.slf4j.Logger
 import org.apache.log4j.Logger
 
 trait BirdTweet {
-  
+  this: BirdTweet =>
+
   val dbTrendService: DBTrendServices
 
   /**
@@ -23,21 +24,14 @@ trait BirdTweet {
    * @param pageNum
    * @return List[(String,Int)]
    */
-  def trending(tweets: List[Tweet], trend: List[Trends], pageNum: Int): List[(String, Int)] = {
+  def trending(tweets: List[Tweet]): List[(String, Int)] = {
     val createRDDTweet = Global.sc parallelize (tweets)
-    val trendsList = trend.map { trends => (trends.hashtag, trends.trend) }
-    val trendsRDD = Global.sc.parallelize(trendsList)
-    val hashtags = createRDDTweet.flatMap { tweet => tweet.content split (" ") }.filter { word => word.startsWith("#") }
+    val hashtags = createRDDTweet.flatMap { tweet => tweet.content split (" ") }.filter { word => word.startsWith("#") }.
+      filter { !_.contains("ass", "porn", "sex") }
     val pair = hashtags.map((_, 1))
-    val aggPair = pair.union(trendsRDD)
-    val trends = aggPair reduceByKey (_ + _) sortBy ({ case (_, value) => value }, false)
+    val trends = pair reduceByKey (_ + _) sortBy ({ case (_, value) => value }, false)
     val topTenTrends = trends take (topTrending) toList
-
-    dbTrendService.removeTrends() onComplete {
-      case Success(result) => topTenTrends.map({ case (hashtag, trend) => Trends(hashtag, trend, pageNum) }).
-        map { trends => dbTrendService.insertTrends(trends) }
-      case Failure(e) =>
-    }
+    
     topTenTrends
   }
 }

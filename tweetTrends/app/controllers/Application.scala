@@ -9,6 +9,15 @@ import com.knoldus.utils.ConstantUtil
 import models.MyWebSocketActor
 import models.WebOut
 import play.api.Play.current
+import scala.concurrent.Future
+
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
+import com.knoldus.db.DBServices
+import com.knoldus.db.DBTrendServices
+import com.knoldus.twittertrends.BirdTweet
+
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.iteratee.Iteratee
@@ -20,7 +29,7 @@ import play.api.mvc.WebSocket
 import play.api.mvc.WebSocket.FrameFormatter
 import utils.JsonParserUtility.tuple2
 
-object Application extends Controller with Application {
+object Application extends Application {
   val dbService = DBServices
   val dbTrendService = DBTrendServices
   val birdTweet = BirdTweet
@@ -30,7 +39,7 @@ object Application extends Controller with Application {
  * @author knoldus
  *
  */
-trait Application {
+trait Application extends Controller {
   this: Controller =>
 
   val dbService: DBServices
@@ -38,31 +47,22 @@ trait Application {
   val dbTrendService: DBTrendServices
   implicit val outEventFormat = Json.format[WebOut]
   implicit val outEventFrameFormatter = FrameFormatter.jsonFrame[WebOut]
-
   /**
-   * @return ajaxCall is used for fetching data as JSON from mongoDb collection
+   * @return ajaxCall is used for fetching data as json from mongoDb collection
    * and use it to render chart and table.
    */
-  def ajaxCall: Action[AnyContent] = Action.async {
-    val trends = dbTrendService.findTrends()
-    val pageNum = trends.map { listOfTrends =>
-      listOfTrends.headOption match {
-        case Some(trend) => trend.pageNum + 1
-        case None        => 1
-      }
-    }
-    val tweets = for {
-      pgNo <- pageNum
-      tweets <- dbService.getChunckOfTweet(pgNo, ConstantUtil.pageSize)
-    } yield (tweets, pgNo)
-    //if listOfTweets.size > 0 then it will aggregate the trend and tweet collection
-    //otherwise it will take trends from tweets.
-    val res = tweets.flatMap {
-      case (listOfTweets, pgNo) => trends.map { listOfTrends =>
-        if (listOfTweets.size > 0) { birdTweet.trending(listOfTweets, listOfTrends, pgNo) }
-        else { listOfTrends.map(trend => (trend.hashtag, trend.trend)).sortBy({ case (hashtag, trend) => trend }).reverse }
-      }
-    }
+  def ajaxCall(start: String): Action[AnyContent] = Action.async {
+    val trends = dbTrendService.removeTrends()
+    val date = new DateTime()
+    val formatter = DateTimeFormat.forPattern("dd/MM/yyyy kk:mm:ss");
+    val endDate = formatter.print(date)
+    println(endDate)
+    val startDate = formatter.parseDateTime(start)
+    val end = formatter.parseDateTime(endDate)
+    val tweets = dbService.getTimeOfTweet(startDate.getMillis, end.getMillis)
+    tweets.map { x => println(x) }
+    val res = tweets.map { x => birdTweet.trending(x) }
+    res.map(x => println(x))
     res.map { r =>
       Ok(play.api.libs.json.Json.toJson(r))
     }.recover {
@@ -70,7 +70,7 @@ trait Application {
     }
   }
   /**
-   * This is to render showData template page.
+   * @return This is to render showData page.
    */
   def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
@@ -95,5 +95,8 @@ trait Application {
 
   def socketPage: Action[AnyContent] = Action {
     Ok(views.html.socket())
+  }
+  def datepick = Action {
+    Ok(views.html.datepicker())
   }
 }

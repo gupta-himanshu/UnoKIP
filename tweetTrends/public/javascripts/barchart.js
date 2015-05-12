@@ -13,9 +13,14 @@ var ajaxCallBar = (function() {
 				$(".LoadingImage").show();
 				$('#table-body').hide();
 				$('#container').hide();
+				var start = $('#datetimepicker1').data('datetimepicker').getDate();
+				var startDate = formatDate(start);
 				$.ajax({
 					url : "/ajaxcall",
 					type : "GET",
+					data:{
+						start:startDate
+					},
 					success : function(jsonData) {
 						top_data = jsonData;
 						barChart(top_data);
@@ -37,7 +42,34 @@ var ajaxCallBar = (function() {
 				});
 			});
 });
+
 setInterval(ajaxCallBar, 5000);
+
+function formatDate(d)
+{
+    var month = d.getMonth();
+    var day = d.getDate();
+    var hh = d.getHours();
+    var mm = d.getMinutes();
+    var ss = d.getSeconds();
+    month = month + 1;
+
+    month = month + "";
+
+    if (month.length == 1)
+    {
+        month = "0" + month;
+    }
+
+    day = day + "";
+
+    if (day.length == 1)
+    {
+        day = "0" + day;
+    }
+
+    return day+ '/' + month + '/' + d.getFullYear() +' '+ hh+':'+mm+':'+ss;
+}
 
 var barChart =	function (top_data) {
 	    $('#container').highcharts({
