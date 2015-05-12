@@ -36,6 +36,8 @@ trait Application {
   val dbService: DBServices
   val birdTweet: BirdTweet
   val dbTrendService: DBTrendServices
+  implicit val outEventFormat = Json.format[WebOut]
+  implicit val outEventFrameFormatter = FrameFormatter.jsonFrame[WebOut]
 
   /**
    * @return ajaxCall is used for fetching data as JSON from mongoDb collection
@@ -80,8 +82,7 @@ trait Application {
     val out = Enumerator("Hello! Guys")
     (in, out)
   }
-  implicit val outEventFormat = Json.format[WebOut]
-  implicit val outEventFrameFormatter = FrameFormatter.jsonFrame[WebOut]
+  
   //With future
   def socket: WebSocket[String, WebOut] = WebSocket.acceptWithActor[String, WebOut] { request =>
     out =>

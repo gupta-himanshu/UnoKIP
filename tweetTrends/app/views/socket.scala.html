@@ -16,16 +16,16 @@
   {
     websocket = new WebSocket(wsUri);
     websocket.onopen = function(evt) { onOpen(evt) };
-    websocket.onclose = function(evt) { onClose(evt) };
+    //websocket.onclose = function(evt) { onClose(evt) };
     websocket.onmessage = function(evt) { onMessage(evt) };
     websocket.onerror = function(evt) { onError(evt) };
   }
 
   function onOpen(evt)
   {
-	var e = document.getElementById("name").value;
+	var name = document.getElementById("name").value;
     writeToScreen("CONNECTED");
-    doSend(e);
+    doSend(name);
   }
 
   function onClose(evt)
