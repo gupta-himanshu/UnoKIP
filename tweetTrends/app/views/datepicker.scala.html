@@ -13,21 +13,21 @@
             </div>
         </div>
         <script type="text/javascript">
-									$(function() {
-										$('#datetimepicker1').datetimepicker();										
-										$('#datetimepicker1').change(
-														function() {
-															var start = $('#datetimepicker1').data('datetimepicker').getDate();
-															var startDate = formatDate(start);
-															$.ajax({
-																		url : "/ajaxcall",
-																		type : "GET",
-																		data : {
-																			start : startDate
-																		}
-																	});
-															});
-								});
+      $(function() {
+$('#datetimepicker1').datetimepicker();										
+$('#datetimepicker1').change(
+	function() {
+	var start = $('#datetimepicker1').data('datetimepicker').getDate();
+	var startDate = formatDate(start);
+	$.ajax({
+     url : "/ajaxcall",
+    type : "GET",
+	data : {
+    start : startDate
+	}
+});
+});
+});
 													
 function formatDate(d)
 {

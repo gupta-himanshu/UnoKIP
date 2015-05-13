@@ -1,21 +1,19 @@
 package controllers
 
 import java.util.concurrent.TimeoutException
-
 import scala.concurrent.Future
-
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-
 import com.knoldus.db.DBServices
 import com.knoldus.db.DBTrendServices
 import com.knoldus.twittertrends.BirdTweet
-
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
-import utils.JsonParserUtility.tuple2
+import utils.JsonParserUtility._
+import com.knoldus.model.Trends
+import play.api.libs.json.Json
 
 object Application extends Application {
   val dbService = DBServices
@@ -42,13 +40,9 @@ trait Application extends Controller {
     val date = new DateTime()
     val formatter = DateTimeFormat.forPattern("dd/MM/yyyy kk:mm:ss");
     val endDate = formatter.print(date)
-    println(endDate)
     val startDate = formatter.parseDateTime(start)
     val end = formatter.parseDateTime(endDate)
-    val tweets = dbService.getTimeOfTweet(startDate.getMillis, end.getMillis)
-    tweets.map { x => println(x) }
-    val res = tweets.map { x => birdTweet.trending(x) }
-    res.map(x => println(x))
+    val res = birdTweet.trending1(startDate.getMillis,end.getMillis)
     res.map { r =>
       Ok(play.api.libs.json.Json.toJson(r))
     }.recover {

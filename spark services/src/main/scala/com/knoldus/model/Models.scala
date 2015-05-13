@@ -35,7 +35,7 @@ object Tweet {
 }
 
 // Domain for Top Trends
-case class Trends(hashtag: String, trend: Int, pageNum: Int)
+case class Trends(hashtag: String, trend: Int)
 
 object Trends {
   implicit val reader: BSONDocumentReader[Trends] = Macros.reader[Trends]

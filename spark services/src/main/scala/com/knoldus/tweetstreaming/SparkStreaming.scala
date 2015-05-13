@@ -14,7 +14,7 @@ import com.typesafe.config.ConfigFactory
  */
 
 //This is main object which is collect tweets from twitter stream and perist in mongoDB
-private object TweetCollect extends App {
+object TweetCollect  {
 
   val ssc: StreamingContext = new StreamingContext(sc, Seconds(streamInterval))
   val client = new TwitterClient()
@@ -28,5 +28,6 @@ private object TweetCollect extends App {
       status.getUser.getScreenName, status.getUser.getURL, status.getUser.getId, status.getUser.getLang,status.getCreatedAt)
   }
   tweets.foreachRDD { x => x.foreach { x => dbService.insert(x) } }
-  ssc.start()
+  def start()=ssc.start()
+  def stop()=ssc.stop()
 }
