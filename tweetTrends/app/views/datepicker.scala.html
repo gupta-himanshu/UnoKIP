@@ -14,45 +14,7 @@
         <script type="text/javascript">
 									$(function() {
 										$('#datetimepicker1').datetimepicker();										
-										$('#datetimepicker1').change(
-														function() {
-															var start = $('#datetimepicker1').data('datetimepicker').getDate();
-															var startDate = formatDate(start);
-															$.ajax({
-																		url : "/ajaxcall",
-																		type : "GET",
-																		data : {
-																			start : startDate
-																		}
-																	});
-															});
-								});
-													
-function formatDate(d)
-{
-    var month = d.getMonth();
-    var day = d.getDate();
-    var hh = d.getHours();
-    var mm = d.getMinutes();
-    var ss = d.getSeconds();
-    month = month + 1;
-
-    month = month + "";
-
-    if (month.length == 1)
-    {
-        month = "0" + month;
-    }
-
-    day = day + "";
-
-    if (day.length == 1)
-    {
-        day = "0" + day;
-    }
-
-    return   day + '/'  +month + '/' + d.getFullYear() +' '+ hh+':'+mm+':'+ss;
-}
+									});
 </script>
     </div>
 </div>
