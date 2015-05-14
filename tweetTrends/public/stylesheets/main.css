@@ -8,7 +8,7 @@
  #fixed-sidebar {
   	position: fixed;
   	left: 10px;
-  	top: 35%;
+  	top: 45%;
   	width: 40px;
   	height: 20%; 
   	margin-top: -2.5em;
@@ -33,18 +33,20 @@
 	width: 100px;
 	height: 100px;
 	z-index:3;
+	box-shadow:0 0 10px #666666;
+	border-radius: 50% 50% 50% 50%;
 }
 
-.box-shadow-effect{
+.box-shadow-effect-header{
 	box-shadow: 0 5px 10px #666666;
-	background-color: #123a45 !important;
-	border-color: #123a45 !important; 
+	background-color: #1ee094 !important;
+	border-color: #1ee094 !important; 
 }
 
 .box-shadow-effect-footer{
 	box-shadow: 0 -5px 10px #666666;
-	background-color: #123a45 !important;
-	border-color: #123a45 !important;
+	background-color: #1ee094 !important;
+	border-color: #1ee094 !important;
 }
 
 h4{
@@ -58,7 +60,7 @@ h5{
 	width: 35px;
 	height: 35px;
 	position: fixed;
-	top:80%;
+	top:75%;
 	right:10px;
 	background-color: #144321;
 	color:#ea9123;
@@ -73,9 +75,10 @@ h5{
 	box-shadow: 5px 5px 5px #888888;
 }
 #dayWiseMenu{
+	font-family: 'Roboto Condensed', sans-serif;
 	position: fixed;
   	right: -10px;
-  	top: 35%;
+  	top: 45%;
   	width: 40px;
   	margin-top: -2.5em;
   	z-index:1;

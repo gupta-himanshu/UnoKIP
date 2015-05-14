@@ -115,6 +115,10 @@ function formatDate(d) {
 var barChart = function(top_data) {
 	$('#chartContainer').highcharts({
 		chart : {
+			style: {
+				 fontFamily: 'Roboto Condensed'
+            },
+			backgroundColor: '#F7EAC8',
 			type : 'column',
 			margin : 100,
 			options3d : {
@@ -161,7 +165,7 @@ var barChart = function(top_data) {
 			},
 			series : {
 				allowPointSelect : true,
-				color : '#CCFF99',
+				color : '#1ee084',
 				dataLabels : {
 					enabled : true,
 					borderRadius : 5,

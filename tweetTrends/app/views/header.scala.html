@@ -1,25 +1,32 @@
 @* header Template File *@
-<div class="row" style="margin-top: 30px;">
-	<nav id="header" class="navbar navbar-default navbar-fixed-top box-shadow-effect">
-		<div class="container-fluid">
-			<div class="row" style="padding: 10px;">
-			<div class="col-md-2">
-    			<div class="navbar-header">
-    				<img class ="logo" alt="Logo" src="@routes.Assets.at("images/twitter.jpg")" width="50px;">
-    			</div>
-    		</div>
-    		<div class="col-md-4">
-    			@menubar()
-    		</div>
-    		<div  class="col-md-3"></div>
-    		<div class="col-md-3">
-    			@datepicker()
-    		</div>
-    		</div>
-    	</div>
-		
-	</nav>
-	<br><br><br><br>
-	@sidebar()
-	@dayWiseMenu()
-</div>
+<nav class="navbar navbar-default navbar-fixed-top box-shadow-effect-header">
+  <div class="container-fluid">
+  	<div class="row">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="col-md-2">
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="#">LOGO
+		      	@*<img class ="logo" alt="Logo" src="@routes.Assets.at("images/twitter.jpg")" width="50px;">*@
+		      </a>
+		    </div>
+		</div>
+		<div class="col-md-7">
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		       	@menubar()
+		    </div><!-- /.navbar-collapse -->
+	    </div>
+	    <div class="col-md-3" style="margin-top: 10px;">
+	    	@datepicker()
+	    </div>
+	</div>
+      	@sidebar()
+			@dayWiseMenu()
+  </div><!-- /.container-fluid -->
+</nav>

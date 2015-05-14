@@ -1,10 +1,13 @@
 @* handleWisePage Template File *@
 @(name: String,color:String, image:String)
 <div class="row">
-	<div class = "col-md-12" style=" margin:10px; background-color: @color;">
-		<div id =@name class="col-md-6 col-xs-12"> Info of @name
+	<div class = "col-md-12" style=" margin:10px; background-color: @color; font-family: 'Roboto Condensed', sans-serif;">
+		<div id =@name class="col-md-6 col-xs-12" style="background-color: @color;"> Info of @name
 			<img class="userImage" alt="Picture" src="@routes.Assets.at("images/"+image)" width="40px;" height="60px;">
 		</div>
-		<div class="col-md-6 col-xs-12"> Graph of @name</div>
+		<div class="col-md-6 col-xs-12"  style="background-color: @color;"> Graph of @name
+			<div style="min-height : 200px; width: 200px; background: #1ee094">Graphs
+			</div>
+		</div>
 	</div>
 </div>
