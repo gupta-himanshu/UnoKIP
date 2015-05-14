@@ -3,7 +3,6 @@
 @main("Twitter Trends") {
 	<div class = "container-fluid">
 		@header()
-		@datepicker()
 		<div class = "container">
 			<div class = "row">
 				<div class="col-md-5 col-xs-12">
@@ -11,10 +10,13 @@
 						<img class="LoadingImage" src="@routes.Assets.at("images/loading-circle.gif")">
 					</table>
 				</div>
-				<div class="col-md-7 col-xs-12">
+				<div class="col-md-7 col-xs-12" style="min-height: 400px;">
 					@chart()<br><br>
 					<div id="output"></div>
 				</div>
+				@handleWisePage("Person1","#aeaeae","userFemale.png")
+				@handleWisePage("Person2","#b2b3c4","userMale.png")
+				@handleWisePage("Person3","#aeaeae","userFemale.png")
 			</div>
 		</div><br><br><br><br><br><br>
 		@footer()

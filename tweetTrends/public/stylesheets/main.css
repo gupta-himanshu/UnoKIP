@@ -1,5 +1,4 @@
 @CHARSET "UTF-8";
-
 .logo{
 	margin-top:10px;
 	margin-left: 10px;
@@ -8,17 +7,18 @@
 
  #fixed-sidebar {
   	position: fixed;
-  	left: 0;
+  	left: 10px;
   	top: 35%;
   	width: 40px;
+  	height: 20%; 
   	margin-top: -2.5em;
   	z-index:1;
   	border-radius: 10px 10px 10px 10px;
 	}
 	
 .icon {
-  	width: 40px;
-  	height:40px;
+  	width: 80%;
+  	height:80%;
   	margin-left: 5px;
   	margin-bottom:5px;
   	z-index:1;
@@ -53,4 +53,47 @@ h4{
 
 h5{
 	color:white !important;
+}
+.goToTop{
+	width: 35px;
+	height: 35px;
+	position: fixed;
+	top:80%;
+	right:10px;
+	background-color: #144321;
+	color:#ea9123;
+	border-radius:50% 50% 50% 50%;
+	font-size: 25px;
+	text-align: center;
+	vertical-align: middle;
+	opacity: .7;
+}
+.goToTop:hover{
+	opacity: 1;
+	box-shadow: 5px 5px 5px #888888;
+}
+#dayWiseMenu{
+	position: fixed;
+  	right: -10px;
+  	top: 35%;
+  	width: 40px;
+  	margin-top: -2.5em;
+  	z-index:1;
+  	border-radius: 10px 10px 10px 10px;
+}
+.dayWiseOption{
+	width: 80%;
+  	height:25px;
+  	margin-left: 5px;
+  	margin-bottom:1px;
+  	text-align: center;	
+  	z-index:1;
+  	opacity: .6;
+  	background: #144321;
+  	border-radius: 10px 0 0 10px;
+} 
+.userImage{
+	height: 170px;
+	width: 150px;
+	margin: 15px;
 }

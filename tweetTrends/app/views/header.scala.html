@@ -2,12 +2,24 @@
 <div class="row" style="margin-top: 30px;">
 	<nav id="header" class="navbar navbar-default navbar-fixed-top box-shadow-effect">
 		<div class="container-fluid">
-    		<div class="navbar-header" style="display: inline; float: left">
-    			<img class ="logo" alt="Logo" src="@routes.Assets.at("images/twitter.jpg")" width="50px;">
+			<div class="row" style="padding: 10px;">
+			<div class="col-md-2">
+    			<div class="navbar-header">
+    				<img class ="logo" alt="Logo" src="@routes.Assets.at("images/twitter.jpg")" width="50px;">
+    			</div>
+    		</div>
+    		<div class="col-md-4">
+    			@menubar()
+    		</div>
+    		<div  class="col-md-3"></div>
+    		<div class="col-md-3">
+    			@datepicker()
+    		</div>
     		</div>
     	</div>
-		@menubar()
+		
 	</nav>
 	<br><br><br><br>
 	@sidebar()
+	@dayWiseMenu()
 </div>

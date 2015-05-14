@@ -33,13 +33,13 @@ var change = function(){
 		}
 	$(".LoadingImage").show();
 	$('#table-body').hide();
-	$('#container').hide();
+	$('#chartContainer').hide();
 	/* clearInterval(myVar); */
 	var start = new Date($('#datetimepicker1').data("DateTimePicker").date());
 	var startDate = formatDate(start);
 	wsUri = "ws://localhost:9000/socket?start="+ startDate;
 
-	function WebSocketCall() {
+	function webSocketCall() {
 
 				websocket = new WebSocket(wsUri);
 				websocket.onopen = function(evt) {
@@ -63,7 +63,7 @@ var change = function(){
 					};
 					$(".LoadingImage").hide();
 					$('#table-body').show();
-					$('#container').show();
+					$('#chartContainer').show();
 					websocket.close();
 				};
 				websocket.onerror = function(evt) {
@@ -77,8 +77,9 @@ var change = function(){
 				pre.innerHTML = message;
 				output.appendChild(pre);
 			}
-			WebSocketCall();
-			myVar = setInterval(WebSocketCall,11000);
+			//calling webSocket 
+			webSocketCall();
+			myVar = setInterval(webSocketCall,11000);
 		}
 
 // Date Formatting
@@ -112,7 +113,7 @@ function formatDate(d) {
 
 // Chart Rendering
 var barChart = function(top_data) {
-	$('#container').highcharts({
+	$('#chartContainer').highcharts({
 		chart : {
 			type : 'column',
 			margin : 100,
