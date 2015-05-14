@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
 			"io.spray"            %% "spray-routing"    % "1.3.1",
 			"io.spray"           %% "spray-json"       % "1.3.1",
 			"com.typesafe.akka"  %% "akka-actor"       % "2.3.7",
-			"com.typesafe.play" % "play-json_2.11" % "2.4.0-M3"
+			"com.typesafe.play" %% "play-json" % "2.3.9"
 		       )
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"

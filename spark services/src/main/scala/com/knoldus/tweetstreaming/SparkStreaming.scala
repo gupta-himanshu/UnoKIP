@@ -1,6 +1,7 @@
 package com.knoldus.tweetstreaming
 
 import org.apache.spark.streaming.Seconds
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.twitter.TwitterUtils
 import com.knoldus.core.Global.sc
@@ -8,6 +9,7 @@ import com.knoldus.db.DBServices
 import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.streamInterval
 import com.typesafe.config.ConfigFactory
+import scala.concurrent.Future
 
 /**
  * @author knoldus
