@@ -22,6 +22,10 @@ var datepicker = (function() {
 	$('#datetimepicker1').datetimepicker({
 		defaultDate:new Date(),
 		maxDate: new Date(),
+		widgetPositioning:{
+			horizontal:'right',
+	         vertical: 'bottom'
+		},
 		//format: 'DD/MM/YYYY HH:mm:ss'
 	});										
 });
@@ -140,10 +144,10 @@ var barChart = function(top_data) {
 				text : 'HashTags'
 			},
 			labels : {
-				rotation : -45,
+				rotation : -30,
 				style : {
 					fontSize : '13px',
-					fontFamily : 'Verdana, sans-serif'
+					fontFamily : 'Roboto Condensed'
 				}
 			}
 		},
@@ -189,7 +193,7 @@ var barChart = function(top_data) {
 				y : 5, // 10 pixels down from the top
 				style : {
 					fontSize : '13px',
-					fontFamily : 'Verdana, sans-serif'
+					fontFamily : 'Roboto Condensed'
 				}
 			}
 		} ]

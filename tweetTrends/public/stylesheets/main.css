@@ -41,9 +41,11 @@
 	box-shadow: 0 5px 10px #666666;
 	background-color: #1ee094 !important;
 	border-color: #1ee094 !important; 
+	font-family: 'Roboto Condensed', sans-serif;"
 }
 
 .box-shadow-effect-footer{
+	font-family: 'Roboto Condensed', sans-serif;
 	box-shadow: 0 -5px 10px #666666;
 	background-color: #1ee094 !important;
 	border-color: #1ee094 !important;
@@ -62,8 +64,8 @@ h5{
 	position: fixed;
 	top:75%;
 	right:10px;
-	background-color: #144321;
-	color:#ea9123;
+	background:#1ee094; 
+	color:#6E80F4;
 	border-radius:50% 50% 50% 50%;
 	font-size: 25px;
 	text-align: center;
@@ -71,7 +73,8 @@ h5{
 	opacity: .7;
 }
 .goToTop:hover{
-	opacity: 1;
+	background:#6E80F4; 
+	color:#1ee094;
 	box-shadow: 5px 5px 5px #888888;
 }
 #dayWiseMenu{
@@ -82,7 +85,6 @@ h5{
   	width: 40px;
   	margin-top: -2.5em;
   	z-index:1;
-  	border-radius: 10px 10px 10px 10px;
 }
 .dayWiseOption{
 	width: 80%;
@@ -91,8 +93,9 @@ h5{
   	margin-bottom:1px;
   	text-align: center;	
   	z-index:1;
-  	opacity: .6;
-  	background: #144321;
+  	opacity: 1;
+  	background: #1ee094;
+  	color:#6E80F4; 
   	border-radius: 10px 0 0 10px;
 } 
 .userImage{
