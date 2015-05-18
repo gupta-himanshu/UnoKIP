@@ -1,24 +1,27 @@
 package controllers
 
 import scala.concurrent.Await
+import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
-
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-
 import com.knoldus.db.DBServices
 import com.knoldus.db.DBTrendServices
 import com.knoldus.twittertrends.BirdTweet
-
 import models.MyWebSocketActor
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.JsValue
+import play.api.libs.json.Json
+import play.libs.F.Function
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import play.api.mvc.WebSocket
+import utils.JsonParserUtility._
 import utils.JsonParserUtility.tuple2
+import scala.concurrent.Promise
+import play.api.libs.ws.WS
 
 object Application extends Application {
   val dbService = DBServices
@@ -52,9 +55,9 @@ trait Application extends Controller {
       val endDate = formatter.print(date)
       val startDate = formatter.parseDateTime(start)
       val end = formatter.parseDateTime(endDate)
-      val tweets = dbService.getTimeOfTweet(startDate.getMillis, end.getMillis)
-      val res = tweets.map { x => birdTweet.trending(x) }
-      val jsonData: JsValue = Await.result(res.map { r => play.api.libs.json.Json.toJson(r) }, 1 second)
+      val res=WS.url("http://localhost:8081/trends?start="+startDate.getMillis+"&end="+end.getMillis).get()
+     // val res1 = birdTweet.trending1(startDate.getMillis,end.getMillis) 
+      val jsonData: JsValue = Await.result(res.map { r => r.json}, 5 second)
       MyWebSocketActor.props(out, jsonData)
   }
 
@@ -64,5 +67,10 @@ trait Application extends Controller {
 
   def datepick = Action {
     Ok(views.html.datepicker())
+  }
+  
+  def startstream=Action{
+    val homePage = WS.url("http://localhost:8080/startstream").get();
+    Ok("stream strat")
   }
 }
