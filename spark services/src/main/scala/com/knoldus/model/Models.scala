@@ -18,7 +18,7 @@ import reactivemongo.bson.Subtype
 
 // Domain for Tweets
 case class Tweet(id: Long, source: String, content: String, retweet: Boolean, authName: String,
-                 username: String, url: String, authId: Long, language: String, create: Date)
+                 username: String, url: String, authId: Long, language: String, create: Date,country:Option[String],locationName:Option[String],long:Option[Double],lat:Option[Double])
 
 object Tweet {
   implicit object BSONDateTimeHandler extends BSONHandler[BSONDateTime, DateTime] {
