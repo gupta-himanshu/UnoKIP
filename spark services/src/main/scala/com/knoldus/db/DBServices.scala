@@ -19,7 +19,7 @@ trait DBServices extends DBConnector {
 
   val filter = BSONDocument()
   val query = BSONDocument()
-  val collTweet = db("twitterHandle")
+  val collTweet = db("twitterHandles")
 
   /**
    * Function to insert Tweet object into mongoDB collection
