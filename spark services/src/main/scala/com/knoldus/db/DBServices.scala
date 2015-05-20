@@ -10,6 +10,7 @@ import org.joda.time.format.ISODateTimeFormat
 import reactivemongo.bson.BSONDateTime
 import reactivemongo.bson.BSONDateTime
 import reactivemongo.bson.BSONDateTime
+import org.slf4j.LoggerFactory
 
 /**
  * @author knoldus
@@ -17,16 +18,19 @@ import reactivemongo.bson.BSONDateTime
  */
 trait DBServices extends DBConnector {
 
+  private val logger = LoggerFactory.getLogger(this.getClass.getName)
+
   val filter = BSONDocument()
   val query = BSONDocument()
   val collTweet = db("twitterHandle")
 
   /**
    * Function to insert Tweet object into mongoDB collection
- * @param tweet
- * @return lastErro
- */
-def insert(tweet: Tweet): Future[Boolean] = {
+   * @param tweet
+   * @return lastErro
+   */
+  def insert(tweet: Tweet): Future[Boolean] = {
+    logger.error("Data being inserted is - " + tweet)
     collTweet.insert(tweet).map { lastError =>
       lastError.ok
     }
@@ -34,19 +38,19 @@ def insert(tweet: Tweet): Future[Boolean] = {
 
   /**
    * Function to fetch chunck of data from mongoDB using pagination
- * @param pageNumber
- * @param pageSize
- * @return
- */
-def getChunckOfTweet(pageNumber: Int, pageSize: Int): Future[List[Tweet]] = {
+   * @param pageNumber
+   * @param pageSize
+   * @return
+   */
+  def getChunckOfTweet(pageNumber: Int, pageSize: Int): Future[List[Tweet]] = {
     collTweet.find(query).options(QueryOpts((pageNumber - 1) * pageSize, pageSize)).cursor[Tweet].collect[List](pageSize)
   }
 
-def getTimeOfTweet(startTime:Long,end:Long): Future[List[Tweet]] = {
-  
-  val query= BSONDocument() /*"create" -> BSONDocument("$gte" -> BSONDateTime(startTime),
+  def getTimeOfTweet(startTime: Long, end: Long): Future[List[Tweet]] = {
+
+    val query = BSONDocument() /*"create" -> BSONDocument("$gte" -> BSONDateTime(startTime),
                                                    "$lt" -> BSONDateTime(end)))
-*/   collTweet.find(query).cursor[Tweet].collect[List]()
+*/ collTweet.find(query).cursor[Tweet].collect[List]()
   }
 }
 object DBServices extends DBServices

@@ -10,6 +10,11 @@ import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.streamInterval
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.Future
+import scala.util.Success
+import scala.util.Failure
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+import org.apache.spark.rdd.RDD
 
 /**
  * @author knoldus
@@ -45,8 +50,13 @@ object TweetCollect {
         case None      => None
       })
   }
-  tweets.foreachRDD { x => x.foreach { x => println(x) } }
-  tweets.foreachRDD { x => x.foreach { x => dbService.insert(x) } }
+  //  tweets.foreachRDD { x => x.foreach { x => println(x) } }
+  val res = tweets.foreachRDD(saveTweets(_))
+  tweets.print()
   def start() = ssc.start()
   def stop() = ssc.stop()
+  private def saveTweets(tweets: RDD[Tweet]) = {
+    val collectedTweets = tweets.collect()
+    collectedTweets.foreach(a => dbService.insert(a))
+  }
 }
