@@ -73,4 +73,7 @@ trait Application extends Controller {
     val homePage = WS.url("http://localhost:8001/startstream").get();
     Ok("stream strat")
   }
+  def sessions=Action{
+    Ok(views.html.sessions())
+  }
 }

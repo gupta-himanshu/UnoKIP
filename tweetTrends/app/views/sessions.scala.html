@@ -1,0 +1,73 @@
+@* sessions Template File *@
+@main("Sessions") {
+<div ng-app="MyApp">
+	<div data-ng-controller="MyController">
+		<table class="table table-responsive" style="background: #55B2CE; border: solid 1px #FFF;">
+			<tr	ng-repeat="scalaDaysSessionData in details" >
+				<td>{{scalaDaysSessionData.Date}}<br>
+					{{scalaDaysSessionData.Time}}<br>
+					{{scalaDaysSessionData.Room}}
+				</td>
+				<td>
+					<div ng-if="scalaDaysSessionData.Image.contains('~')">
+							<div style="display: inline;">
+								<div style="display: inline; float: left;">
+									<div style="display: inline; float: left;">
+										<img  width="50px" height="50" style=" margin:5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;" 
+										src="{{scalaDaysSessionData.Image.split('~')[0]}}">
+									</div>
+									<div style="display: inline;">
+										{{scalaDaysSessionData.Name.split('~')[0]}}<br>
+										{{scalaDaysSessionData.TwitterID.split('~')[0]}}
+									</div>
+								</div>
+								<div>
+									<div style="display: inline; float: left;">
+										<img  width="50px" height="50" style="margin:5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;" 
+										src="{{scalaDaysSessionData.Image.split('~')[1]}}">
+									</div>
+									<div style="display: inline;">
+										{{scalaDaysSessionData.Name.split('~')[1]}}<br>
+										{{scalaDaysSessionData.TwitterID.split('~')[1]}}
+									</div>
+								</div>
+							</div>
+					</div>
+					<div ng-if ="! scalaDaysSessionData.Image.contains('~')" >
+							<div>
+								<div style="display: inline; float: left;">
+									<img  width="50px" height="50" style="margin:5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;" 
+										src="{{scalaDaysSessionData.Image}}">
+								</div>
+								<div style="display: inline;">
+									{{scalaDaysSessionData.Name}}<br>
+									<a href="http://twitter.com/{{scalaDaysSessionData.TwitterID}}">{{scalaDaysSessionData.TwitterID}}</a>
+								</div>
+							</div>
+					</div>
+				</td>
+				<td>
+					<div>{{scalaDaysSessionData.Topic}}
+						<div class="panel-group" id="{{scalaDaysSessionData.TopicId}}" role="tablist" aria-multiselectable="true">
+						  <div class="panel panel-info">
+						    <div class="panel-heading" role="tab" id="headingOne">
+						      <h4 class="panel-title" align="right">
+						        <a style="color:#55B2CE;" data-toggle="collapse" data-parent="#{{scalaDaysSessionData.TopicId}}" href="#collapse{{scalaDaysSessionData.TopicId}}" aria-expanded="false" aria-controls="collapse{{scalaDaysSessionData.TopicId}}">
+						          Pulses of the session
+						        </a>
+						      </h4>
+						    </div>
+						    <div id="collapse{{scalaDaysSessionData.TopicId}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{scalaDaysSessionData.TopicId}}">
+						      <div class="panel-body">
+						      	@chart()
+						      </div>
+						    </div>
+						  </div>
+  						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+}
