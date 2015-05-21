@@ -14,6 +14,6 @@ object Global {
   private val config = ConfigFactory.load()
   private val appName = config.getString("spark.conf.appName")
   private val master = config.getString("spark.conf.master")
-  private val sparkConf: SparkConf = new SparkConf()//.setAppName(appName).setMaster(master)
+  private val sparkConf: SparkConf = new SparkConf().setAppName(appName).setMaster(master)
   val sc: SparkContext = new SparkContext(sparkConf)
 }

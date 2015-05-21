@@ -55,7 +55,7 @@ trait Application extends Controller {
       val endDate = formatter.print(date)
       val startDate = formatter.parseDateTime(start)
       val end = formatter.parseDateTime(endDate)
-      val res=WS.url("http://localhost:8081/trends?start="+startDate.getMillis+"&end="+end.getMillis).get()
+      val res=WS.url("http://192.168.1.14:8001/trends?start="+startDate.getMillis+"&end="+end.getMillis).get()
      // val res1 = birdTweet.trending1(startDate.getMillis,end.getMillis) 
       val jsonData: JsValue = Await.result(res.map { r => r.json}, 5 second)
       MyWebSocketActor.props(out, jsonData)
@@ -70,7 +70,7 @@ trait Application extends Controller {
   }
   
   def startstream=Action{
-    val homePage = WS.url("http://localhost:8080/startstream").get();
+    val homePage = WS.url("http://192.168.1.14:8001/startstream").get();
     Ok("stream strat")
   }
 }
