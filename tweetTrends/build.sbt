@@ -1,4 +1,4 @@
-name := """tweetTrends"""
+name := """tweetTrendsTest"""
 
 version := "1.0-SNAPSHOT"
 

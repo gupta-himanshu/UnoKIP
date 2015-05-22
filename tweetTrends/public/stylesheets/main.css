@@ -4,6 +4,9 @@
 	margin-left: 10px;
 	border-radius: 15px;
 }
+#panelHead:link,#panelHead:hover,#panelHead:visited,#panelHead:visited,#panelHead:active{
+	text-decoration: none;
+}
 
  #fixed-sidebar {
   	position: fixed;
