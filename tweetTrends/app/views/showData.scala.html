@@ -3,18 +3,25 @@
 @main("Twitter Trends") {
 	<div class = "container-fluid">
 		@header()
-		@datepicker()
 		<div class = "container">
 			<div class = "row">
+				@*<div class="col-md-2" style="font-family: 'Roboto Condensed', sans-serif;">
+				</div>*@
 				<div class="col-md-5 col-xs-12">
-					<table id="table-body" class="table table-hover">
+					<table id="table-body" class="table table-hover" style="font-family: 'Roboto Condensed', sans-serif;">
 						<img class="LoadingImage" src="@routes.Assets.at("images/loading-circle.gif")">
 					</table>
 				</div>
-				<div class="col-md-7 col-xs-12">
+				<div class="col-md-7 col-xs-12" style="min-height: 400px;">
 					@chart()<br><br>
 					<div id="output"></div>
 				</div>
+				@handleWisePage("Person1","#6ee094","userFemale.png")
+				@handleWisePage("Person2","#6e80f4","userMale.png")
+				@handleWisePage("Person3","#6ee094","userFemale.png")
+				@handleWisePage("Person4","#6e80f4","userMale.png")
+				@handleWisePage("Person5","#6ee094","userFemale.png")
+				@handleWisePage("Person6","#6e80f4","userMale.png")
 			</div>
 		</div><br><br><br><br><br><br>
 		@footer()

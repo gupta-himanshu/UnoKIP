@@ -2,6 +2,8 @@ if (window.console) {
   console.log("Welcome to Animation.js file");
 }
 $(document).ready(function() {
+	var divs = $('.goToTop');
+	divs.fadeOut(0);
 	/// mouse hover event
 	$(".icon").mouseenter(function() {
 			$(this).stop(true);	
@@ -25,8 +27,10 @@ $(document).ready(function() {
 				});
 		});
 	$(window).scroll(function() {
+		
 		var top = $(this).scrollTop();
 		if(top >30){
+			divs.fadeIn("fast");
 			$(".logo").stop(true);	
 			$(".logo").clearQueue();
 			$(".logo").animate({
@@ -37,6 +41,7 @@ $(document).ready(function() {
 					});	
 		}
 		else{
+	         divs.fadeOut("fast");
 			$(".logo").stop(true);	
 			$(".logo").clearQueue();
 			$( ".logo" ).animate({

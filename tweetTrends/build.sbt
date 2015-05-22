@@ -1,4 +1,4 @@
-name := """tweetTrendsTest"""
+name := """tweetTrends"""
 
 version := "1.0-SNAPSHOT"
 
@@ -10,7 +10,6 @@ resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositor
 
 libraryDependencies ++= Seq(				
 						ws,
-  						"org.reactivemongo" 	%% 	"reactivemongo" % "0.10.5.0.akka23",
 						"org.webjars" 			%% 	"webjars-play" 		% "2.3.0-2",
   						"org.webjars" 			%	"bootstrap" 		% "3.1.1-2",
 						"com.knoldus"          %%   "spark-services"  %   "1.0",

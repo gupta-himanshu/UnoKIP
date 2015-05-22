@@ -22,6 +22,10 @@ var datepicker = (function() {
 	$('#datetimepicker1').datetimepicker({
 		defaultDate:new Date(),
 		maxDate: new Date(),
+		widgetPositioning:{
+			horizontal:'right',
+	         vertical: 'bottom'
+		},
 		//format: 'DD/MM/YYYY HH:mm:ss'
 	});										
 });
@@ -33,13 +37,13 @@ var change = function(){
 		}
 	$(".LoadingImage").show();
 	$('#table-body').hide();
-	$('#container').hide();
+	$('#chartContainer').hide();
 	/* clearInterval(myVar); */
 	var start = new Date($('#datetimepicker1').data("DateTimePicker").date());
 	var startDate = formatDate(start);
 	wsUri = "ws://localhost:9000/socket?start="+ startDate;
 
-	function WebSocketCall() {
+	function webSocketCall() {
 
 				websocket = new WebSocket(wsUri);
 				websocket.onopen = function(evt) {
@@ -63,7 +67,7 @@ var change = function(){
 					};
 					$(".LoadingImage").hide();
 					$('#table-body').show();
-					$('#container').show();
+					$('#chartContainer').show();
 					websocket.close();
 				};
 				websocket.onerror = function(evt) {
@@ -77,8 +81,9 @@ var change = function(){
 				pre.innerHTML = message;
 				output.appendChild(pre);
 			}
-			WebSocketCall();
-			myVar = setInterval(WebSocketCall,11000);
+			//calling webSocket 
+			webSocketCall();
+			myVar = setInterval(webSocketCall,100000);
 		}
 
 // Date Formatting
@@ -112,8 +117,12 @@ function formatDate(d) {
 
 // Chart Rendering
 var barChart = function(top_data) {
-	$('#container').highcharts({
+	$('#chartContainer').highcharts({
 		chart : {
+			style: {
+				 fontFamily: 'Roboto Condensed'
+            },
+			backgroundColor: '#F7EAC8',
 			type : 'column',
 			margin : 100,
 			options3d : {
@@ -135,10 +144,10 @@ var barChart = function(top_data) {
 				text : 'HashTags'
 			},
 			labels : {
-				rotation : -45,
+				rotation : -30,
 				style : {
 					fontSize : '13px',
-					fontFamily : 'Verdana, sans-serif'
+					fontFamily : 'Roboto Condensed'
 				}
 			}
 		},
@@ -160,7 +169,7 @@ var barChart = function(top_data) {
 			},
 			series : {
 				allowPointSelect : true,
-				color : '#CCFF99',
+				color : '#1ee084',
 				dataLabels : {
 					enabled : true,
 					borderRadius : 5,
@@ -184,7 +193,7 @@ var barChart = function(top_data) {
 				y : 5, // 10 pixels down from the top
 				style : {
 					fontSize : '13px',
-					fontFamily : 'Verdana, sans-serif'
+					fontFamily : 'Roboto Condensed'
 				}
 			}
 		} ]

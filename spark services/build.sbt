@@ -23,8 +23,8 @@ libraryDependencies ++= Seq(
 			          "com.typesafe.play"	 %% 	"play-json"	 	%	 "2.3.9",
 			          "io.netty" % "netty-all" % "4.0.23.Final",
 			          "com.typesafe" % "config" % "1.2.1",
-			          "com.typesafe.akka" %% "akka-slf4j" % "2.3.4" % "provided",
-			          "ch.qos.logback" % "logback-classic" % "1.0.7"
+	          "com.typesafe.akka" %% "akka-slf4j" % "2.3.4" % "provided",
+		"io.spray" %% "spray-testkit" % "1.3.1" % "test"	
 		       )
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
