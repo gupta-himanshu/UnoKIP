@@ -22,6 +22,7 @@ import spray.routing.HttpService
 import spray.routing.directives.ParamDefMagnet.apply
 import spray.util.LoggingContext
 import akka.actor.ActorContext
+import com.knoldus.model.Trend
 
 trait MyService extends HttpService {
 
@@ -44,6 +45,12 @@ trait MyService extends HttpService {
           parameters('start.as[Long], 'end.as[Long]) { (start, end) =>
             respondWithMediaType(`application/json`) {
               implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
+              implicit val trendWrite = new Writes[Trend] {
+                def writes(trend: Trend) = Json.obj(
+                  "hashtag" -> trend.hashtag,
+                  "trend" -> trend.trends)
+              }
+
               val tweetTrends = BirdTweet.trending1(start, end)
               complete {
                 tweetTrends.map(s => HttpResponse(OK, Json.toJson(s).toString()))
@@ -55,6 +62,6 @@ trait MyService extends HttpService {
 }
 
 class MyServiceActor extends Actor with MyService {
-  def actorRefFactory:ActorContext = context
-  def receive:Actor.Receive = runRoute(myRoute)
+  def actorRefFactory: ActorContext = context
+  def receive: Actor.Receive = runRoute(myRoute)
 }

@@ -1,4 +1,4 @@
-name := "spark test"
+name := "spark services"
 
 version := "1.0"
 
@@ -23,8 +23,8 @@ libraryDependencies ++= Seq(
 			          "com.typesafe.play"	 %% 	"play-json"	 	%	 "2.3.9",
 			          "io.netty" % "netty-all" % "4.0.23.Final",
 			          "com.typesafe" % "config" % "1.2.1",
-	          "com.typesafe.akka" %% "akka-slf4j" % "2.3.4" % "provided",
-		"io.spray" %% "spray-testkit" % "1.3.1" % "test"	
+			          "com.typesafe.akka" %% "akka-slf4j" % "2.3.4" % "provided",
+			          "ch.qos.logback" % "logback-classic" % "1.0.7"
 		       )
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -33,7 +33,10 @@ test in assembly := {}
 
 assemblyJarName in assembly := "spark_services-1.0-SNAPSHOT.jar"
 
-excludedJars in assembly <<= (fullClasspath in assembly).map { _ filter { cp =>List("servlet-api", "guice-all", "junit", "uuid","jetty", "jsp-api-2.0", "antlr", "avro", "slf4j-log4j", "log4j-1.2","scala-actors", "commons-cli", "stax-api", "mockito").exists(cp.data.getName.startsWith(_))
+excludedJars in assembly <<= (fullClasspath in assembly) map { _ filter { cp =>
+      List("servlet-api", "guice-all", "junit", "uuid",
+        "jetty", "jsp-api-2.0", "antlr", "avro", "slf4j-log4j", "log4j-1.2",
+        "scala-actors", "commons-cli", "stax-api", "mockito").exists(cp.data.getName.startsWith(_))
     } }
 
 assembleArtifact in packageScala := false  // We don't need the Scala library, Spark already includes it
@@ -44,3 +47,4 @@ mergeStrategy in assembly := {
       case "reference.conf" => MergeStrategy.concat
       case _ => MergeStrategy.first
     }
+

@@ -20,19 +20,26 @@ import utils.JsonParserUtility.tuple2
 import play.api.libs.ws.WS
 import play.api.Logger
 import sprayutility.RoutesFunction
+import services.DBTrendServices
+import play.api.libs.json.Writes
+import services.Trend
 
 /**
  * @author knoldus
  *
  */
 
-object Application extends Application
+object Application extends Application{
+  val dbTrendServices=DBTrendServices
+  
+}
 
 trait Application extends Controller {
 
+  val dbTrendServices:DBTrendServices
   def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
-  
+
   }
   //WebSocket With future
   def socket(start: String): WebSocket[String, JsValue] = WebSocket.acceptWithActor[String, JsValue] { request =>
@@ -42,12 +49,11 @@ trait Application extends Controller {
       val endDate = formatter.print(date)
       val startDate = formatter.parseDateTime(start)
       val end = formatter.parseDateTime(endDate)
-      val res = WS.url("http://192.168.1.14:8001/trends?start=" + startDate.getMillis + "&end=" + end.getMillis).get()
-        .map { response =>
-          Logger.info("Response is ::::::::::::::::: " + response.body)
-          (response.json).as[JsValue]
-        }
-      val jsonData: JsValue = Await.result(res, 60 second)
+     
+      val trend = dbTrendServices.getTrends
+      val res=trend.map { x => x.map { x => (x.hashtag,x.trends) }.sortBy(x=>x._2).reverse }
+        val res1=res.map { x => Json.toJson(x) }
+      val jsonData: JsValue = Await.result(res1, 1 second)
       MyWebSocketActor.props(out, jsonData)
   }
 
@@ -60,7 +66,21 @@ trait Application extends Controller {
   }
 
   def startstream: Action[AnyContent] = Action {
-    val homePage =      WS.url("http://192.168.1.14:8001/startstream").get();
+    val homePage = WS.url("http://192.168.1.14:8001/startstream").get();
     Ok("start stream")
+  }
+
+  def testTrend() = Action.async {
+    val res = dbTrendServices.getTrends
+    implicit val trendWrite = new Writes[Trend] {
+      def writes(trend: Trend) = Json.obj(
+        "hashtag" -> trend.hashtag,
+        "trend" -> trend.trends)
+    }
+    res.map { x => Ok(Json.toJson(x).toString())}.recover{case s=>Ok("not")}
+      }
+  def insTrend() = Action {
+    dbTrendServices.insTrend
+    Ok("done")
   }
 }

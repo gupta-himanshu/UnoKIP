@@ -1,8 +1,5 @@
 package com.knoldus.sprayservices
 
-/**
- * @author knoldus
- */
 
 import akka.actor.{ ActorSystem, Props }
 import akka.event.Logging

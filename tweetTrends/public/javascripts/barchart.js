@@ -83,7 +83,7 @@ var change = function(){
 			}
 			//calling webSocket 
 			webSocketCall();
-			myVar = setInterval(webSocketCall,100000);
+			myVar = setInterval(webSocketCall,13000);
 		}
 
 // Date Formatting
