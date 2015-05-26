@@ -26,9 +26,7 @@ trait DBConnector {
  */
 def connector(host: String, dbName: String, userName: String, password: String): DefaultDB = {
     val driver = new MongoDriver
-    val credentials = Seq(Authenticate(dbName, userName, password))
-    val connection = driver.connection(List(host), nbChannelsPerNode = numOfChannels,
-      authentications = credentials)
+    val connection = driver.connection(List(host))
     connection(dbName)
   }
 }

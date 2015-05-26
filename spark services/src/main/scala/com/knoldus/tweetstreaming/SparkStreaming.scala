@@ -10,10 +10,13 @@ import com.knoldus.model.Tweet
 import com.knoldus.utils.ConstantUtil.streamInterval
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.Future
-
-/**
- * @author knoldus
- */
+import org.apache.spark.rdd.RDD
+import com.knoldus.twittertrends.BirdTweet
+import com.knoldus.twittertrends.TopTrends
+import com.knoldus.db.DBTrendServices
+import scala.util.Success
+import scala.util.Failure
+import com.knoldus.twittertrends.SentimentAnalysis
 
 //This is main object which is collect tweets from twitter stream and perist in mongoDB
 object TweetCollect {
@@ -45,8 +48,17 @@ object TweetCollect {
         case None      => None
       })
   }
-  tweets.foreachRDD { x => x.foreach { x => println(x) } }
-  tweets.foreachRDD { x => x.foreach { x => dbService.insert(x) } }
-  def start() = ssc.start()
-  def stop() = ssc.stop()
+  tweets.foreachRDD(saveTweets(_))
+  //tweets.foreachRDD(analyzeAndSaveTrends(_))
+  tweets.foreachRDD(sentimentAnalysis(_))
+  def start(): Unit = ssc.start()
+  def stop(): Unit = ssc.stop()
+  private def saveTweets(tweetRDD: RDD[Tweet]) = {
+    val collectedTweets = tweetRDD.collect
+    println("No of Actual tweets :::::::::::::::::: " + collectedTweets.size)
+    collectedTweets.foreach(dbService.insert(_))
+  }
+  private def sentimentAnalysis(tweetRDD: RDD[Tweet]) = SentimentAnalysis.sentimentAnalysis(tweetRDD)
+  //private def analyzeAndSaveTrends(tweetRDD: RDD[Tweet]) = TopTrends.trending1(tweetRDD)
+
 }

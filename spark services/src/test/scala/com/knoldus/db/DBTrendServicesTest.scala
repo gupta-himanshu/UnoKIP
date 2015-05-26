@@ -11,20 +11,20 @@ import com.knoldus.model.Trends
 class DBTrendServicesTest extends FunSuite with BeforeAndAfter with DBTrendServices{
 
   test("insertion of trends") {
-    val res = insertTrends(Trends("#source content", 5, 1))
-    val finalRes = Await.result(res, 1 second)
+    val res = insertTrends(Trends("#source content", 5))
+    val finalRes = Await.result(res, 2 second)
     assert(finalRes === true)
   }
   
   test("fetch list of trends") {
     val res = findTrends()
-    val finalRes = Await.result(res, 1 second)
-    assert(finalRes === List(Trends("#source content", 5, 1)))
+    val finalRes = Await.result(res, 2 second)
+    assert(finalRes === List(Trends("#source content", 5)))
   }
   
   test("remove trends from databse") {
     val res = removeTrends()
-    val finalRes = Await.result(res, 1 second)
+    val finalRes = Await.result(res, 2 second)
     assert(finalRes === true)
     
   }

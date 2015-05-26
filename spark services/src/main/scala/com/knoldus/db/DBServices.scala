@@ -43,7 +43,6 @@ def getChunckOfTweet(pageNumber: Int, pageSize: Int): Future[List[Tweet]] = {
   }
 
 def getTimeOfTweet(startTime:Long,end:Long): Future[List[Tweet]] = {
-  
   val query= BSONDocument() /*"create" -> BSONDocument("$gte" -> BSONDateTime(startTime),
                                                    "$lt" -> BSONDateTime(end)))
 */   collTweet.find(query).cursor[Tweet].collect[List]()

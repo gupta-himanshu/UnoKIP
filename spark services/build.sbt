@@ -1,4 +1,4 @@
-name := "spark test"
+name := "spark-services"
 
 version := "1.0"
 
@@ -33,7 +33,10 @@ test in assembly := {}
 
 assemblyJarName in assembly := "spark_services-1.0-SNAPSHOT.jar"
 
-excludedJars in assembly <<= (fullClasspath in assembly).map { _ filter { cp =>List("servlet-api", "guice-all", "junit", "uuid","jetty", "jsp-api-2.0", "antlr", "avro", "slf4j-log4j", "log4j-1.2","scala-actors", "commons-cli", "stax-api", "mockito").exists(cp.data.getName.startsWith(_))
+excludedJars in assembly <<= (fullClasspath in assembly) map { _ filter { cp =>
+      List("servlet-api", "guice-all", "junit", "uuid",
+        "jetty", "jsp-api-2.0", "antlr", "avro", "slf4j-log4j", "log4j-1.2",
+        "scala-actors", "commons-cli", "stax-api", "mockito").exists(cp.data.getName.startsWith(_))
     } }
 
 assembleArtifact in packageScala := false  // We don't need the Scala library, Spark already includes it
@@ -44,3 +47,4 @@ mergeStrategy in assembly := {
       case "reference.conf" => MergeStrategy.concat
       case _ => MergeStrategy.first
     }
+

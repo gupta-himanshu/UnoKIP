@@ -18,46 +18,26 @@ import spray.http.HttpResponse
 import spray.http.MediaTypes.`application/json`
 import spray.http.MediaTypes.`text/html`
 import spray.http.StatusCodes.OK
-import spray.routing._
+import spray.routing.HttpService
 import spray.routing.directives.ParamDefMagnet.apply
 import spray.util.LoggingContext
+import akka.actor.ActorContext
+import com.knoldus.model.Trend
 
 trait MyService extends HttpService {
 
   val myRoute =
-    path("index") {
+    path("startstream") {
       get {
-        entity(as[String]) { json =>
-          respondWithMediaType(`text/html`) {
-            complete {
-              // val result = DBService.insert
-              HttpResponse(OK, "Hello Sandeep " + pass)
-            }
-          }
+        complete {
+          TweetCollect.start()
+          HttpResponse(OK, "Streaming is Started")
         }
       }
     } ~
-//      path("getindex") {
-//        get {
-//          parameter('pass) { password =>
-//            respondWithMediaType(`text/html`) { ctx =>
-//              val result = DBServices.insert(Tweet(591216001431142400L, "<a href=http://fathir.mazaa.us rel=nofollow>Aplikasi #KakakFathir</a>", "#KakakFathir Suka Menghayal ? 67", false, "Somen||48", "amat_skate48", "http://jkt48.com", 2880640850L, "en", new Date()))
-//              result onComplete {
-//                case Success(x)  => ctx.complete({ result.map { x => HttpResponse(OK, "Hello Sandeep " + x) } })
-//                case Failure(ex) => ctx.complete("error")
-//              }
-//            }
-//          }
-//        }
-//      } ~
-      path("startstream") {
-        get {
-          ctx => TweetCollect.start()
-        }
-      } ~
       path("stopstream") {
         get {
-          ctx => { TweetCollect.stop() }
+          complete { TweetCollect.stop(); HttpResponse(OK, "Streaming is Stopped") }
         }
       } ~
       path("trends") {
@@ -65,6 +45,12 @@ trait MyService extends HttpService {
           parameters('start.as[Long], 'end.as[Long]) { (start, end) =>
             respondWithMediaType(`application/json`) {
               implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
+              implicit val trendWrite = new Writes[Trend] {
+                def writes(trend: Trend) = Json.obj(
+                  "hashtag" -> trend.hashtag,
+                  "trend" -> trend.trends)
+              }
+
               val tweetTrends = BirdTweet.trending1(start, end)
               complete {
                 tweetTrends.map(s => HttpResponse(OK, Json.toJson(s).toString()))
@@ -76,7 +62,6 @@ trait MyService extends HttpService {
 }
 
 class MyServiceActor extends Actor with MyService {
-  def actorRefFactory = context
-  def receive = runRoute(myRoute)
+  def actorRefFactory: ActorContext = context
+  def receive: Actor.Receive = runRoute(myRoute)
 }
-
