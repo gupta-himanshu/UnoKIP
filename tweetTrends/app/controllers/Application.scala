@@ -63,7 +63,7 @@ trait Application extends Controller {
   }
   
   def sessions:Action[AnyContent] = Action{
-    Ok(views.html.sessions())
+    Ok(views.html.sessions(Json.toJson("x")))
   }
 
   def startstream: Action[AnyContent] = Action {
@@ -121,7 +121,18 @@ trait Application extends Controller {
     //       case None=>
     //     }}
     displayData.map { x=>
-      Ok(x.toString())
+      implicit val sentimentWrite = new Writes[Sentiment] {
+      def writes(sentiment:Sentiment) = Json.obj(
+        "tweetId" -> sentiment.tweetId,
+        "positiveCount" -> sentiment.positiveCount,
+        "negativeCount" -> sentiment.negativeCount,
+        "neutralCount" -> sentiment.neutralCount,
+        "session" -> sentiment.session,
+        "hastags" -> sentiment.hastags,
+        "content" -> sentiment.content
+        )
+    }
+      Ok(views.html.sessions(Json.toJson(x)))
     }.recover { case s => Ok("not") }
 
   }
@@ -141,7 +152,7 @@ trait Application extends Controller {
     Some(a.foldRight(0)(_ + _))
   }
   
-  def dummy(data:String):Action[AnyContent] = Action{
+  def dummy(data:play.api.libs.json.JsValue):Action[AnyContent] = Action{
     Ok(views.html.dummyGraph(data))
   } 
 

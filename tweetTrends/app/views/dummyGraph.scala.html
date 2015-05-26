@@ -1,3 +1,19 @@
 @* dummyGraph Template File *@
-@(param: String)
-@param
+@(param: play.api.libs.json.JsValue)
+@main("dummyData") {
+	@param
+	<div id="pieContainer1"></div>
+}
+<script src="@routes.Assets.at("javascripts/pieChart.js")" type="text/javascript"></script>
+<script>
+var positive = 10
+var negative = 80
+var neutral = 30
+var data_json = [positive,negative,neutral]
+var t = data_json.toString(); 
+console.log(data_json)
+var j = JSON.parse("["+t+"]");
+console.log(j)
+	console.log(">>>>>>>>>>"+ j)
+	
+</script>

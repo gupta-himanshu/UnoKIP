@@ -5,58 +5,84 @@ console.log("Welcome to angularJs file");
 
 var testM = angular.module("MyApp", []);
 
-/*testM.directive('myChart', function() {
+testM.directive('myChart', function() {
 	return {
 		restrict : 'E',
 		replace : true,
-		template : '<div id="pieContainer{{infos.topicId}}"></div>',
-		controller : function($scope) {
-			var data_json = [ [ 'Positive', 50.0 ], [ 'Negative', 10.0 ],
-					[ 'Neutral', 9.0 ], ] 
-			console.log("mychart")
-			$('#pieContainer1').highcharts({
-				   colors: [ '#92CD00','#CC3637', '#FED200'],
-				    
-				    CHART TITLE 
-				   title: {
-					   text: 'Twitter Sentiment Analysis',
-				      style: {
-				         color: '#000',
-				         font: 'bold 16px Roboto Condensed, sans-serif'
-				      }
-				   },
-				   chart: {
-					   backgroundColor: '#EEEEEE',
-					   plotBorderWidth: 0,
-					   spacingBottom: 0,
-				       spacingTop: 0,
-				       spacingLeft: 0,
-				       spacingRight: 0,
-				       width: null,
-				       height: null,
-				       renderTo: '#pieContainer'+1
-				   },
-				   plotOptions: {
-				       pie: {
-				          cursor: 'pointer',
-				          shadow: false,
-				          dataLabels: {
-				              enabled: true,
-				              format: '{point.percentage:.1f} %'
-				          }
-				       }
-				   },
-				   series: [{
-		            type: 'pie',
-		            name: 'number of tweets',
-		            data: data_json,
-		            showInLegend:true
-		        }]
-	        });
+		scope : {
+			chartid : '='
+		},
+		template : '<div id="pieContainer{{chartid}}"></div>',
+		link : function($scope) {
+			$scope.$watch($scope.chartid,
+					function() {
+						var highchartsOptions = Highcharts.setOptions(Highcharts.theme);     
+						$("#pieContainer" + $scope.chartid).highcharts({
+							colors: [ '#92CD00','#CC0000', '#FF9900'],
+						    
+							   /* CHART TITLE */
+							   chart: {
+								   style: {
+									   font: 'bold 16px "Roboto Condensed", sans-serif'
+							       },
+								   backgroundColor: 'transparent',
+								   plotBorderWidth: 0,
+								   spacingBottom: 0,
+							       spacingTop: 0,
+							       spacingLeft: 0,
+							       spacingRight: 0,
+							       width: null,
+							       height: 200,
+							       renderTo: '#pieContainer'+1
+							   },
+							   title: {
+							       text: ''
+							   },
+							   plotOptions: {
+							       pie: {
+							          cursor: 'pointer',
+							          shadow: false,
+							          dataLabels: {
+							              enabled: true,
+							              format: '{point.percentage:.1f} %'
+							          }
+							       }
+							   },
+							series : [ {
+								type : 'pie',
+								name : 'number of tweets',
+								innerSize: '60%',
+								data : j,
+								showInLegend : false
+							} ]
+						});
+
+						var myElement = document.querySelector("#aas"
+								+ $scope.chartid);
+
+						if (positive >= negative) {
+							if (positive >= neutral) {
+								console.log("positive")
+								myElement.style.backgroundColor = "#93DB70";
+							} else {
+								console.log("neutral")
+								myElement.style.backgroundColor = "#FFC966";
+							}
+						} else {
+							if (negative >= neutral) {
+								console.log("negative")
+								myElement.style.backgroundColor = "#FF4040";
+							} else {
+								console.log("neutral")
+								myElement.style.backgroundColor = "#FFC966";
+							}
+						}
+					});
+
 		}
 	}
 });
-*/
+
 testM.directive('scaladaySessionData', function() {
 	return {
 		restrict : 'E',
@@ -67,24 +93,14 @@ testM.directive('scaladaySessionData', function() {
 		templateUrl : 'userDetails.htm',
 		controller : function($scope) {
 			$scope.userinfos = [];
-			var dates = $scope.sessiondata.Date;
-			var times = $scope.sessiondata.Time;
-			var rooms = $scope.sessiondata.Room;
 			var images = $scope.sessiondata.Image.split("~");
 			var names = $scope.sessiondata.Name.split("~");
 			var twitterIds = $scope.sessiondata.TwitterID.split("~");
-			var topics = $scope.sessiondata.Topic;
-			var topicIDs = $scope.sessiondata.TopicId;
 			for (var i = 0; i < names.length; i++) {
 				$scope.userinfos.push({
-					"date" : dates,
-					"time" : times,
-					"room" : rooms,
 					"image" : images[i],
 					"name" : names[i],
 					"twitterId" : twitterIds[i],
-					"topic" : topics,
-					"topicId" : topicIDs
 				})
 			}
 			$scope.userDetails = $scope.userinfos
