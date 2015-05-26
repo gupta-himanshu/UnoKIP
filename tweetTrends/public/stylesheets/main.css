@@ -4,8 +4,16 @@
 	margin-left: 10px;
 	border-radius: 15px;
 }
-#panelHead:link,#panelHead:hover,#panelHead:visited,#panelHead:visited,#panelHead:active{
+.panelHead{
 	text-decoration: none;
+	background-color: #eee;
+	color:#3434AA;
+}
+#heading1{
+	background-color: #eee;
+}
+#heading2{
+	background-color: #eee;
 }
 
  #fixed-sidebar {

@@ -1,48 +1,47 @@
 @* sessions Template File *@
 @main("Sessions") {
 <div data-ng-app="MyApp" class="container-fluid">
-	<div data-ng-controller="MyController" >
-		
-			<div data-ng-repeat="scalaDaysSessionData in details">
-				<script type="text/ng-template" id="userDetails.htm">
-                   	<div data-ng-repeat="infos in userDetails" style="display:inline;">
-                       	<img data-ng-if="infos.image" width="50px" height="50" style="margin: 5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;"
-                                   src="{{infos.image}}">
-                       	<div style="display:inline;">
-                           	{{infos.name}}
-                           	<a href="http://twitter.com/{{infos.twitterId}}">{{infos.twitterId}}</a>
-                       	</div>
-                   	</div>
-                </script>
-				<div class="row">
-					<div class="col-md-12 col-xs-12">
-						<div class="panel-group" id="{{scalaDaysSessionData.TopicId}}" role="tablist" aria-multiselectable="true" style="margin: 0;">
-							<a id="panelHead" data-toggle="collapse" data-parent="#{{scalaDaysSessionData.TopicId}}" href="#collapse{{scalaDaysSessionData.TopicId}}"  aria-expanded="false" aria-controls="collapse{{scalaDaysSessionData.TopicId}}">
-						  		<div class="panel panel-default row">
-						    		<div class="panel-heading" role="tab" id="headingOne">
-						      			<div>
-						      				<h4 class="panel-title">
-						      					{{scalaDaysSessionData.Topic}}<br>
-						      					{{scalaDaysSessionData.Date}}
-												{{scalaDaysSessionData.Time}}
-												{{scalaDaysSessionData.Room}}
-						          				Pulses<span class="glyphicon glyphicon-chevron-down"></span>
-							      			</h4>
-						      			</div>
-						      			<scaladay-session-data sessiondata="scalaDaysSessionData"> </scaladay-session-data>
-						    		</div>
-						    	</div>
-					      	</a>
-						    <div id="collapse{{scalaDaysSessionData.TopicId}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{scalaDaysSessionData.TopicId}}">
-						      <div class="panel-body">
-						      	Chart
-						      </div>
+	@header()
+	<div data-ng-controller="MyController">
+		<div data-ng-repeat="scalaDaysSessionData in details">
+			<div class="row" style="font-family: Roboto Condensed, sans-serif;">
+				<div class="col-md-12 col-xs-12">
+					<div class="panel-group" id="{{scalaDaysSessionData.TopicId}}" style="margin: 0;">
+						<div class="panel panel-default row">
+						   	<div class="panelHead">
+						    	<scaladay-session-data	 sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
 						    </div>
-						  </div>
-  						</div>
-					</div>
+						</div>
+  					</div>
 				</div>
 			</div>
+		</div>
 	</div>
+	
+	<script type="text/ng-template" id="userDetails.htm">
+    	<div data-ng-repeat="infos in userDetails" class="col-md-12 col-xs-12">
+        	<div  class="col-md-7 col-xs-12">
+				<div class="col-md-2 col-xs-6">
+					<img data-ng-if="infos.image" title={{infos.name}} width="50px" height="50" style="margin: 5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;"
+            	    	src="{{infos.image}}">
+					
+					<!--<my-chart style="height:200px;"></my-chart>-->
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<b>{{infos.topic}}</b><br> {{infos.room}}
+				</div>
+				<div class="col-md-3 col-xs-6">
+					{{infos.date}} {{infos.time}}
+				</div>
+            	<div class="col-md-3 col-xs-6" style="text-align:right;">
+	              	{{infos.name}}<br>
+              		{{infos.twitterId}}
+            	</div>
+			</div>
+			<div class="col-md-5 col-xs-12">
+				<div id="pieContainer{{infos.topicId}}"></div>
+			</div>
+     	</div>
+ 	</script>
 </div>
 }

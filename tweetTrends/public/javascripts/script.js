@@ -5,32 +5,97 @@ console.log("Welcome to angularJs file");
 
 var testM = angular.module("MyApp", []);
 
+/*testM.directive('myChart', function() {
+	return {
+		restrict : 'E',
+		replace : true,
+		template : '<div id="pieContainer{{infos.topicId}}"></div>',
+		controller : function($scope) {
+			var data_json = [ [ 'Positive', 50.0 ], [ 'Negative', 10.0 ],
+					[ 'Neutral', 9.0 ], ] 
+			console.log("mychart")
+			$('#pieContainer1').highcharts({
+				   colors: [ '#92CD00','#CC3637', '#FED200'],
+				    
+				    CHART TITLE 
+				   title: {
+					   text: 'Twitter Sentiment Analysis',
+				      style: {
+				         color: '#000',
+				         font: 'bold 16px Roboto Condensed, sans-serif'
+				      }
+				   },
+				   chart: {
+					   backgroundColor: '#EEEEEE',
+					   plotBorderWidth: 0,
+					   spacingBottom: 0,
+				       spacingTop: 0,
+				       spacingLeft: 0,
+				       spacingRight: 0,
+				       width: null,
+				       height: null,
+				       renderTo: '#pieContainer'+1
+				   },
+				   plotOptions: {
+				       pie: {
+				          cursor: 'pointer',
+				          shadow: false,
+				          dataLabels: {
+				              enabled: true,
+				              format: '{point.percentage:.1f} %'
+				          }
+				       }
+				   },
+				   series: [{
+		            type: 'pie',
+		            name: 'number of tweets',
+		            data: data_json,
+		            showInLegend:true
+		        }]
+	        });
+		}
+	}
+});
+*/
 testM.directive('scaladaySessionData', function() {
-    return {
-        restrict : 'E',
-        replace : true,
-        scope : {
-            sessiondata : "="
-        },
-        templateUrl : 'userDetails.htm',
-        controller : function($scope) {
-            $scope.userinfos = [];
-            var images = $scope.sessiondata.Image.split("~");
-            var names = $scope.sessiondata.Name.split("~");
-            var twitterIds = $scope.sessiondata.TwitterID.split("~");
-            for (var i = 0; i < names.length; i++) {
-                $scope.userinfos.push({
-                    "image" : images[i],
-                    "name" : names[i],
-                    "twitterId" : twitterIds[i]
-                })
-            }
-            $scope.userDetails = $scope.userinfos
-        }
-    }
+	return {
+		restrict : 'E',
+		replace : true,
+		scope : {
+			sessiondata : "="
+		},
+		templateUrl : 'userDetails.htm',
+		controller : function($scope) {
+			$scope.userinfos = [];
+			var dates = $scope.sessiondata.Date;
+			var times = $scope.sessiondata.Time;
+			var rooms = $scope.sessiondata.Room;
+			var images = $scope.sessiondata.Image.split("~");
+			var names = $scope.sessiondata.Name.split("~");
+			var twitterIds = $scope.sessiondata.TwitterID.split("~");
+			var topics = $scope.sessiondata.Topic;
+			var topicIDs = $scope.sessiondata.TopicId;
+			for (var i = 0; i < names.length; i++) {
+				$scope.userinfos.push({
+					"date" : dates,
+					"time" : times,
+					"room" : rooms,
+					"image" : images[i],
+					"name" : names[i],
+					"twitterId" : twitterIds[i],
+					"topic" : topics,
+					"topicId" : topicIDs
+				})
+			}
+			$scope.userDetails = $scope.userinfos
+		}
+	}
 })
 
-testM.controller("MyController",function($scope, $log, $filter) {
+testM
+		.controller(
+				"MyController",
+				function($scope, $log, $filter) {
 					$scope.num = 10000;
 					$scope.predicate = undefined;
 					$scope.sort = true;
@@ -43,7 +108,7 @@ testM.controller("MyController",function($scope, $log, $filter) {
 						}
 
 					}
-					
+
 					/*
 					 * $scope.getUserDetails = { var images =
 					 * scalaDaysSessionData.Image.split("~"); var names =
@@ -598,7 +663,8 @@ testM.controller("MyController",function($scope, $log, $filter) {
 								"Topic" : "A next generation tool for Scala code review",
 								"TopicId" : "54",
 								"Image" : "http://event.scaladays.org/dl/photos/Scala%20Days%202015%20speakers/Alexander_Podkhalyuzin.jpg"
-							}, {
+							},
+							{
 								"Date" : "2015-06-10",
 								"Time" : "16:50",
 								"Room" : "Veilingzaal",
