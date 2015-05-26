@@ -1,4 +1,4 @@
-name := "spark services"
+name := "spark-services"
 
 version := "1.0"
 

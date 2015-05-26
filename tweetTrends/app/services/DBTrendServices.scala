@@ -8,12 +8,18 @@ import reactivemongo.bson.BSONDocument
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
 import reactivemongo.bson.Macros
+import models.Trend._
+import models.Trend
+import scala.concurrent.Future
+import models.Handlers._
+import reactivemongo.bson.BSON
+import com.knoldus.model.Sentiment
+import models.Handlers
 
 /**
  * @author knoldus
  */
 
-case class Trend(hashtag: String, trends: Int)
 
 trait DBTrendServices {
 
@@ -23,25 +29,28 @@ trait DBTrendServices {
   val username: String = config.getString("db.username")
   val pass: String = config.getString("db.password")
 
-  def insTrend{
-    val driver = new MongoDriver
-    val connection = driver.connection(List(host))
-    val db = connection(dbName)
-    val trendColl = db("trends")
-    implicit val reader: BSONDocumentReader[Trend] = Macros.reader[Trend]
-    implicit val writer: BSONDocumentWriter[Trend] = Macros.writer[Trend]
-    val list=trendColl.insert(Trend("ss",4))
-  }
   
-  def getTrends = {
     val driver = new MongoDriver
     val connection = driver.connection(List(host))
     val db = connection(dbName)
+    
     val trendColl = db("trends")
-    implicit val reader: BSONDocumentReader[Trend] = Macros.reader[Trend]
-    implicit val writer: BSONDocumentWriter[Trend] = Macros.writer[Trend]
+ 
+  def getTrends = {
     trendColl.find(BSONDocument()).cursor[Trend].collect[List]()
   }
+  
+    val collHandler = db("handles")
+
+  def findHandler(topicId: String): Future[Option[Handlers]] = {
+    collHandler.find(BSONDocument({ "topicId" -> topicId })).one[Handlers]
+  }
+  
+    
+val sentColl=db("sentiment")
+    def sentimentQuery(handler:String): Future[Option[Sentiment]]={
+      sentColl.find(BSONDocument("session"->handler)).one[Sentiment]
+    }
 }
 
 object DBTrendServices extends DBTrendServices

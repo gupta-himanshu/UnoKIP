@@ -4,7 +4,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import reactivemongo.bson.BSONDocument
 import com.knoldus.model.Trend
-import com.knoldus.model.Handlers
 import com.knoldus.model.Sentiment
 
 trait DBTrendServices extends DBConnector {
@@ -38,11 +37,6 @@ trait DBTrendServices extends DBConnector {
     collTrends.remove(query).map { lastError => lastError.ok }
   }
 
-  val collHandler = db("searchandlers")
-
-  def findHandler(handler: String): Future[List[Handlers]] = {
-    collHandler.find(BSONDocument({ "handler" -> handler })).cursor[Handlers].collect[List]()
-  }
 
   val collSent = db("sentiment")
   def insertSentiment(sentiment: Sentiment): Future[Boolean] = {

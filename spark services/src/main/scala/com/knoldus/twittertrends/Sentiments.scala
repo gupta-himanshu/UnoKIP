@@ -16,10 +16,9 @@ trait SentimentAnalysis {
   def sentimentAnalysis(tweetRDD: RDD[Tweet]) = {
     val positive = Array("happy", "amazing", "good")
     val negative = Array("sad", "bad", "angry")
-    //  val positiveRDD = Global.sc.makeRDD(positive)
-    //  val negativeRDD = Global.sc.makeRDD(negative)
-    //  
+
     val sentiment = tweetRDD.flatMap { tweet =>
+   
       val words = tweet.content.split(" ")
       val s = words.flatMap { x => positive.map { y => x.contains(y) } }
       val sen = s.filter(x => x)
@@ -29,11 +28,12 @@ trait SentimentAnalysis {
       val ncount = nsen.size
       val hashtags = words.filter(_.startsWith("#"))
       val session = words.filter(_.startsWith("@"))
+
       if (pcount > ncount) session.map(handler => Sentiment(tweet.id, Some(1), None, None, handler, hashtags, tweet.content))
       else if (pcount < ncount) session.map(handler => Sentiment(tweet.id, None, Some(1), None, handler, hashtags, tweet.content))
       else session.map(handler => Sentiment(tweet.id, None, None, Some(1), handler, hashtags, tweet.content))
     }.collect
-    
+
     sentiment.foreach { doc =>
       val oldSentiment = dbTrend.findSentiment(doc.session)
       oldSentiment map { result =>

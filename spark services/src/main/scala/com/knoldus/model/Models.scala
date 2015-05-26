@@ -20,18 +20,18 @@ import reactivemongo.bson.BSONDateTime
 
 // Domain for Tweets
 case class Tweet(id: Long, source: String, content: String, retweet: Boolean, authName: String,
-                 username: String, url: String, authId: Long, language: String, create: Date,country:Option[String],
-                 locationName:Option[String],long:Option[Double],lat:Option[Double])
+                 username: String, url: String, authId: Long, language: String, create: Date, country: Option[String],
+                 locationName: Option[String], long: Option[Double], lat: Option[Double])
 
 object Tweet {
   implicit object BSONDateTimeHandler extends BSONHandler[BSONDateTime, DateTime] {
-    def write(time: DateTime):BSONDateTime = BSONDateTime(time.getMillis)
-    def read(bsonDateTime: BSONDateTime):DateTime = new DateTime(bsonDateTime.value)
+    def write(time: DateTime): BSONDateTime = BSONDateTime(time.getMillis)
+    def read(bsonDateTime: BSONDateTime): DateTime = new DateTime(bsonDateTime.value)
   }
 
   implicit object BSONDateTimeHandler1 extends BSONHandler[BSONDateTime, Date] {
-    def write(time: Date):BSONDateTime = BSONDateTime(time.getTime)
-    def read(bsonDateTime: BSONDateTime):Date = new Date(bsonDateTime.value)
+    def write(time: Date): BSONDateTime = BSONDateTime(time.getTime)
+    def read(bsonDateTime: BSONDateTime): Date = new Date(bsonDateTime.value)
   }
   implicit val reader: BSONDocumentReader[Tweet] = Macros.reader[Tweet]
   implicit val writer: BSONDocumentWriter[Tweet] = Macros.writer[Tweet]
@@ -46,14 +46,8 @@ object Trend {
 }
 
 
-case class Handlers(topicId: String, handler: String)
 
-object Handlers {
-  implicit val reader: BSONDocumentReader[Handlers] = Macros.reader[Handlers]
-  implicit val writer: BSONDocumentWriter[Handlers] = Macros.writer[Handlers]
-}
-
-case class Sentiment(tweetId:Long,positiveCount:Option[Int],negativeCount:Option[Int],neutralCount:Option[Int],session:String,hastags:Array[String],content:String)
+case class Sentiment(tweetId: Long, positiveCount: Option[Int], negativeCount: Option[Int], neutralCount: Option[Int], session: String, hastags: Array[String], content: String)
 
 object Sentiment {
   implicit val reader: BSONDocumentReader[Sentiment] = Macros.reader[Sentiment]

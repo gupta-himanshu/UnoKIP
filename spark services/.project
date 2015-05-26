@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>spark test</name>
+  <name>spark-services</name>
   <buildSpec>
     <buildCommand>
       <name>org.scala-ide.sdt.core.scalabuilder</name>
