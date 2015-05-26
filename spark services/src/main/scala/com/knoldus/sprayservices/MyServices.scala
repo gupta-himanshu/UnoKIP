@@ -4,11 +4,8 @@ import java.util.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Failure
 import scala.util.Success
-import com.knoldus.db.DBServices
 import com.knoldus.model.Tweet
-import com.knoldus.sprayservices.RouteRequestHandler.execute
 import com.knoldus.tweetstreaming.TweetCollect
-import com.knoldus.twittertrends.BirdTweet
 import akka.actor.Actor
 import play.api.libs.json.Json
 import play.api.libs.json.Json.toJsFieldJsValueWrapper
@@ -23,6 +20,7 @@ import spray.routing.directives.ParamDefMagnet.apply
 import spray.util.LoggingContext
 import akka.actor.ActorContext
 import com.knoldus.model.Trend
+import com.knoldus.twittertrends.TopTrends
 
 trait MyService extends HttpService {
 
@@ -39,25 +37,7 @@ trait MyService extends HttpService {
         get {
           complete { TweetCollect.stop(); HttpResponse(OK, "Streaming is Stopped") }
         }
-      } ~
-      path("trends") {
-        get {
-          parameters('start.as[Long], 'end.as[Long]) { (start, end) =>
-            respondWithMediaType(`application/json`) {
-              implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
-              implicit val trendWrite = new Writes[Trend] {
-                def writes(trend: Trend) = Json.obj(
-                  "hashtag" -> trend.hashtag,
-                  "trend" -> trend.trends)
-              }
 
-              val tweetTrends = BirdTweet.trending1(start, end)
-              complete {
-                tweetTrends.map(s => HttpResponse(OK, Json.toJson(s).toString()))
-              }
-            }
-          }
-        }
       }
 }
 

@@ -13,15 +13,14 @@ import models.Trend
 import scala.concurrent.Future
 import models.Handlers._
 import reactivemongo.bson.BSON
-import com.knoldus.model.Sentiment
 import models.Handlers
+import models.Sentiment
 
 /**
  * @author knoldus
  */
 
-
-trait DBTrendServices {
+trait DBApi {
 
   val config = ConfigFactory.load()
   val host: String = config.getString("db.hostName")
@@ -29,28 +28,26 @@ trait DBTrendServices {
   val username: String = config.getString("db.username")
   val pass: String = config.getString("db.password")
 
-  
-    val driver = new MongoDriver
-    val connection = driver.connection(List(host))
-    val db = connection(dbName)
-    
-    val trendColl = db("trends")
- 
+  val driver = new MongoDriver
+  val connection = driver.connection(List(host))
+  val db = connection(dbName)
+
+  val trendColl = db("trends")
+
   def getTrends = {
     trendColl.find(BSONDocument()).cursor[Trend].collect[List]()
   }
-  
-    val collHandler = db("handles")
+
+  val collHandler = db("handles")
 
   def findHandler(topicId: String): Future[Option[Handlers]] = {
     collHandler.find(BSONDocument({ "topicId" -> topicId })).one[Handlers]
   }
-  
-    
-val sentColl=db("sentiment")
-    def sentimentQuery(handler:String): Future[Option[Sentiment]]={
-      sentColl.find(BSONDocument("session"->handler)).one[Sentiment]
-    }
+
+  val sentColl = db("sentiment")
+  def sentimentQuery(handler: String): Future[Option[Sentiment]] = {
+    sentColl.find(BSONDocument("session" -> handler)).one[Sentiment]
+  }
 }
 
-object DBTrendServices extends DBTrendServices
+object DBApi extends DBApi

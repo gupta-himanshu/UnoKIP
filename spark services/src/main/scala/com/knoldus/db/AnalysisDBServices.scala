@@ -6,7 +6,7 @@ import reactivemongo.bson.BSONDocument
 import com.knoldus.model.Trend
 import com.knoldus.model.Sentiment
 
-trait DBTrendServices extends DBConnector {
+trait AnalysisDBServices extends DBConnector {
 
   val collTrends = db("trends")
   val query = BSONDocument()
@@ -37,7 +37,6 @@ trait DBTrendServices extends DBConnector {
     collTrends.remove(query).map { lastError => lastError.ok }
   }
 
-
   val collSent = db("sentiment")
   def insertSentiment(sentiment: Sentiment): Future[Boolean] = {
     collSent.insert(sentiment).map { lastError => lastError.ok }
@@ -54,4 +53,4 @@ trait DBTrendServices extends DBConnector {
 
 }
 
-object DBTrendServices extends DBTrendServices
+object AnalysisDBServices extends AnalysisDBServices

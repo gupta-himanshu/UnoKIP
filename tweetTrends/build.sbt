@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
 						ws,
 						"org.webjars" 			%% 	"webjars-play" 		% "2.3.0-2",
   						"org.webjars" 			%	"bootstrap" 		% "3.1.1-2",
-						"com.knoldus"          %%   "spark-services"  %   "1.0",
+  						"org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23",
 						     "joda-time" % "joda-time" % "2.7",
 						     "net.liftweb" %% "lift-json" % "2.6.2"						     		
 )

@@ -22,4 +22,10 @@ object Handlers {
   implicit val writer: BSONDocumentWriter[Handlers] = Macros.writer[Handlers]
 }
 
-  
+case class Sentiment(tweetId: Long, positiveCount: Option[Int], negativeCount: Option[Int],
+                     neutralCount: Option[Int], session: String, hastags: Array[String], content: String)
+
+object Sentiment {
+  implicit val reader: BSONDocumentReader[Sentiment] = Macros.reader[Sentiment]
+  implicit val writer: BSONDocumentWriter[Sentiment] = Macros.writer[Sentiment]
+}
