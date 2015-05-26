@@ -39,7 +39,7 @@ trait Application extends Controller {
   def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
   }
-  def socket(start:String): WebSocket[String, JsValue] = WebSocket.acceptWithActor[String, JsValue] { request =>
+  def socket(start: String): WebSocket[String, JsValue] = WebSocket.acceptWithActor[String, JsValue] { request =>
     out =>
       val trends = dbTrendService.removeTrends()
       val date = new DateTime()
@@ -47,15 +47,18 @@ trait Application extends Controller {
       val endDate = formatter.print(date)
       val startDate = formatter.parseDateTime(start)
       val end = formatter.parseDateTime(endDate)
-      val res=WS.url("http://192.168.1.10:8001/trends?start=" + startDate.getMillis + "&end=" + end.getMillis).get()
-      val jsonData: JsValue = Await.result(res.map { r => r.json}, 5 second)
+      val res = WS.url("http://192.168.1.10:8001/trends?start=" + startDate.getMillis + "&end=" + end.getMillis).get()
+      val jsonData: JsValue = Await.result(res.map { r => r.json }, 5 second)
       MyWebSocketActor.props(out, jsonData)
   }
-  def startstream:Action[AnyContent] =Action{
+  def startstream: Action[AnyContent] = Action {
     val homePage = WS.url("http://192.168.1.10:8001/startstream").get();
     Ok("stream start")
   }
-  def sessions:Action[AnyContent] =Action{
+  def sessions: Action[AnyContent] = Action {
     Ok(views.html.sessions())
+  }
+  def getDataFromMongo: Action[AnyContent] = Action {
+    Ok("Got Data.")
   }
 }
