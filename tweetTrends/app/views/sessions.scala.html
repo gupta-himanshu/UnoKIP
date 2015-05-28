@@ -1,6 +1,9 @@
 @* sessions Template File *@
-@(param : play.api.libs.json.JsValue)
+@(param : List[play.api.libs.json.JsValue])
 @main("Sessions") {
+	@param.map{ record =>
+		@(record \"session") </b><br>
+	}
 <div data-ng-app="MyApp" class="container-fluid">
 	<div data-ng-controller="MyController">
 		<div data-ng-repeat="scalaDaysSessionData in details">
@@ -9,8 +12,8 @@
 					<div class="panel-group" id="{{scalaDaysSessionData.TopicId}}" style="margin: 0;">
 						<div class="panel panel-default row">
 						   	<div class="panelHead">
-						   		@param
 						    	<scaladay-session-data sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
+						    	
 						    </div>
 						</div>
   					</div>
@@ -19,9 +22,10 @@
 		</div>
 	</div>
 	<script>
-		var positive = @(param.\("positiveCount"));
-		var negative = @(param.\("negativeCount"));
-		var neutral = @(param.\("neutralCount"));
+		var positive = @(param(5).\("positiveCount"))+0;
+		var negative = @(param(5).\("negativeCount"))+0;
+		var neutral = @(param(5).\("neutralCount").as[Float]);
+		var session = @(param(5).\("session").as[String]);
 		var data_json = [positive,negative,neutral]
 		var t = data_json.toString(); 
 		console.log(data_json)

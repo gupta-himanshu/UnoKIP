@@ -43,16 +43,19 @@ trait DBTrendServices {
 
   val collHandler = db("handles")
 
-  def findHandler(topicId: String): Future[Option[Handlers]] = {
-      println("finding Handler......")
-    collHandler.find(BSONDocument({ "topicId" -> topicId })).one[Handlers]
+  def findHandler(topicId: String): Future[List[Handlers]] = {
+    println("finding Handler......")
+    val data = collHandler.find(BSONDocument()).cursor[Handlers].collect[List]()
+    //data.map { x => x.map { y => println(y.toString()) } }
+    data
   }
-  
-    
-val sentColl=db("sentiment")
-    def sentimentQuery(handler:String): Future[Option[Sentiment]]={
-      sentColl.find(BSONDocument("session"->handler)).one[Sentiment]
-    }
+
+  val sentColl = db("sentiment")
+  def sentimentQuery(handler: String): Future[List[Sentiment]] = {
+    val data = sentColl.find(BSONDocument("session" -> handler)).cursor[Sentiment].collect[List]()
+    //data.map { x => x.map { y => println(y.toString()) } }
+    data
+  }
 }
 
 object DBTrendServices extends DBTrendServices

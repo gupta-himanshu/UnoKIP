@@ -1,30 +1,30 @@
 package controllers
 
 import scala.concurrent.Await
+import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import play.api.libs.ws.WS
 import com.knoldus.model.Sentiment
 import models.MyWebSocketActor
 import models.Trend
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json._
 import play.api.libs.json.JsValue
-import play.api.libs.ws.WS
 import play.api.libs.json.Json
 import play.api.libs.json.Writes
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
-import play.api.Logger
 import play.api.mvc.WebSocket
 import services.DBTrendServices
 import utils.JsonParserUtility.JsonParser
 import utils.JsonParserUtility.tuple2
-import scala.concurrent.Future
-import play.api.libs.json._
-import net.liftweb.json._
+import play.api.libs.ws.WS
+import play.api.Logger
+import scala.util.Failure
+import scala.util.Success
 
 /**
  * @author knoldus
@@ -61,9 +61,10 @@ trait Application extends Controller {
   def datepick: Action[AnyContent] = Action {
     Ok(views.html.datepicker())
   }
-  
-  def sessions:Action[AnyContent] = Action{
-    Ok(views.html.sessions(Json.toJson("x")))
+
+  def sessions: Action[AnyContent] = Action {
+
+    Ok(views.html.sessions(List()))
   }
 
   def startstream: Action[AnyContent] = Action {
@@ -86,26 +87,52 @@ trait Application extends Controller {
 
   private val DEFAULT_SENTIMENT = Sentiment(0L, None, None, None, "", Array(""), "")
 
-    def testAnalysis(topidId: String) = Action.async {
-    val handler = dbTrendServices.findHandler(topidId)
+  def testAnalysis(topidId: String) = Action {
+    val futureofHandlers = dbTrendServices.findHandler(topidId)
+    //Logger.info(futureofHandlers.toString())
 
     val sentiments =
       for {
-        x <- handler
-        res = x match {
-          case Some(data) => data.handler.map { handler =>
-            Logger.info(">>>>>>>>>>>>>>>>>>>>>>>" + handler)
-            dbTrendServices.sentimentQuery(handler)
-          }
-          case None => {
-            Logger.info(">>>>>>>>>>>>>>>>>>>>>>> Got None")
-            dbTrendServices.sentimentQuery("1")
-           List(Future(None)) 
-          }
-          
+        handlers <- futureofHandlers
+        handlerList = handlers.map { handlerObj => handlerObj.handler.map { handler => handler } }.flatten
+        sentiments <- Future(handlerList map { handler => dbTrendServices.sentimentQuery(handler) })
+      } yield (sentiments)
+    //Logger.info(" >>>>>>>>>>>>>>>>>>>>" + sentiments.toString())
+
+    
+    val topicIds =
+      for {
+        handlers <- futureofHandlers
+        //handlerList = handlers.map { handlerObj => handlerObj.topicId.map { handler => handler } }
+      } yield (handlers)
+    topicIds.map { x => println(x) }
+    val listofSentiment = (sentiments flatMap (sentiment => Future.sequence(sentiment)))
+
+    //implicit val senJsonParser = Json.format[Sentiment]
+    val sentimentFuture = listofSentiment.map { valueList => valueList.flatten
+    }
+    val json = sentimentFuture.map { sentimentList =>
+      sentimentList.map { sentimentList =>
+        //Logger.info("negative " + sentimentList.negativeCount.toString())
+        //Logger.info("positive " + sentimentList.positiveCount.toString())
+        //Logger.info("neutral " + sentimentList.neutralCount.toString())
+        implicit val sentimentWrite = new Writes[Sentiment] {
+          def writes(sentiment: Sentiment) = Json.obj(
+            //"tweetId" -> sentiment.tweetId,
+            "positiveCount" -> sentiment.positiveCount,
+            "negativeCount" -> sentiment.negativeCount,
+            "neutralCount" -> sentiment.neutralCount,
+            "session" -> sentiment.session,
+            "hastags" -> sentiment.hastags,
+            "content" -> sentiment.content)
         }
-      } yield (res)
-    val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
+        Json.toJson(sentimentList)
+      }
+    }
+
+    val jsonData: List[JsValue] = Await.result(json, 1 second)
+    Ok(views.html.sessions(jsonData))
+    /*val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
     listofSentiment.map { x => println(x) }
     val displayData = listofSentiment.map { sentiments =>
       val totalPositiveCount = getPostiveCount(sentiments)
@@ -113,14 +140,14 @@ trait Application extends Controller {
       val totalNeutralCount = getNeutralCount(sentiments)
       DEFAULT_SENTIMENT.copy(positiveCount = totalPositiveCount, negativeCount = totalNegativeCount,
         neutralCount = totalNeutralCount)
-    }
+    }*/
 
     //   val sentiment=handler.map { handler =>  
     //     handler match {
     //       case Some(handler)=>dbTrendServices.sentimentQuery(handler.handler)
     //       case None=>
     //     }}
-    displayData.map { x=>
+    /*    displayData.map { x=>
       implicit val sentimentWrite = new Writes[Sentiment] {
       def writes(sentiment:Sentiment) = Json.obj(
         "tweetId" -> sentiment.tweetId,
@@ -132,9 +159,9 @@ trait Application extends Controller {
         "content" -> sentiment.content
         )
     }
-      Ok(views.html.sessions(Json.toJson(x)))
-    }.recover { case s => Ok("not") }
-
+      Ok(Json.toJson(x))
+    }.recover { case s => Ok("not") }*/
+    //Ok("Done")
   }
 
   private def getPostiveCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
@@ -151,9 +178,9 @@ trait Application extends Controller {
     val a = sentiments map (sentiment => sentiment.getOrElse(DEFAULT_SENTIMENT).neutralCount.getOrElse(0))
     Some(a.foldRight(0)(_ + _))
   }
-  
-  def dummy(data:play.api.libs.json.JsValue):Action[AnyContent] = Action{
+
+  def dummy(data: play.api.libs.json.JsValue): Action[AnyContent] = Action {
     Ok(views.html.dummyGraph(data))
-  } 
+  }
 
 }

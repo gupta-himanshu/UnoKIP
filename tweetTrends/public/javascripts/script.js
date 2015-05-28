@@ -20,7 +20,6 @@ testM.directive('myChart', function() {
 						$("#pieContainer" + $scope.chartid).highcharts({
 							colors: [ '#92CD00','#CC0000', '#FF9900'],
 						    
-							   /* CHART TITLE */
 							   chart: {
 								   style: {
 									   font: 'bold 16px "Roboto Condensed", sans-serif'
@@ -57,7 +56,7 @@ testM.directive('myChart', function() {
 							} ]
 						});
 
-						var myElement = document.querySelector("#record" + $scope.chartid);
+						/*var myElement = document.querySelector("#record" + $scope.chartid);
 						console.log(myElement);
 						var max = function(positive, negative, neutral){
 							if (positive >= negative) {
@@ -78,7 +77,7 @@ testM.directive('myChart', function() {
 								}
 							}
 						}
-						max(positive, negative, neutral);
+						max(positive, negative, neutral);*/
 					});
 
 		}
