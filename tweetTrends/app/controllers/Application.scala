@@ -86,7 +86,7 @@ trait Application extends Controller {
 
   private val DEFAULT_SENTIMENT = Sentiment(0L, None, None, None, "", Array(""), "")
 
-  def testAnalysis(topidId: String) = Action.async {
+    def testAnalysis(topidId: String) = Action.async {
     val handler = dbTrendServices.findHandler(topidId)
 
     val sentiments =

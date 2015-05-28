@@ -15,11 +15,13 @@ import models.Handlers._
 import reactivemongo.bson.BSON
 import com.knoldus.model.Sentiment
 import models.Handlers
+import play.api.Logger
+import scala.util.Failure
+import scala.util.Success
 
 /**
  * @author knoldus
  */
-
 
 trait DBTrendServices {
 
@@ -29,18 +31,17 @@ trait DBTrendServices {
   val username: String = config.getString("db.username")
   val pass: String = config.getString("db.password")
 
-  
-    val driver = new MongoDriver
-    val connection = driver.connection(List(host))
-    val db = connection(dbName)
-    
-    val trendColl = db("trends")
- 
+  val driver = new MongoDriver
+  val connection = driver.connection(List(host))
+  val db = connection(dbName)
+
+  val trendColl = db("trends")
+
   def getTrends = {
     trendColl.find(BSONDocument()).cursor[Trend].collect[List]()
   }
-  
-    val collHandler = db("handles")
+
+  val collHandler = db("handles")
 
   def findHandler(topicId: String): Future[Option[Handlers]] = {
       println("finding Handler......")

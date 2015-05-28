@@ -9,6 +9,7 @@
 					<div class="panel-group" id="{{scalaDaysSessionData.TopicId}}" style="margin: 0;">
 						<div class="panel panel-default row">
 						   	<div class="panelHead">
+						   		@param
 						    	<scaladay-session-data sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
 						    </div>
 						</div>
@@ -18,9 +19,9 @@
 		</div>
 	</div>
 	<script>
-		var positive = @(param.\("positiveCount"))+2;
-		var negative = @(param.\("negativeCount"))+2
-		var neutral = @(param.\("neutralCount"))+1;
+		var positive = @(param.\("positiveCount"));
+		var negative = @(param.\("negativeCount"));
+		var neutral = @(param.\("neutralCount"));
 		var data_json = [positive,negative,neutral]
 		var t = data_json.toString(); 
 		console.log(data_json)

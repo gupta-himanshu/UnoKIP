@@ -2,7 +2,8 @@
 <div class="col-md-12 col-xs-12" style="background: #61C9E6;">
 	<div class="col-md-12 col-xs-12" style="padding: 10px; background: #4695AE; color: #FFF;"> {{sessiondata.Date}} {{sessiondata.Time}}</div>
 	<div data-ng-repeat="infos in userDetails" style="vertical-align:top;">
-		<div class="col-md-3 col-xs-12" id="record{{infos.topicId}}" style="padding: 5px;">
+	<a href="/test?topicId={{infos.topicId}}">
+		<div class="col-md-3 col-xs-12" id="record{{infos.topicId}}" style="padding: 5px; border-radius:0 0 15px 15px;">
 			<div data-ng-bind="infos.topic" class="col-md-12 col-xs-12" style="color: #FFF;" ></div>
 			<div class="col-md-12 col-xs-12" style="font-size: 10px;">
 				 {{infos.room}}
@@ -19,5 +20,6 @@
 			</div>
 			<a href="#" style="font-size: 10px;">top contributers</a> <a href="#" style="font-size: 10px;">top hashtags</a>
 		</div>
+		</a>
 	</div>
 </div>

@@ -71,10 +71,10 @@ testM.directive('myChart', function() {
 							} else {
 								if (negative >= neutral) {
 									console.log("negative")
-									myElement.style.backgroundColor = "rgb(255,201,102)";
+									myElement.style.backgroundColor = "#FF6666"; 
 								} else {
 									console.log("neutral")
-									myElement.style.backgroundColor = "#FFC966";
+									myElement.style.backgroundColor ="rgb(255,201,102)";
 								}
 							}
 						}
