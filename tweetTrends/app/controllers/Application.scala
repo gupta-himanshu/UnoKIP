@@ -85,7 +85,6 @@ trait Application extends Controller {
 
   def testAnalysis(topidId: String) = Action.async {
     val handler = dbApi.findHandler(topidId)
-
     val sentiments =
       for {
         handlers <- handler
@@ -95,6 +94,7 @@ trait Application extends Controller {
           }
           case None => List(Future(None))
         }
+
       } yield (res)
     val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
     val displayData = listofSentiment.map { sentiments =>
@@ -107,7 +107,6 @@ trait Application extends Controller {
 
     displayData.map { x => Ok(x + "?????") }.recover { case s => Ok("not") }
   }
-
 }
 
 

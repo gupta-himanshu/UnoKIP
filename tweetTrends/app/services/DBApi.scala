@@ -15,6 +15,7 @@ import models.Handlers._
 import reactivemongo.bson.BSON
 import models.Handlers
 import models.Sentiment
+import models.OtherAnalysis
 
 /**
  * @author knoldus
@@ -48,6 +49,13 @@ trait DBApi {
   def sentimentQuery(handler: String): Future[Option[Sentiment]] = {
     sentColl.find(BSONDocument("session" -> handler)).one[Sentiment]
   }
+  
+  
+  val collHashtag=db("hashtags")
+  def findHashtag(session:String): Future[List[OtherAnalysis]] = {
+    collHashtag.find(BSONDocument("session"-> session)).cursor[OtherAnalysis].collect[List]()
+  }
+
 }
 
 object DBApi extends DBApi
