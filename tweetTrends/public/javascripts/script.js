@@ -15,7 +15,7 @@ function drawChart(chartId) {
 			var positive = data.positiveCount;
 			var negative = data.negativeCount;
 			var nuetral = data.neutralCount;
-			var jsonData = [ positive, negative, nuetral ];
+			var jsonData = [["positive", positive],["negative", negative],["nuetral", nuetral ]];
 			var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 			if (positive > 0 || negative > 0 || nuetral > 0) {
 				$("#pieContainer" + chartId).highcharts({
@@ -39,9 +39,9 @@ function drawChart(chartId) {
 					},
 					plotOptions : {
 						pie : {
+							allowPointSelect: true,
 							cursor : 'pointer',
 							shadow : false,
-							innerSize: 60,
 							dataLabels : {
 								enabled : true,
 								format : '{point.percentage:.1f} %'
@@ -50,10 +50,13 @@ function drawChart(chartId) {
 					},
 					series : [ {
 						type : 'pie',
-						name : 'Number Of Tweets',
+						name : 'Tweets',
 						data : jsonData,
 						showInLegend : false
-					} ]
+					} ],
+					drilldown: {
+	                    series: drilldownSeries
+	                }
 				});
 			}
 
