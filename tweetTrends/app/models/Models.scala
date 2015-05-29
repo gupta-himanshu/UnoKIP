@@ -36,3 +36,10 @@ object OtherAnalysis {
   implicit val reader: BSONDocumentReader[OtherAnalysis] = Macros.reader[OtherAnalysis]
   implicit val writer: BSONDocumentWriter[OtherAnalysis] = Macros.writer[OtherAnalysis]
 }
+
+case class TweetDetails(tweetId:Long,content:String,hashtags:Array[String],username:String,session:String,sentiment:Double)
+
+object TweetDetails {
+  implicit val reader: BSONDocumentReader[TweetDetails] = Macros.reader[TweetDetails]
+  implicit val writer: BSONDocumentWriter[TweetDetails] = Macros.writer[TweetDetails]
+}

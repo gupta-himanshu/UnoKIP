@@ -28,6 +28,7 @@ import play.api.libs.ws.WS
 import play.api.Logger
 import utils.SentimentAnalysisUtility
 import models.Sentiment
+import models.TweetDetails
 
 /**
  * @author knoldus
@@ -93,8 +94,8 @@ trait Application extends Controller {
 
   private val DEFAULT_SENTIMENT = Sentiment("session", None, None, None)
 
-  def testAnalysis(topidId: String) = Action.async {
-    val futureofHandlers = dbApi.findHandler(topidId)
+  def testAnalysis(topicId: String) = Action.async {
+    val futureofHandlers = dbApi.findHandler(topicId)
     val sentiments =
       for {
         handlers <- futureofHandlers
@@ -131,8 +132,26 @@ trait Application extends Controller {
     Some(a.foldRight(0)(_ + _))
   }
 
-  def dummy(data: play.api.libs.json.JsValue): Action[AnyContent] = Action {
-    Ok(views.html.dummyGraph(data))
-  }
+  def getTweetsDetails(topicId: String) = Action.async {
+    val futureofHandlers = dbApi.findHandler(topicId)
+    val tweetDetails = for {
+      handlers <- futureofHandlers
+      res = handlers match {
+        case Some(data) => data.handler.map { handler =>
+          val s = dbApi.findTweetDetails(handler)
+          s
+        }
+        case None => Nil
+      }
 
+    } yield (res)
+    val futureTweets = tweetDetails flatMap { detail => Future.sequence(detail) }
+    val displayData = futureTweets.map { list => 
+      list.flatten
+    }
+    val content = displayData map { list => list.map { tweetDetail => tweetDetail.content } }
+    val username = displayData map { list => list.map { tweetDetail => tweetDetail.username } }
+    println(username.map { x => x })
+    displayData map { content => Ok(content.toString()) }
+  }
 }

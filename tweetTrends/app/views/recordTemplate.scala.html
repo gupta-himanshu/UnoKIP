@@ -9,13 +9,13 @@
         				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         				<h4 class="modal-title" id="myModalLabel{{infos.topicId}}" style="color: #673AB2 !important;">{{infos.topic}}</h4>
       				</div>
-      				<div class="modal-body">
-        				{{infos.topicId}}{{infos.topic}}{{infos.twitterId}}
+      				<div class="modal-body" id="myModalBody{{infos.topicId}}">
+        				<div class="col-md-12 col-xs-12" id ="modelData{{infos.topicId}}">tweets</div>
       				</div>
     			</div>
   			</div>
 		</div>
-		<a  data-toggle="modal" data-target="#myModal{{infos.topicId}}"><div class="col-md-3 col-xs-12" id="record{{infos.topicId}}" style="padding: 5px; border-radius:0 0 15px 15px;">
+		<div class="col-md-3 col-xs-12" id="record{{infos.topicId}}" style="padding: 5px; border-radius:0 0 15px 15px;">
 			<div data-ng-bind="infos.topic" class="col-md-12 col-xs-12" style="color: #FFF;" ></div>
 			<div class="col-md-12 col-xs-12" style="font-size: 10px;">
 				 {{infos.room}} 
@@ -29,8 +29,8 @@
 			</div>
 			<div class="col-md-6 col-xs-12">
 				<my-chart chartid="infos.topicId"></my-chart>
-				<!-- <div id="pieContainer{{infos.topicId}}"></div>-->
+				<my-link linkid="infos.topicId"></my-link>
 			</div>
-		</div></a>
+		</div>
 	</div>
 </div>

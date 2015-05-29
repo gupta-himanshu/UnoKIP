@@ -4,7 +4,17 @@
 console.log("Welcome to angularJs file");
 
 var testM = angular.module("MyApp", []);
-
+//data for Model
+var getTweetDetail = function(topicId){
+	$.ajax({
+		url : "gettweets?topicId=" + topicId,
+		type : 'GET',
+		async : true,
+		success : function(data) {
+			$("#myModalBody"+topicId).text(data);
+		}
+	})
+}
 function drawChart(chartId) {
 	$.ajax({
 		url : "/test?topicId=" + chartId,
@@ -54,9 +64,6 @@ function drawChart(chartId) {
 						data : jsonData,
 						showInLegend : false
 					} ],
-					drilldown: {
-	                    series: drilldownSeries
-	                }
 				});
 			}
 
@@ -77,10 +84,26 @@ testM.directive('myChart', function($interval) {
 				drawChart($scope.chartid);
 				$interval(function() {
 					drawChart($scope.chartid);
-				}, 40000);
+				}, 60000);
 
 			});
 
+		}
+	}
+});
+
+testM.directive('myLink', function() {
+	return {
+		restrict : 'E',
+		replace : true,
+		scope : {
+			linkid : '='
+		},
+		template : '<a class="btn btn-primary" data-toggle="modal" data-target="#myModal{{linkid}}">Click</a>',
+		link : function($scope, element) {
+			element.bind('click', function () {
+                getTweetDetail($scope.linkid);
+            });
 		}
 	}
 });
@@ -112,11 +135,7 @@ testM.directive('scaladaySessionData', function() {
 	}
 })
 
-testM
-		.controller(
-				"MyController",
-				function($scope, $log, $filter) {
-
+testM.controller("MyController",function($scope, $log, $filter) {
 					$scope.details = [
 							{
 								"Date" : "2015-06-08",
