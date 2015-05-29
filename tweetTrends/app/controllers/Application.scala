@@ -52,7 +52,6 @@ trait Application extends Controller {
       val endDate = formatter.print(date)
       val startDate = formatter.parseDateTime(start)
       val end = formatter.parseDateTime(endDate)
-
       val trend = dbApi.getTrends
       val res = trend.map { x => x.map { x => (x.hashtag, x.trends) }.sortBy(x => x._2).reverse }
       val res1 = res.map { x => Json.toJson(x) }
@@ -94,8 +93,32 @@ trait Application extends Controller {
           }
           case None => List(Future(None))
         }
-
       } yield (res)
+
+    val hashtags =
+      for {
+        handlers <- handler
+        res = handlers match {
+          case Some(data) => data.handler.map { handler =>
+            dbApi.findHashtag(handler)
+
+          }
+
+          case None => List(Future(None))
+        }
+      } yield (res)
+
+    val hash = hashtags.flatMap(hashtag => Future.sequence(hashtag))
+    val s = hash.map { x =>
+      x.map { x =>
+        x match {
+          case Some(data) => data.hashtag
+          case None       => Array("")
+        }
+      }
+    }
+    val pair = s.map { x => x.flatMap { x => x.map { x => (x, 1) } } }
+    val hashtag = pair.map(x => x.groupBy(_._1).map(data => data._1 -> data._2.map(_._2).sum))  
     val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
     val displayData = listofSentiment.map { sentiments =>
       val totalPositiveCount = sentimentUtility.getPostiveCount(sentiments)
@@ -107,6 +130,8 @@ trait Application extends Controller {
 
     displayData.map { x => Ok(x + "?????") }.recover { case s => Ok("not") }
   }
+  
+  
 }
 
 

@@ -52,10 +52,11 @@ trait DBApi {
   
   
   val collHashtag=db("hashtags")
-  def findHashtag(session:String): Future[List[OtherAnalysis]] = {
-    collHashtag.find(BSONDocument("session"-> session)).cursor[OtherAnalysis].collect[List]()
+  def findHashtag(session:String): Future[Option[OtherAnalysis]] = {
+    collHashtag.find(BSONDocument("session"-> session)).one[OtherAnalysis]
   }
 
+  
 }
 
 object DBApi extends DBApi

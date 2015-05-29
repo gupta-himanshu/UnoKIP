@@ -6,7 +6,7 @@ import models.Sentiment
  */
 trait SentimentAnalysisUtility {
 
-  val DEFAULT_SENTIMENT = Sentiment(0L, None, None, None, "", Array(""), "")
+  val DEFAULT_SENTIMENT = Sentiment("", None, None, None)
 
   def getPostiveCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
     val a = sentiments map (sentiment => sentiment.getOrElse(DEFAULT_SENTIMENT).positiveCount.getOrElse(0))

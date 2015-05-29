@@ -46,23 +46,16 @@ trait AffinSentiments {
       session.map(handler => TweetDetails(tweet.id, tweet.content, hashtags, tweet.username, handler, value))
     }.collect()
 
-    details.foreach { x => dbTrend.insertHashtag(OtherAnalysis(x.session, x.hashtags,x.username)) }
+    details.foreach { x => dbTrend.insertTweetDetails(x) }
 
     val sentiment = details.flatMap { tweetDetail =>
 
       val tweetsDetails = dbTrend.findTweetDetails(tweetDetail.session)
-      //      val top5hashtags = for {
-      //        details <- tweetsDetails
-      //        val hashtagspair = details.flatMap { x => x.hashtags.map { x => (x, 1) } }
-      //        val hashpairRDD = Global.sc.parallelize(hashtagspair)
-      //        val top5hastags = hashpairRDD.reduceByKey((x, y) => x + y).sortBy({ case (_, value) => value }, false) take (5)
-      //      } yield (top5hastags)
-
       val words = tweetDetail.content.split(" ")
-      val session = words.filter(_.startsWith("@"))
+      val session = words.filter(_.startsWith("@")).map { x => x.replace("@", "") }
       if (tweetDetail.sentiment > 0) {
         println("happy")
-        
+
         session.map { handler => Sentiment(handler, Some(1), None, None) }
       } else if (0 > tweetDetail.sentiment) {
         println("negative")
@@ -74,10 +67,12 @@ trait AffinSentiments {
     }
 
     sentiment.foreach { doc =>
+      println(doc.session)
       val oldSentiment = dbTrend.findSentiment(doc.session)
       oldSentiment map { result =>
         result match {
           case Some(sentiment) =>
+
             if (doc.positiveCount.isDefined)
               dbTrend.updateSentiment(sentiment.copy(positiveCount = Some(sentiment.positiveCount.getOrElse(0) + 1)))
             if (doc.negativeCount.isDefined)

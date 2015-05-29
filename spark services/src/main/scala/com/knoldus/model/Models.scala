@@ -53,7 +53,7 @@ object Sentiment {
   implicit val writer: BSONDocumentWriter[Sentiment] = Macros.writer[Sentiment]
 }
 
-case class OtherAnalysis(  session: String,hashtag:Array[String],contributor:String)
+case class OtherAnalysis(session: String,hashtag:Array[String],contributor:String)
 
 object OtherAnalysis {
   implicit val reader: BSONDocumentReader[OtherAnalysis] = Macros.reader[OtherAnalysis]
@@ -68,3 +68,11 @@ object TweetDetails {
   implicit val writer: BSONDocumentWriter[TweetDetails] = Macros.writer[TweetDetails]
 }
 
+case class Handlers(topicId: String, handler: List[String])
+
+object Handlers {
+  implicit val reader: BSONDocumentReader[Handlers] = Macros.reader[Handlers]
+  implicit val writer: BSONDocumentWriter[Handlers] = Macros.writer[Handlers]
+}
+
+case class WordList(word: String, value: Double)

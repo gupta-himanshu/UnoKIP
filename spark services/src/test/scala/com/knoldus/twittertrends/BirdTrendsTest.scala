@@ -1,4 +1,4 @@
-package com.knoldus.twittertrends
+/*package com.knoldus.twittertrends
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
@@ -34,4 +34,4 @@ class BirdTrendTest extends FunSuite with MockitoSugar {
     val fres = Await.result(trends, 3 second)
     assert(fres.size === 1)
   }
-}
+}*/
