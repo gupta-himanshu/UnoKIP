@@ -13,17 +13,19 @@ import models.Trend
 import scala.concurrent.Future
 import models.Handlers._
 import reactivemongo.bson.BSON
-import com.knoldus.model.Sentiment
 import models.Handlers
 import play.api.Logger
 import scala.util.Failure
 import scala.util.Success
+import models.Sentiment
+import models.OtherAnalysis
 
 /**
  * @author knoldus
  */
 
-trait DBTrendServices {
+
+trait DBApi {
 
   val config = ConfigFactory.load()
   val host: String = config.getString("db.hostName")
@@ -43,19 +45,25 @@ trait DBTrendServices {
 
   val collHandler = db("handles")
 
-  def findHandler(topicId: String): Future[List[Handlers]] = {
+  def findHandler(topicId: String): Future[Option[Handlers]] = {
     println("finding Handler......")
-    val data = collHandler.find(BSONDocument()).cursor[Handlers].collect[List]()
-    //data.map { x => x.map { y => println(y.toString()) } }
+    val data = collHandler.find(BSONDocument("topicId"->topicId)).one[Handlers]
+    data.map { x => x.map { y => println(y.toString()) } }
     data
   }
 
   val sentColl = db("sentiment")
-  def sentimentQuery(handler: String): Future[List[Sentiment]] = {
-    val data = sentColl.find(BSONDocument("session" -> handler)).cursor[Sentiment].collect[List]()
-    //data.map { x => x.map { y => println(y.toString()) } }
+  def sentimentQuery(handler: String): Future[Option[Sentiment]] = {
+    val session = handler.replace("@", "") 
+    val data = sentColl.find(BSONDocument("session" -> session)).one[Sentiment]
+    data.map { x => x.map { y => println(y.toString()) } }
     data
+  }
+  
+  val collHashtag=db("hashtags")
+  def findHashtag(session:String): Future[List[OtherAnalysis]] = {
+    collHashtag.find(BSONDocument("session"-> session)).cursor[OtherAnalysis].collect[List]()
   }
 }
 
-object DBTrendServices extends DBTrendServices
+object DBApi extends DBApi

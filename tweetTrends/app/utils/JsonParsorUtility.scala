@@ -2,7 +2,7 @@ package utils;
 
 import play.api.libs.json.Json
 import play.api.libs.json.Writes
-import com.knoldus.model.Trend
+import models.Trend
 
 object JsonParserUtility{
   implicit def JsonParser=Json.format[Trend]

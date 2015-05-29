@@ -5,7 +5,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import com.knoldus.model.Sentiment
 import models.MyWebSocketActor
 import models.Trend
 import play.api.Play.current
@@ -18,13 +17,17 @@ import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import play.api.mvc.WebSocket
-import services.DBTrendServices
-import utils.JsonParserUtility.JsonParser
+import services.DBApi
 import utils.JsonParserUtility.tuple2
 import play.api.libs.ws.WS
 import play.api.Logger
 import scala.util.Failure
 import scala.util.Success
+import sprayutility.RoutesFunction
+import play.api.libs.ws.WS
+import play.api.Logger
+import utils.SentimentAnalysisUtility
+import models.Sentiment
 
 /**
  * @author knoldus
@@ -32,13 +35,16 @@ import scala.util.Success
  */
 
 object Application extends Application {
-  val dbTrendServices = DBTrendServices
-
+  val dbApi = DBApi
+  val sentimentUtility = SentimentAnalysisUtility
+  val routes: RoutesFunction = RoutesFunction
 }
 
 trait Application extends Controller {
 
-  val dbTrendServices: DBTrendServices
+  val dbApi: DBApi
+  val sentimentUtility: SentimentAnalysisUtility
+  val routes: RoutesFunction
   def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
 
@@ -51,7 +57,7 @@ trait Application extends Controller {
       val endDate = formatter.print(date)
       val startDate = formatter.parseDateTime(start)
       val end = formatter.parseDateTime(endDate)
-      val trend = dbTrendServices.getTrends
+      val trend = dbApi.getTrends
       val res = trend.map { x => x.map { x => (x.hashtag, x.trends) }.sortBy(x => x._2).reverse }
       val res1 = res.map { x => Json.toJson(x) }
       val jsonData: JsValue = Await.result(res1, 1 second)
@@ -63,17 +69,17 @@ trait Application extends Controller {
   }
 
   def sessions: Action[AnyContent] = Action {
-
-    Ok(views.html.sessions(List()))
+    val json = "{'positiveCount':0,'negativeCount':0,'neutralCount':0}"
+    Ok(views.html.sessions(Json.toJson(json)))
   }
 
   def startstream: Action[AnyContent] = Action {
-    val homePage = WS.url("http://192.168.1.14:8001/startstream").get();
+    val homePage = routes.startStream()
     Ok("start stream")
   }
 
   def testTrend() = Action.async {
-    val res = dbTrendServices.getTrends
+    val res = dbApi.getTrends
     implicit val trendWrite = new Writes[Trend] {
       def writes(trend: Trend) = Json.obj(
         "hashtag" -> trend.hashtag,
@@ -85,97 +91,43 @@ trait Application extends Controller {
   /*case class Sentiment(tweetId: Long, positiveCount: Option[Int], negativeCount: Option[Int],
                        neutralCount: Option[Int], session: String, hastags: Array[String], content: String)*/
 
-  private val DEFAULT_SENTIMENT = Sentiment(0L, None, None, None, "", Array(""), "")
+  private val DEFAULT_SENTIMENT = Sentiment("session", None, None, None)
 
-  def testAnalysis(topidId: String) = Action {
-    val futureofHandlers = dbTrendServices.findHandler(topidId)
-    //Logger.info(futureofHandlers.toString())
-
+  def testAnalysis(topidId: String) = Action.async {
+    val futureofHandlers = dbApi.findHandler(topidId)
     val sentiments =
       for {
         handlers <- futureofHandlers
-        handlerList = handlers.map { handlerObj => handlerObj.handler.map { handler => handler } }.flatten
-        sentiments <- Future(handlerList map { handler => dbTrendServices.sentimentQuery(handler) })
-      } yield (sentiments)
-    //Logger.info(" >>>>>>>>>>>>>>>>>>>>" + sentiments.toString())
-
-    
-    val topicIds =
-      for {
-        handlers <- futureofHandlers
-        //handlerList = handlers.map { handlerObj => handlerObj.topicId.map { handler => handler } }
-      } yield (handlers)
-    topicIds.map { x => println(x) }
-    val listofSentiment = (sentiments flatMap (sentiment => Future.sequence(sentiment)))
-
-    //implicit val senJsonParser = Json.format[Sentiment]
-    val sentimentFuture = listofSentiment.map { valueList => valueList.flatten
-    }
-    val json = sentimentFuture.map { sentimentList =>
-      sentimentList.map { sentimentList =>
-        //Logger.info("negative " + sentimentList.negativeCount.toString())
-        //Logger.info("positive " + sentimentList.positiveCount.toString())
-        //Logger.info("neutral " + sentimentList.neutralCount.toString())
-        implicit val sentimentWrite = new Writes[Sentiment] {
-          def writes(sentiment: Sentiment) = Json.obj(
-            //"tweetId" -> sentiment.tweetId,
-            "positiveCount" -> sentiment.positiveCount,
-            "negativeCount" -> sentiment.negativeCount,
-            "neutralCount" -> sentiment.neutralCount,
-            "session" -> sentiment.session,
-            "hastags" -> sentiment.hastags,
-            "content" -> sentiment.content)
+        res = handlers match {
+          case Some(data) => data.handler.map { handler =>
+            dbApi.sentimentQuery(handler)
+          }
+          case None => List(Future(None))
         }
-        Json.toJson(sentimentList)
-      }
-    }
 
-    val jsonData: List[JsValue] = Await.result(json, 1 second)
-    Ok(views.html.sessions(jsonData))
-    /*val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
-    listofSentiment.map { x => println(x) }
+      } yield (res)
+    val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
     val displayData = listofSentiment.map { sentiments =>
-      val totalPositiveCount = getPostiveCount(sentiments)
-      val totalNegativeCount = getNegativeCount(sentiments)
-      val totalNeutralCount = getNeutralCount(sentiments)
-      DEFAULT_SENTIMENT.copy(positiveCount = totalPositiveCount, negativeCount = totalNegativeCount,
+      val totalPositiveCount = sentimentUtility.getPostiveCount(sentiments)
+      val totalNegativeCount = sentimentUtility.getNegativeCount(sentiments)
+      val totalNeutralCount = sentimentUtility.getNeutralCount(sentiments)
+      sentimentUtility.DEFAULT_SENTIMENT.copy(positiveCount = totalPositiveCount, negativeCount = totalNegativeCount,
         neutralCount = totalNeutralCount)
-    }*/
-
-    //   val sentiment=handler.map { handler =>  
-    //     handler match {
-    //       case Some(handler)=>dbTrendServices.sentimentQuery(handler.handler)
-    //       case None=>
-    //     }}
-    /*    displayData.map { x=>
-      implicit val sentimentWrite = new Writes[Sentiment] {
-      def writes(sentiment:Sentiment) = Json.obj(
-        "tweetId" -> sentiment.tweetId,
-        "positiveCount" -> sentiment.positiveCount,
-        "negativeCount" -> sentiment.negativeCount,
-        "neutralCount" -> sentiment.neutralCount,
-        "session" -> sentiment.session,
-        "hastags" -> sentiment.hastags,
-        "content" -> sentiment.content
-        )
     }
+
+    displayData.map { x =>
+      implicit val sentimentWrite = new Writes[Sentiment] {
+        def writes(sentiment: Sentiment) = Json.obj(
+          "positiveCount" -> sentiment.positiveCount,
+          "negativeCount" -> sentiment.negativeCount,
+          "neutralCount" -> sentiment.neutralCount)
+      }
       Ok(Json.toJson(x))
-    }.recover { case s => Ok("not") }*/
-    //Ok("Done")
+    }.recover { case s => Ok("not") }
   }
 
   private def getPostiveCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
     val a = sentiments map (sentiment => sentiment.getOrElse(DEFAULT_SENTIMENT).positiveCount.getOrElse(0))
-    Some(a.foldRight(0)(_ + _))
-  }
-
-  private def getNegativeCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
-    val a = sentiments map (sentiment => sentiment.getOrElse(DEFAULT_SENTIMENT).negativeCount.getOrElse(0))
-    Some(a.foldRight(0)(_ + _))
-  }
-
-  private def getNeutralCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
-    val a = sentiments map (sentiment => sentiment.getOrElse(DEFAULT_SENTIMENT).neutralCount.getOrElse(0))
     Some(a.foldRight(0)(_ + _))
   }
 

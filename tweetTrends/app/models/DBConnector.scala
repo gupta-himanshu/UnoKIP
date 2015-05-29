@@ -1,7 +1,6 @@
 package models
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.knoldus.utils.ConstantUtil.numOfChannels
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.MongoDriver
 import reactivemongo.core.nodeset.Authenticate
@@ -19,7 +18,7 @@ trait DBConnector {
   def connector(host: String, dbName: String, userName: String, password: String): DefaultDB = {
     val driver = new MongoDriver
     val credentials = Seq(Authenticate(dbName, userName, password))
-    val connection = driver.connection(List(host), nbChannelsPerNode = numOfChannels,
+    val connection = driver.connection(List(host),
       authentications = credentials)
     connection(dbName)
   }

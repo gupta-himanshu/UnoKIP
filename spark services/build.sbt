@@ -7,8 +7,8 @@ scalaVersion := "2.10.4"
 organization := "com.knoldus"
 
 libraryDependencies ++= Seq(
-                      "org.apache.spark"	%%	"spark-core"	    %	"1.3.0"	%	"provided" exclude("io.netty", "netty-all"),
-                      "org.apache.spark"	%%	"spark-streaming"	% 	"1.3.0" % "provided" exclude("io.netty", "netty-all"),
+                      "org.apache.spark"	%%	"spark-core"	    %	"1.3.0"	,
+                      "org.apache.spark"	%%	"spark-streaming"	% 	"1.3.0" ,
                       "org.apache.spark" 	%% 	"spark-streaming-twitter" % 	"1.3.0",
                       "org.scalatest"	 	%% 	"scalatest" % "2.2.4" 	  %       "test",
                       "org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23",
@@ -24,7 +24,8 @@ libraryDependencies ++= Seq(
 			          "io.netty" % "netty-all" % "4.0.23.Final",
 			          "com.typesafe" % "config" % "1.2.1",
 			          "com.typesafe.akka" %% "akka-slf4j" % "2.3.4" % "provided",
-			          "ch.qos.logback" % "logback-classic" % "1.0.7"
+			          "ch.qos.logback" % "logback-classic" % "1.0.7",
+			"net.sf.opencsv" % "opencsv" % "2.3"
 		       )
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"

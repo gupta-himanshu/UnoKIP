@@ -22,4 +22,17 @@ object Handlers {
   implicit val writer: BSONDocumentWriter[Handlers] = Macros.writer[Handlers]
 }
 
-  
+case class Sentiment(session:String, positiveCount: Option[Int], negativeCount: Option[Int],
+                     neutralCount: Option[Int])
+
+object Sentiment {
+  implicit val reader: BSONDocumentReader[Sentiment] = Macros.reader[Sentiment]
+  implicit val writer: BSONDocumentWriter[Sentiment] = Macros.writer[Sentiment]
+}
+
+case class OtherAnalysis(session: String, hashtag: Array[String], contributor: String)
+
+object OtherAnalysis {
+  implicit val reader: BSONDocumentReader[OtherAnalysis] = Macros.reader[OtherAnalysis]
+  implicit val writer: BSONDocumentWriter[OtherAnalysis] = Macros.writer[OtherAnalysis]
+}
