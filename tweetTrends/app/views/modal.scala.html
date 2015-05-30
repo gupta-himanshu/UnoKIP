@@ -1,0 +1,27 @@
+@* modal Template File *@
+@(param: Any)
+<div class="modal fade" id="myModal{{infos.topicId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        				<h4 class="modal-title" id="myModalLabel{{infos.topicId}}" style="color: #673AB2 !important;">{{infos.topic}}</h4>
+      				</div>
+      				<div class="modal-body" id="myModelBody{{infos.topicId}}">
+      				<div class="panel-group">
+      					<div class="panel panel-default">
+							<div class="panel-heading">Hashtags & Contributers
+      						</div>
+      						<div class="panel-body col-md-6 col-xs-6" id ="modelHashtags{{infos.topicId}}"></div>
+							<div class="panel-body col-md-6 col-xs-6" id ="modelContributor{{infos.topicId}}"></div>
+      					</div>
+      					<div class="panel panel-default">
+							<div class="panel-heading">Tweets
+      						</div>
+      						<div class="panel-body col-md-12 col-xs-12" id ="modelTweets{{infos.topicId}}"></div>
+      					</div>
+      				</div>
+      				</div>
+    			</div>
+  			</div>
+		</div>

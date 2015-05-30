@@ -1,4 +1,4 @@
-package com.knoldus.db
+/*package com.knoldus.db
 
 import scala.concurrent.Await
 import com.knoldus.utils.ConstantUtil
@@ -29,4 +29,4 @@ class DBTrendServicesTest extends FunSuite with BeforeAndAfter with DBTrendServi
     
   }
 
-}
+}*/

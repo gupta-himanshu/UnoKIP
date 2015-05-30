@@ -1,37 +1,22 @@
 @* sessions Template File *@
 @(param :play.api.libs.json.JsValue)
 @main("Sessions") {
+	@header()
 <div data-ng-app="MyApp" class="container-fluid" id="mainDiv">
 	<div data-ng-controller="MyController">
 		<div data-ng-repeat="scalaDaysSessionData in details">
 			<div class="row" style="font-family: Roboto Condensed, sans-serif;">
-				<div class="col-md-12 col-xs-12">
-					<div class="panel-group" id="{{scalaDaysSessionData.TopicId}}" style="margin: 0;">
-						<div class="panel panel-default row">
-						   	<div class="panelHead">
-						    	<scaladay-session-data sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
-						    </div>
-						</div>
-  					</div>
+				<div class="col-md-12 col-xs-12" id="{{scalaDaysSessionData.TopicId}}">
+					<div class="panelHead">
+				    	<scaladay-session-data sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
+				    </div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script>
-	@*@(param.\("positiveCount"))+
-		var positive = 0;
-		var negative = 0;
-		var neutral = 0;
-		var data_json = [positive,negative,neutral]
-		var t = data_json.toString(); 
-		console.log(data_json)
-		var j = JSON.parse("["+t+"]");
-		console.log(t.length)
-		console.log(j)
-		console.log(">>>>>>>>>>"+ j)*@
-	</script>
 	<script type="text/ng-template" id="userDetails.htm">
 		@recordTemplate()	
  	</script>
+ 	@footer()
 </div>
 }

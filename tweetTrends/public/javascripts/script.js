@@ -3,26 +3,29 @@
  */
 console.log("Welcome to angularJs file");
 
-/*var blurIt = function(){
-	console.log("change");	
-	$("#mainDiv").addClass("blurPlate");
-}
-var removeBlur = function(){
-	console.log("change");	
-	$("#mainDiv").removeClass("blurPlate");
-}*/
-var testM = angular.module("MyApp", []);
-// data for Model
+// Ajax Call for Model
 var getTweetDetail = function(topicId) {
 	$.ajax({
-		url : "gettweets?topicId=" + topicId,
+		url : "testHashtag?topicId=" + topicId,
 		type : 'GET',
 		async : true,
 		success : function(data) {
-			$("#myModalBody" + topicId).text(data);
+			$("#modelHashtags" + topicId).text("");
+			$("#modelContributor" + topicId).text("");
+			$("#modelTweets" + topicId).text("");
+			var tweets = data.tweets;
+			var contributers = data.contributor;
+			var hashtags = data.hashtags;
+			for(var i=0;i<hashtags.length;i++){
+				$("#modelContributor" + topicId).append(i+1 +". "+contributers[i]+"<br>");
+				$("#modelHashtags" + topicId).append(i+1 +". "+hashtags[i]+"<br>");
+				$("#modelTweets" + topicId).append(i+1 +". "+tweets[i]+"<br>");
+			}
 		}
 	})
 }
+
+//Ajax Call for chart
 function drawChart(chartId) {
 	$.ajax({
 		url : "/test?topicId=" + chartId,
@@ -80,6 +83,10 @@ function drawChart(chartId) {
 	})
 }
 
+//app for angularJs
+var testM = angular.module("MyApp", []);
+
+//directive to render chart.
 testM.directive('myChart', function($interval) {
 	return {
 		restrict : 'E',
@@ -102,25 +109,24 @@ testM.directive('myChart', function($interval) {
 	}
 });
 
-testM
-		.directive(
-				'myLink',
-				function() {
-					return {
-						restrict : 'E',
-						replace : true,
-						scope : {
-							linkid : '='
-						},
-						template : '<a class="btn btn-primary" data-toggle="modal" data-target="#myModal{{linkid}}">Click</a>',
-						link : function($scope, element) {
-							element.bind('click', function() {
-								getTweetDetail($scope.linkid);
-							});
-						}
-					}
-				});
+//directive to render button for modal.
+testM.directive('myLink',function() {
+	return {
+		restrict : 'E',
+		replace : true,
+		scope : {
+			linkid : '='
+		},
+		template : '<a class="btn btn-primary" data-toggle="modal" data-target="#myModal{{linkid}}">Show Details</a>',
+		link : function($scope, element) {
+			element.bind('click', function() {
+				getTweetDetail($scope.linkid);
+			});
+		}
+	}
+});
 
+//directive to render table row wise.
 testM.directive('scaladaySessionData', function() {
 	return {
 		restrict : 'E',
@@ -131,7 +137,6 @@ testM.directive('scaladaySessionData', function() {
 		templateUrl : 'userDetails.htm',
 		controller : function($scope) {
 			$scope.userinfos = [];
-			// $scope.chartdata = j;
 			var sessions = $scope.sessiondata.Session;
 			for (var i = 0; i < sessions.length; i++) {
 				$scope.userinfos.push({
@@ -147,11 +152,8 @@ testM.directive('scaladaySessionData', function() {
 		}
 	}
 })
-
-testM
-		.controller(
-				"MyController",
-				function($scope, $log, $filter) {
+//controller for table
+testM.controller("MyController",function($scope, $log, $filter) {
 					$scope.details = [
 							{
 								"Date" : "2015-06-08",

@@ -26,9 +26,12 @@ import scala.util.Success
 import sprayutility.RoutesFunction
 import play.api.libs.ws.WS
 import play.api.Logger
+import utils.JsonParserUtility.otherAnalysisWrite
+import utils.JsonParserUtility.sentimentWrite
 import utils.SentimentAnalysisUtility
 import models.Sentiment
 import models.TweetDetails
+import models.OtherAnalysis
 
 /**
  * @author knoldus
@@ -89,9 +92,6 @@ trait Application extends Controller {
     res.map { x => Ok(Json.toJson(x).toString()) }.recover { case s => Ok("not") }
   }
 
-  /*case class Sentiment(tweetId: Long, positiveCount: Option[Int], negativeCount: Option[Int],
-                       neutralCount: Option[Int], session: String, hastags: Array[String], content: String)*/
-
   private val DEFAULT_SENTIMENT = Sentiment("session", None, None, None)
 
   def testAnalysis(topicId: String) = Action.async {
@@ -103,10 +103,10 @@ trait Application extends Controller {
           case Some(data) => data.handler.map { handler =>
             dbApi.sentimentQuery(handler)
           }
-          case None => List(Future(None))
+          case None => Nil
         }
-
       } yield (res)
+
     val listofSentiment = sentiments flatMap (sentiment => Future.sequence(sentiment))
     val displayData = listofSentiment.map { sentiments =>
       val totalPositiveCount = sentimentUtility.getPostiveCount(sentiments)
@@ -117,12 +117,6 @@ trait Application extends Controller {
     }
 
     displayData.map { x =>
-      implicit val sentimentWrite = new Writes[Sentiment] {
-        def writes(sentiment: Sentiment) = Json.obj(
-          "positiveCount" -> sentiment.positiveCount,
-          "negativeCount" -> sentiment.negativeCount,
-          "neutralCount" -> sentiment.neutralCount)
-      }
       Ok(Json.toJson(x))
     }.recover { case s => Ok("not") }
   }
@@ -132,26 +126,36 @@ trait Application extends Controller {
     Some(a.foldRight(0)(_ + _))
   }
 
-  def getTweetsDetails(topicId: String) = Action.async {
+  def otherAnalysis(topicId: String) = Action.async {
     val futureofHandlers = dbApi.findHandler(topicId)
-    val tweetDetails = for {
-      handlers <- futureofHandlers
-      res = handlers match {
-        case Some(data) => data.handler.map { handler =>
-          val s = dbApi.findTweetDetails(handler)
-          s
+    futureofHandlers.map { x => println(x) }
+    val tweetDetails =
+      for {
+        handlers <- futureofHandlers
+        res = handlers match {
+          case Some(data) => data.handler.map(handler => dbApi.findTweetDetails(handler))
+          case None       => Nil
         }
-        case None => Nil
-      }
+      } yield (res)
 
-    } yield (res)
-    val futureTweets = tweetDetails flatMap { detail => Future.sequence(detail) }
-    val displayData = futureTweets.map { list => 
-      list.flatten
-    }
-    val content = displayData map { list => list.map { tweetDetail => tweetDetail.content } }
-    val username = displayData map { list => list.map { tweetDetail => tweetDetail.username } }
-    println(username.map { x => x })
-    displayData map { content => Ok(content.toString()) }
+    val listOfTweets = tweetDetails.flatMap(detail => Future.sequence(detail)).map(listOfTweetDetails => listOfTweetDetails.flatten)
+    val contributors = listOfTweets.map { listOfTweet => listOfTweet.map { tweetDetails => tweetDetails.username } }
+    val contributorPair = contributors.map { x => x.map { x => (x, 1) } }
+    val contributorSum = contributorPair.map(x => x.groupBy(_._1).map(data => data._1 -> data._2.map(_._2).sum))
+    val contributorList = contributorSum.map(x => x.toList)
+    val top5contributor = contributorList.map(x => x.sortBy(_._2).reverse.take(5).map(x => x._1))
+    val hashtags = listOfTweets.map { listOfTweet => listOfTweet.flatMap { tweetDetails => tweetDetails.hashtags } }
+    val hashtagspair = hashtags.map { hashtags => hashtags.map { hashtag => (hashtag, 1) } }
+    val hashtagsSum = hashtagspair.map(hashtags => hashtags.groupBy(_._1).map(data => data._1 -> data._2.map(_._2).sum))
+    val hashtagsList = hashtagsSum.map(hashtagMap => hashtagMap.toList)
+    val top5hashtags=hashtagsList.map(hashtag=>hashtag.sortBy(_._2).reverse.take(5).map(x=>x._1))
+    val tweets = listOfTweets.map { x => x.map { x => x.content } }
+    val otherAnalysis=for{
+      tophashtags<-top5hashtags
+      topcontributor<-top5contributor
+      tweets<-tweets
+      otherAnalysis=OtherAnalysis(tweets,tophashtags,topcontributor)
+    }yield(otherAnalysis)
+    otherAnalysis.map {x=>Ok(Json.toJson(x))}.recover { case s => Ok("not") }
   }
 }

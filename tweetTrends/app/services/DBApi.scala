@@ -62,16 +62,9 @@ trait DBApi {
     data
   }
   
-  val collHashtag=db("hashtags")
-  def findHashtag(session:String): Future[List[OtherAnalysis]] = {
-    collHashtag.find(BSONDocument("session"-> session)).cursor[OtherAnalysis].collect[List]()
-  }
-  
-  val collTweet = db("tweets")
+  val collTweet=db("tweets")
   def findTweetDetails(session:String): Future[List[TweetDetails]] = {
-    val data = collTweet.find(BSONDocument("session"-> session)).cursor[TweetDetails].collect[List]()
-    data.map { x => x.map { y => println(y.username +">>>"+y.content+">>>"+y.session) } }
-    data
+    collTweet.find(BSONDocument("session"-> session)).cursor[TweetDetails].collect[List]()
   }
 }
 

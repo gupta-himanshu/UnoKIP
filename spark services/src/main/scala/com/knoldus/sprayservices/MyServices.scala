@@ -37,7 +37,6 @@ trait MyService extends HttpService {
         get {
           complete { TweetCollect.stop(); HttpResponse(OK, "Streaming is Stopped") }
         }
-
       }
 }
 

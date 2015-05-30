@@ -1,4 +1,4 @@
-/*package com.knoldus.db
+package com.knoldus.db
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -10,7 +10,7 @@ import com.knoldus.utils.ConstantUtil
 import reactivemongo.bson.BSONDocument
 import java.util.Date
 
-class DBServicesTest extends FunSuite with DBConnector with BeforeAndAfter with DBServices {
+class DBIngestionSpec extends FunSuite with DBConnector with BeforeAndAfter with DBIngestion {
 
   before {
     val remove = collTweet.remove(BSONDocument())
@@ -24,12 +24,7 @@ class DBServicesTest extends FunSuite with DBConnector with BeforeAndAfter with 
       "#KakakFathir Suka Menghayal ? 67", false, "Somen||48", "amat_skate48", "http://jkt48.com", 2880640850L, "en", new Date, Some("new york"), Some("new york"), Some(23554221), Some(43545423)))
     val finalRes = Await.result(res, 1 second)
     assert(finalRes === true)
-  }
-
-  test("fetching tweets from mongo using timestamp") {
-    val res = getTimeOfTweet(2384L, 34342L)
-    val fres = Await.result(res, 1 second)
-    assert(fres.size === 1)
 
   }
-}*/
+
+}
