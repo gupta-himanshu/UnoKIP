@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   						"org.webjars" 			%	"bootstrap" 		% "3.1.1-2",
   						"org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23",
 						     "joda-time" % "joda-time" % "2.7",
-						     "net.liftweb" %% "lift-json" % "2.6.2"						     		
+						     "net.liftweb" %% "lift-json" % "2.6.2"
 )
 
 ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;controllers.ref.*;controllers.javascript.*;"

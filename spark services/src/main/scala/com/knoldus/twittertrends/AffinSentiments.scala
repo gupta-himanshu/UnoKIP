@@ -19,12 +19,13 @@ import com.knoldus.model.TweetDetails
 import com.knoldus.model.OtherAnalysis
 import scala.concurrent.impl.Future
 import scala.concurrent.Future
+import scala.util.Success
+import scala.util.Failure
+import com.knoldus.model.WordList
 
 /**
  * @author knoldus
  */
-
-case class WordList(word: String, value: Double)
 
 trait AffinSentiments {
 
@@ -34,7 +35,7 @@ trait AffinSentiments {
 
     val details = tweetRDD.flatMap { tweet =>
       val sen = tweet.content.split(" ").toList.flatMap(word => listOfSentiments.map { x =>
-        if (word == x.word) {
+        if (x.word.split(" ").exists(word.contains)) {
           println(word + "," + x.word + "," + x.value)
           (x.value)
         } else (0D)
@@ -48,31 +49,34 @@ trait AffinSentiments {
 
     details.foreach { x => dbTrend.insertTweetDetails(x) }
 
-    val sentiment = details.flatMap { tweetDetail =>
-
-      val tweetsDetails = dbTrend.findTweetDetails(tweetDetail.session)
-      val words = tweetDetail.content.split(" ")
-      val session = words.filter(_.startsWith("@")).map { x => x.replace("@", "") }
+    val sentiment = details.map { tweetDetail =>
       if (tweetDetail.sentiment > 0) {
         println("happy")
-
-        session.map { handler => Sentiment(handler, Some(1), None, None) }
+        Sentiment(tweetDetail.session, Some(1), None, None)
       } else if (0 > tweetDetail.sentiment) {
         println("negative")
-        session.map(handler => Sentiment(handler, None, Some(1), None))
+        Sentiment(tweetDetail.session, None, Some(1), None)
       } else {
         println("neutral")
-        session.map(handler => Sentiment(handler, None, None, Some(1)))
+        Sentiment(tweetDetail.session, None, None, Some(1))
       }
     }
 
-    sentiment.foreach { doc =>
+    val groupedSentiments = sentiment.groupBy(_.session).map {
+      case (session, data) =>
+        session -> Sentiment(session, Some(data.map(_.positiveCount.getOrElse(0)).sum),
+          Some(data.map(_.negativeCount.getOrElse(0)).sum),
+          Some(data.map(_.neutralCount.getOrElse(0)).sum))
+    }
+    
+    val listOfSentiment = groupedSentiments.values.toList
+
+    listOfSentiment.foreach { doc =>
       println(doc.session)
       val oldSentiment = dbTrend.findSentiment(doc.session)
       oldSentiment map { result =>
         result match {
           case Some(sentiment) =>
-
             if (doc.positiveCount.isDefined)
               dbTrend.updateSentiment(sentiment.copy(positiveCount = Some(sentiment.positiveCount.getOrElse(0) + 1)))
             if (doc.negativeCount.isDefined)

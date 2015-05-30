@@ -63,10 +63,10 @@ trait AnalysisDBServices extends DBConnector {
     collSent.find(BSONDocument({ session -> session })).cursor[TweetDetails].collect[List]()
   }
 
-  val collHashtag = db("hashtags")
+  /*val collHashtag = db("hashtags")
   def insertHashtag(hashtag: OtherAnalysis): Future[Boolean] = {
     collHashtag.insert(hashtag).map { lastError => lastError.ok }
-  }
+  }*/
 
 }
 

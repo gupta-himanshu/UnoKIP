@@ -7,8 +7,8 @@ scalaVersion := "2.10.4"
 organization := "com.knoldus"
 
 libraryDependencies ++= Seq(
-                      "org.apache.spark"	%%	"spark-core"	    %	"1.3.0"	,
-                      "org.apache.spark"	%%	"spark-streaming"	% 	"1.3.0" ,
+                      "org.apache.spark"	%%	"spark-core"	    %	"1.3.0"   %	"provided" exclude("io.netty", "netty-all"),
+                      "org.apache.spark"	%%	"spark-streaming"	% 	"1.3.0"  % "provided" exclude("io.netty", "netty-all"),
                       "org.apache.spark" 	%% 	"spark-streaming-twitter" % 	"1.3.0",
                       "org.scalatest"	 	%% 	"scalatest" % "2.2.4" 	  %       "test",
                       "org.reactivemongo" 	%% 	"reactivemongo" 	% 	"0.10.5.0.akka23",

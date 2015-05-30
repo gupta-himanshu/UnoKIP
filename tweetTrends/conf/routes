@@ -8,8 +8,10 @@
 GET   /                controllers.Application.trending
 GET		/socket		controllers.Application.socket(start:String)
 GET		/start		controllers.Application.startstream
+GET		/sessions	controllers.Application.sessions
 GET		/trends		controllers.Application.testTrend()
 GET		/test		controllers.Application.testAnalysis(topicId:String)
+GET		/testHashtag  controllers.Application.otherAnalysis(topicId:String)
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file    controllers.Assets.at(path="/public", file)
 GET   /webjars/*file   controllers.WebJarAssets.at(file)

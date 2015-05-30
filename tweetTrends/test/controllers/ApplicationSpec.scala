@@ -15,6 +15,7 @@ import play.api.test.PlaySpecification
 import play.api.test.WithApplication
 import org.specs2.runner.JUnitRunner
 import play.api.mvc.Controller
+import org.specs2.execute.Results
 
 /**
  *
@@ -23,7 +24,7 @@ import play.api.mvc.Controller
  * For more information, consult the wiki.
  */
 @RunWith(classOf[JUnitRunner])
-class ApplicationSpec extends PlaySpecification with Mockito {
+class ApplicationSpec extends PlaySpecification with Mockito with Results {
 
   val mockDbService: DBServices = mock[DBServices]
   val mockBirdTweet: BirdTweet = mock[BirdTweet]
@@ -35,31 +36,22 @@ class ApplicationSpec extends PlaySpecification with Mockito {
     val dbTrendService: DBTrendServices = mockDbTrend
   }
 
-  "Application" should {
-  
-    "Ajax Call when we get chunck of tweets" in new WithApplication(new FakeApplication) {
-      mockDbTrend.findTrends() returns Future(List(Trends("#source content", 5, 1)))
-      mockDbService.getChunckOfTweet(2, ConstantUtil.pageSize) returns Future(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")))
-      mockBirdTweet.trending(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")), List(Trends("#source content", 5, 1)), 2) returns List(("", 1))
-      val result = await(TestObj.ajaxCall.apply(FakeRequest()))
-      result.header.status must equalTo(200)
+  "Application" should {    
+    "trending should be valid" in new WithApplication{
+          val result = TestObj.trending()(FakeRequest())        
+          status(result) must equalTo(200)
+          contentType(result) must beSome("text/html")
     }
     
-   
-    "Ajax Call when we get Nil tweet list" in new WithApplication(new FakeApplication) {
-      mockDbTrend.findTrends() returns Future(List(Trends("#source content", 5, 1)))
-      mockDbService.getChunckOfTweet(2, ConstantUtil.pageSize) returns Future(List())
-      val result = await(TestObj.ajaxCall.apply(FakeRequest()))
-      result.header.status must equalTo(200)
+    "sessions should be valid" in new WithApplication{
+          val result = TestObj.sessions()(FakeRequest())        
+          status(result) must equalTo(200)
+          contentType(result) must beSome("text/html")
     }
     
-    
-    "Ajax Call when we get Nil trends list" in new WithApplication(new FakeApplication) {
-      mockDbTrend.findTrends() returns Future(Nil)
-      mockDbService.getChunckOfTweet(1, ConstantUtil.pageSize) returns Future(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")))
-      mockBirdTweet.trending(List(Tweet(123, "source", "content", true, "authName", "username", "url", 234, "language")), Nil, 1) returns List(("", 1))
-      val result = await(TestObj.ajaxCall.apply(FakeRequest()))
-      result.header.status must equalTo(200)
-    }
+    /*"startStream should be valid" in {
+          val result = TestObj.startstream()(FakeRequest())        
+          status(result) must equalTo(200)
+    }*/
   }
 }

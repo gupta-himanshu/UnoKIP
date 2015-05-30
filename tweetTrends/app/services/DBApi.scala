@@ -14,12 +14,17 @@ import scala.concurrent.Future
 import models.Handlers._
 import reactivemongo.bson.BSON
 import models.Handlers
+import play.api.Logger
+import scala.util.Failure
+import scala.util.Success
 import models.Sentiment
 import models.OtherAnalysis
+import models.TweetDetails
 
 /**
  * @author knoldus
  */
+
 
 trait DBApi {
 
@@ -42,21 +47,24 @@ trait DBApi {
   val collHandler = db("handles")
 
   def findHandler(topicId: String): Future[Option[Handlers]] = {
-    collHandler.find(BSONDocument({ "topicId" -> topicId })).one[Handlers]
+    println("finding Handler......")
+    val data = collHandler.find(BSONDocument("topicId"->topicId)).one[Handlers]
+    data.map { x => x.map { y => println(y.toString()) } }
+    data
   }
 
   val sentColl = db("sentiment")
   def sentimentQuery(handler: String): Future[Option[Sentiment]] = {
-    sentColl.find(BSONDocument("session" -> handler)).one[Sentiment]
+    val session = handler.replace("@", "") 
+    val data = sentColl.find(BSONDocument("session" -> session)).one[Sentiment]
+    data.map { x => x.map { y => println(y.toString()) } }
+    data
   }
   
-  
-  val collHashtag=db("hashtags")
-  def findHashtag(session:String): Future[Option[OtherAnalysis]] = {
-    collHashtag.find(BSONDocument("session"-> session)).one[OtherAnalysis]
+  val collTweet=db("tweets")
+  def findTweetDetails(session:String): Future[List[TweetDetails]] = {
+    collTweet.find(BSONDocument("session"-> session)).cursor[TweetDetails].collect[List]()
   }
-
-  
 }
 
 object DBApi extends DBApi
