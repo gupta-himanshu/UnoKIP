@@ -15,6 +15,20 @@
 #heading2{
 	background-color: #eee;
 }
+.blurPlate{
+	background: rgb(255,255,255,0.4) !important;
+  	filter:blur(20px);
+}
+
+
+.blurBackground {
+	color: fuchsia;
+	filter:blur(1px);
+}
+.blurBackground div div div h4{
+	color: fuchsia;
+	filter:blur(0px) !important;
+}
 
  #fixed-sidebar {
   	position: fixed;

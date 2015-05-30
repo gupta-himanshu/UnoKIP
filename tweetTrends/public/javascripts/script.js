@@ -3,15 +3,23 @@
  */
 console.log("Welcome to angularJs file");
 
+/*var blurIt = function(){
+	console.log("change");	
+	$("#mainDiv").addClass("blurPlate");
+}
+var removeBlur = function(){
+	console.log("change");	
+	$("#mainDiv").removeClass("blurPlate");
+}*/
 var testM = angular.module("MyApp", []);
-//data for Model
-var getTweetDetail = function(topicId){
+// data for Model
+var getTweetDetail = function(topicId) {
 	$.ajax({
 		url : "gettweets?topicId=" + topicId,
 		type : 'GET',
 		async : true,
 		success : function(data) {
-			$("#myModalBody"+topicId).text(data);
+			$("#myModalBody" + topicId).text(data);
 		}
 	})
 }
@@ -25,7 +33,8 @@ function drawChart(chartId) {
 			var positive = data.positiveCount;
 			var negative = data.negativeCount;
 			var nuetral = data.neutralCount;
-			var jsonData = [["positive", positive],["negative", negative],["nuetral", nuetral ]];
+			var jsonData = [ [ "positive", positive ],
+					[ "negative", negative ], [ "nuetral", nuetral ] ];
 			var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 			if (positive > 0 || negative > 0 || nuetral > 0) {
 				$("#pieContainer" + chartId).highcharts({
@@ -49,7 +58,7 @@ function drawChart(chartId) {
 					},
 					plotOptions : {
 						pie : {
-							allowPointSelect: true,
+							allowPointSelect : true,
 							cursor : 'pointer',
 							shadow : false,
 							dataLabels : {
@@ -80,6 +89,7 @@ testM.directive('myChart', function($interval) {
 		},
 		template : '<div id="pieContainer{{chartid}} "></div>',
 		link : function($scope) {
+			
 			$scope.$watch($scope.chartid, function() {
 				drawChart($scope.chartid);
 				$interval(function() {
@@ -92,21 +102,24 @@ testM.directive('myChart', function($interval) {
 	}
 });
 
-testM.directive('myLink', function() {
-	return {
-		restrict : 'E',
-		replace : true,
-		scope : {
-			linkid : '='
-		},
-		template : '<a class="btn btn-primary" data-toggle="modal" data-target="#myModal{{linkid}}">Click</a>',
-		link : function($scope, element) {
-			element.bind('click', function () {
-                getTweetDetail($scope.linkid);
-            });
-		}
-	}
-});
+testM
+		.directive(
+				'myLink',
+				function() {
+					return {
+						restrict : 'E',
+						replace : true,
+						scope : {
+							linkid : '='
+						},
+						template : '<a class="btn btn-primary" data-toggle="modal" data-target="#myModal{{linkid}}">Click</a>',
+						link : function($scope, element) {
+							element.bind('click', function() {
+								getTweetDetail($scope.linkid);
+							});
+						}
+					}
+				});
 
 testM.directive('scaladaySessionData', function() {
 	return {
@@ -135,7 +148,10 @@ testM.directive('scaladaySessionData', function() {
 	}
 })
 
-testM.controller("MyController",function($scope, $log, $filter) {
+testM
+		.controller(
+				"MyController",
+				function($scope, $log, $filter) {
 					$scope.details = [
 							{
 								"Date" : "2015-06-08",
