@@ -10,12 +10,14 @@ var getTweetDetail = function(topicId) {
 		type : 'GET',
 		async : true,
 		success : function(data) {
+			//empty the divs.
 			$("#modelHashtags" + topicId).text("");
 			$("#modelContributor" + topicId).text("");
 			$("#modelTweets" + topicId).text("");
 			var tweets = data.tweets;
 			var contributers = data.contributor;
 			var hashtags = data.hashtags;
+			//filling the divs.
 			for(var i=0;i<hashtags.length;i++){
 				$("#modelContributor" + topicId).append(i+1 +". "+contributers[i]+"<br>");
 				$("#modelHashtags" + topicId).append(i+1 +". "+hashtags[i]+"<br>");
