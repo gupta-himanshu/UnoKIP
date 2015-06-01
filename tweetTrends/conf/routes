@@ -6,7 +6,6 @@
 
 
 GET   	/           controllers.Application.sessions
-GET		/socket		controllers.Application.socket(start:String)
 GET		/start		controllers.Application.startstream
 GET		/sessions	controllers.Application.sessions
 GET		/trends		controllers.Application.testTrend()

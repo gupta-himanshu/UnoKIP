@@ -45,31 +45,15 @@ object Application extends Application {
 }
 
 trait Application extends Controller {
-
+  
+  private val DEFAULT_SENTIMENT = Sentiment("session", None, None, None)
   val dbApi: DBApi
   val sentimentUtility: SentimentAnalysisUtility
   val routes: RoutesFunction
+  
   def trending: Action[AnyContent] = Action {
     Ok(views.html.showData())
 
-  }
-  //WebSocket With future
-  def socket(start: String): WebSocket[String, JsValue] = WebSocket.acceptWithActor[String, JsValue] { request =>
-    out =>
-      val date = new DateTime()
-      val formatter = DateTimeFormat.forPattern("dd/MM/yyyy kk:mm:ss");
-      val endDate = formatter.print(date)
-      val startDate = formatter.parseDateTime(start)
-      val end = formatter.parseDateTime(endDate)
-      val trend = dbApi.getTrends
-      val res = trend.map { x => x.map { x => (x.hashtag, x.trends) }.sortBy(x => x._2).reverse }
-      val res1 = res.map { x => Json.toJson(x) }
-      val jsonData: JsValue = Await.result(res1, 1 second)
-      MyWebSocketActor.props(out, jsonData)
-  }
-
-  def datepick: Action[AnyContent] = Action {
-    Ok(views.html.datepicker())
   }
 
   def sessions: Action[AnyContent] = Action {
@@ -92,7 +76,7 @@ trait Application extends Controller {
     res.map { x => Ok(Json.toJson(x).toString()) }.recover { case s => Ok("not") }
   }
 
-  private val DEFAULT_SENTIMENT = Sentiment("session", None, None, None)
+  
 
   def testAnalysis(topicId: String) = Action.async {
     val futureofHandlers = dbApi.findHandler(topicId)
