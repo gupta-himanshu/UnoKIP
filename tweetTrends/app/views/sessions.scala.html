@@ -1,14 +1,12 @@
 @* sessions Template File *@
 @main("Sessions") {
 	@header()
-<div data-ng-app="MyApp" class="container" id="mainDiv">
+<div data-ng-app="MyApp" class="container-fluid">
 	<div data-ng-controller="MyController">
 		<div data-ng-repeat="scalaDaysSessionData in details">
 			<div class="row" style="font-family: Roboto Condensed, sans-serif;">
 				<div class="col-md-12 col-xs-12" id="{{scalaDaysSessionData.TopicId}}">
-					<div class="panelHead">
-				    	<scaladay-session-data sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
-				    </div>
+				    <scaladay-session-data sessiondata="scalaDaysSessionData" class="panelHead"> </scaladay-session-data>
 				</div>
 			</div>
 		</div>

@@ -21,5 +21,15 @@ class RoutesSpec extends PlaySpecification{
       charset(result) must beSome("utf-8")
       contentAsString(result) must contain("Sessions")
     }
+    "respond to the /test route" in new WithApplication(new FakeApplication) {
+      val Some(result) = route(FakeRequest(GET, "/test?topicId=1"))
+      status(result) must equalTo(OK)
+      charset(result) must beSome("utf-8")
+    }
+    "respond to the /testHashtag route" in new WithApplication(new FakeApplication) {
+      val Some(result) = route(FakeRequest(GET, "/testHashtag?topicId=1"))
+      status(result) must equalTo(OK)
+      charset(result) must beSome("utf-8")
+    }
   }
 }

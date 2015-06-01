@@ -31,6 +31,16 @@ class ViewsSpec extends PlaySpecification {
       contentAsString(html) must contain("Home")
     }
     
+    "render modal template" in new WithApplication {
+      val html = views.html.modal()
+      contentAsString(html) must contain("myModalLabel")
+    }
+    
+    "render recordTemplate template" in new WithApplication {
+      val html = views.html.recordTemplate()
+      contentAsString(html) must contain("infos in userDetails")
+    }
+    
     "render sessions template" in new WithApplication {
       val html = views.html.sessions()
       contentAsString(html) must contain("MyApp")

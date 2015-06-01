@@ -5,7 +5,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import models.MyWebSocketActor
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.JsValue
@@ -80,11 +79,6 @@ trait Application extends Controller {
     displayData.map { x =>
       Ok(Json.toJson(x))
     }.recover { case ex:Any => Ok("not") }
-  }
-
-  private def getPostiveCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
-    val a = sentiments map (sentiment => sentiment.getOrElse(DEFAULT_SENTIMENT).positiveCount.getOrElse(0))
-    Some(a.foldRight(0)(_ + _))
   }
 
   def otherAnalysis(topicId: String) = Action.async {

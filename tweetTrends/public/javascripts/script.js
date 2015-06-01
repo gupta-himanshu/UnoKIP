@@ -14,13 +14,16 @@ var getTweetDetail = function(topicId) {
 			var i=0;
 			$("#modelHashtags" + topicId).text("");
 			$("#modelContributor" + topicId).text("");
-			$("#modelTweets" + topicId).text("");
+			var table = document.getElementById("table"+topicId);
+			table.innerHTML = " ";
 			var tweets = data.tweets;
 			var contributers = data.contributor;
 			var hashtags = data.hashtags;
 			//filling the divs.
 			for(i=0;i<tweets.length;i++){
-				$("#modelTweets" + topicId).append(i+1 +". "+tweets[i]+"<br>");
+				var row = table.insertRow(i-1);
+				var cell1 = row.insertCell(0);
+				cell1.innerHTML = tweets[i];
 			}
 			for(i=0;i<contributers.length;i++){
 				$("#modelContributor" + topicId).append(i+1 +". "+contributers[i]+"<br>");
@@ -42,11 +45,11 @@ var pieChart = function(jsonData, chartId){
 				font : 'bold 16px "Roboto Condensed", sans-serif'
 			},
 			backgroundColor : 'transparent',
-			plotBorderWidth : 0,
-			spacingBottom : 0,
-			spacingTop : 0,
-			spacingLeft : 0,
-			spacingRight : 0,
+			plotBorderWidth : null,
+			spacingBottom : null,
+			spacingTop : null,
+			spacingLeft : null,
+			spacingRight : null,
 			width : null,
 			height : 200,
 		},
