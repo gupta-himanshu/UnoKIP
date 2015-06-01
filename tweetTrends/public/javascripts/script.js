@@ -11,6 +11,7 @@ var getTweetDetail = function(topicId) {
 		async : true,
 		success : function(data) {
 			//empty the divs.
+			var i=0;
 			$("#modelHashtags" + topicId).text("");
 			$("#modelContributor" + topicId).text("");
 			$("#modelTweets" + topicId).text("");
@@ -18,10 +19,14 @@ var getTweetDetail = function(topicId) {
 			var contributers = data.contributor;
 			var hashtags = data.hashtags;
 			//filling the divs.
-			for(var i=0;i<hashtags.length;i++){
-				$("#modelContributor" + topicId).append(i+1 +". "+contributers[i]+"<br>");
-				$("#modelHashtags" + topicId).append(i+1 +". "+hashtags[i]+"<br>");
+			for(i=0;i<tweets.length;i++){
 				$("#modelTweets" + topicId).append(i+1 +". "+tweets[i]+"<br>");
+			}
+			for(i=0;i<contributers.length;i++){
+				$("#modelContributor" + topicId).append(i+1 +". "+contributers[i]+"<br>");
+			}
+			for(i=0;i<hashtags.length;i++){
+				$("#modelHashtags" + topicId).append(i+1 +". "+hashtags[i]+"<br>");
 			}
 		}
 	})
