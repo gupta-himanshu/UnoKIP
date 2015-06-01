@@ -18,4 +18,8 @@ libraryDependencies ++= Seq(
 						     "net.liftweb" %% "lift-json" % "2.6.2"
 )
 
-ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;controllers.ref.*;controllers.javascript.*;"
+//ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;controllers.ref.*;controllers.javascript.*;"
+
+instrumentSettings
+
+parallelExecution in Test := false

@@ -1,8 +1,8 @@
 @* recordTemplate Template File *@
 <div class="col-md-12 col-xs-12" style="background: #61C9E6;">
 	<div class="col-md-12 col-xs-12" style="padding: 10px; background: #4695AE; color: #FFF;"> 
-		{{sessiondata.Date}} 
-		{{sessiondata.Time}}
+		<b>Date:</b> {{sessiondata.Date}} 
+		<b>Time:</b> {{sessiondata.Time}}
 	</div>
 	<div data-ng-repeat="infos in userDetails" style="vertical-align:top;">
 		@modal()

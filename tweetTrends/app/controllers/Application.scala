@@ -6,17 +6,14 @@ import scala.concurrent.duration.DurationInt
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import models.MyWebSocketActor
-import models.Trend
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json._
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json
 import play.api.libs.json.Writes
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
-import play.api.mvc.WebSocket
 import services.DBApi
 import utils.JsonParserUtility.tuple2
 import play.api.libs.ws.WS
@@ -24,8 +21,6 @@ import play.api.Logger
 import scala.util.Failure
 import scala.util.Success
 import sprayutility.RoutesFunction
-import play.api.libs.ws.WS
-import play.api.Logger
 import utils.JsonParserUtility.otherAnalysisWrite
 import utils.JsonParserUtility.sentimentWrite
 import utils.SentimentAnalysisUtility
@@ -45,38 +40,20 @@ object Application extends Application {
 }
 
 trait Application extends Controller {
-  
+
   private val DEFAULT_SENTIMENT = Sentiment("session", None, None, None)
   val dbApi: DBApi
   val sentimentUtility: SentimentAnalysisUtility
   val routes: RoutesFunction
-  
-  def trending: Action[AnyContent] = Action {
-    Ok(views.html.showData())
-
-  }
 
   def sessions: Action[AnyContent] = Action {
-    val json = "{'positiveCount':0,'negativeCount':0,'neutralCount':0}"
-    Ok(views.html.sessions(Json.toJson(json)))
+    Ok(views.html.sessions())
   }
 
   def startstream: Action[AnyContent] = Action {
     val homePage = routes.startStream()
     Ok("start stream")
   }
-
-  def testTrend() = Action.async {
-    val res = dbApi.getTrends
-    implicit val trendWrite = new Writes[Trend] {
-      def writes(trend: Trend) = Json.obj(
-        "hashtag" -> trend.hashtag,
-        "trend" -> trend.trends)
-    }
-    res.map { x => Ok(Json.toJson(x).toString()) }.recover { case s => Ok("not") }
-  }
-
-  
 
   def testAnalysis(topicId: String) = Action.async {
     val futureofHandlers = dbApi.findHandler(topicId)
@@ -102,7 +79,7 @@ trait Application extends Controller {
 
     displayData.map { x =>
       Ok(Json.toJson(x))
-    }.recover { case s => Ok("not") }
+    }.recover { case ex:Any => Ok("not") }
   }
 
   private def getPostiveCount(sentiments: List[Option[Sentiment]]): Option[Int] = {
@@ -112,7 +89,6 @@ trait Application extends Controller {
 
   def otherAnalysis(topicId: String) = Action.async {
     val futureofHandlers = dbApi.findHandler(topicId)
-    futureofHandlers.map { x => println(x) }
     val tweetDetails =
       for {
         handlers <- futureofHandlers
@@ -132,14 +108,14 @@ trait Application extends Controller {
     val hashtagspair = hashtags.map { hashtags => hashtags.map { hashtag => (hashtag, 1) } }
     val hashtagsSum = hashtagspair.map(hashtags => hashtags.groupBy(_._1).map(data => data._1 -> data._2.map(_._2).sum))
     val hashtagsList = hashtagsSum.map(hashtagMap => hashtagMap.toList)
-    val top5hashtags=hashtagsList.map(hashtag=>hashtag.sortBy(_._2).reverse.take(5).map(x=>x._1))
+    val top5hashtags = hashtagsList.map(hashtag => hashtag.sortBy(_._2).reverse.take(5).map(x => x._1))
     val tweets = listOfTweets.map { x => x.map { x => x.content } }
-    val otherAnalysis=for{
-      tophashtags<-top5hashtags
-      topcontributor<-top5contributor
-      tweets<-tweets
-      otherAnalysis=OtherAnalysis(tweets,tophashtags,topcontributor)
-    }yield(otherAnalysis)
-    otherAnalysis.map {x=>Ok(Json.toJson(x))}.recover { case s => Ok("not") }
+    val otherAnalysis = for {
+      tophashtags <- top5hashtags
+      topcontributor <- top5contributor
+      tweets <- tweets
+      otherAnalysis = OtherAnalysis(tweets, tophashtags, topcontributor)
+    } yield (otherAnalysis)
+    otherAnalysis.map { x => Ok(Json.toJson(x)) }.recover { case ex:Any => Ok("not") }
   }
 }

@@ -32,6 +32,47 @@ var getTweetDetail = function(topicId) {
 	})
 }
 
+//chart
+var pieChart = function(jsonData, chartId){
+	$("#pieContainer" + chartId).highcharts({
+		colors : [ '#92CD00', '#CC0000', '#FF9900' ],
+
+		chart : {
+			style : {
+				font : 'bold 16px "Roboto Condensed", sans-serif'
+			},
+			backgroundColor : 'transparent',
+			plotBorderWidth : 0,
+			spacingBottom : 0,
+			spacingTop : 0,
+			spacingLeft : 0,
+			spacingRight : 0,
+			width : null,
+			height : 200,
+		},
+		title : {
+			text : ""
+		},
+		plotOptions : {
+			pie : {
+				allowPointSelect : true,
+				cursor : 'pointer',
+				shadow : false,
+				dataLabels : {
+					enabled : true,
+					format : '{point.percentage:.1f} %'
+				}
+			}
+		},
+		series : [ {
+			type : 'pie',
+			name : 'Tweets',
+			data : jsonData,
+			showInLegend : false
+		} ],
+	});
+}
+
 //Ajax Call for chart
 function drawChart(chartId) {
 	$.ajax({
@@ -47,43 +88,7 @@ function drawChart(chartId) {
 					[ "negative", negative ], [ "nuetral", nuetral ] ];
 			var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 			if (positive > 0 || negative > 0 || nuetral > 0) {
-				$("#pieContainer" + chartId).highcharts({
-					colors : [ '#92CD00', '#CC0000', '#FF9900' ],
-
-					chart : {
-						style : {
-							font : 'bold 16px "Roboto Condensed", sans-serif'
-						},
-						backgroundColor : 'transparent',
-						plotBorderWidth : 0,
-						spacingBottom : 0,
-						spacingTop : 0,
-						spacingLeft : 0,
-						spacingRight : 0,
-						width : null,
-						height : 200,
-					},
-					title : {
-						text : ""
-					},
-					plotOptions : {
-						pie : {
-							allowPointSelect : true,
-							cursor : 'pointer',
-							shadow : false,
-							dataLabels : {
-								enabled : true,
-								format : '{point.percentage:.1f} %'
-							}
-						}
-					},
-					series : [ {
-						type : 'pie',
-						name : 'Tweets',
-						data : jsonData,
-						showInLegend : false
-					} ],
-				});
+				pieChart(jsonData, chartId);
 			}
 
 		}
@@ -101,7 +106,7 @@ testM.directive('myChart', function($interval) {
 		scope : {
 			chartid : '='
 		},
-		template : '<div id="pieContainer{{chartid}} "></div>',
+		template : '<div id="pieContainer{{chartid}}"></div>',
 		link : function($scope) {
 			
 			$scope.$watch($scope.chartid, function() {
@@ -124,7 +129,7 @@ testM.directive('myLink',function() {
 		scope : {
 			linkid : '='
 		},
-		template : '<a class="btn btn-primary" data-toggle="modal" data-target="#myModal{{linkid}}">Show Details</a>',
+		template : '<a class="btn btn-primary btn-custom" data-toggle="modal" data-target="#myModal{{linkid}}">Show Details</a>',
 		link : function($scope, element) {
 			element.bind('click', function() {
 				getTweetDetail($scope.linkid);
