@@ -66,7 +66,7 @@ var pieChart = function(jsonData, chartId) {
 				shadow : false,
 				dataLabels : {
 					enabled : true,
-					format : '{point.percentage} %',
+					format : '{point.percentage:.1f} %',
 					distance: -30,
 					color:'black'
 				}

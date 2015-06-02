@@ -10,6 +10,12 @@
 	background:rgba(255,255,255,0.5);
 	color: #3434AA;
 }
+.menu{
+	color: white !important;
+}
+.menu:hover{
+	color: black !important;
+}
 
 #heading1 {
 	background-color: #eee;
@@ -50,13 +56,12 @@
 }
 
 .icon {
-	width: 80%;
-	height: 80%;
-	margin-left: 5px;
-	margin-bottom: 5px;
+	width: 40px;
+	height: 40px;
+	margin: 5px;
 	z-index: 1;
 	border-radius: 50% 50% 50% 50%;
-	opacity: .6;
+	opacity: .7;
 }
 
 .LoadingImage {
@@ -71,8 +76,9 @@
 }
 
 .box-shadow-effect-header {
-	background-color: #1ee094 !important;
-	border-color: #1ee094 !important;
+	background-color: rgba(70,149,174,0.6) !important;
+	border-color: rgba(70,149,174,0.6) !important;
+	color:white !important;
 	font-family: 'Roboto Condensed', sans-serif;
 }
 
@@ -97,18 +103,17 @@ h5 {
 	position: fixed;
 	top: 75%;
 	right: 10px;
-	background: #1ee094;
-	color: #6E80F4;
+	background: rgba(70,149,174,0.8);
+	color: rgb(97,201,230);
 	border-radius: 50% 50% 50% 50%;
 	font-size: 25px;
 	text-align: center;
 	vertical-align: middle;
-	opacity: .7;
 }
 
 .goToTop:hover {
-	background: #6E80F4;
-	color: #1ee094;
+	background: rgba(97,201,230,0.8);
+	color: rgba(70,149,174,0.8);
 	box-shadow: 5px 5px 5px #888888;
 }
 

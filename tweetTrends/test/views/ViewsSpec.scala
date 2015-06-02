@@ -10,7 +10,12 @@ import play.api.test.WithApplication
 @RunWith(classOf[JUnitRunner])
 class ViewsSpec extends PlaySpecification {
 
-  "Views" should {    
+  "Views" should {
+    "render dayWiseMenu template" in new WithApplication {
+      val html = views.html.contactUs("Contact Us")
+      contentAsString(html) must contain("Contact Us")
+    }
+    
     "render dayWiseMenu template" in new WithApplication {
       val html = views.html.dayWiseMenu()
       contentAsString(html) must contain("smoothScroll")
@@ -23,7 +28,7 @@ class ViewsSpec extends PlaySpecification {
     
     "render header template" in new WithApplication {
       val html = views.html.header()
-      contentAsString(html) must contain("navbar navbar-default")
+      contentAsString(html) must contain("navbar")
     }
     
     "render menubar template" in new WithApplication {
