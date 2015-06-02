@@ -10,39 +10,42 @@ var getTweetDetail = function(topicId) {
 		type : 'GET',
 		async : true,
 		success : function(data) {
-			//empty the divs.
-			var i=0;
+			// empty the divs.
+			var i = 0;
 			$("#modelHashtags" + topicId).text("");
 			$("#modelContributor" + topicId).text("");
-			var table = document.getElementById("table"+topicId);
+			var table = document.getElementById("table" + topicId);
 			table.innerHTML = " ";
 			var tweets = data.tweets;
 			var contributers = data.contributor;
 			var hashtags = data.hashtags;
-			//filling the divs.
-			for(i=0;i<tweets.length;i++){
-				var row = table.insertRow(i-1);
+			// filling the divs.
+			for (i = 0; i < tweets.length; i++) {
+				var row = table.insertRow(i - 1);
 				var cell1 = row.insertCell(0);
 				cell1.innerHTML = tweets[i];
 			}
-			for(i=0;i<contributers.length;i++){
-				$("#modelContributor" + topicId).append(i+1 +". "+contributers[i]+"<br>");
+			for (i = 0; i < contributers.length; i++) {
+				$("#modelContributor" + topicId).append(
+						i + 1 + ". " + contributers[i] + "<br>");
 			}
-			for(i=0;i<hashtags.length;i++){
-				$("#modelHashtags" + topicId).append(i+1 +". "+hashtags[i]+"<br>");
+			for (i = 0; i < hashtags.length; i++) {
+				$("#modelHashtags" + topicId).append(
+						i + 1 + ". " + hashtags[i] + "<br>");
 			}
 		}
 	})
 }
 
-//chart
-var pieChart = function(jsonData, chartId){
+// chart
+var pieChart = function(jsonData, chartId) {
 	$("#pieContainer" + chartId).highcharts({
 		colors : [ '#92CD00', '#CC0000', '#FF9900' ],
 
 		chart : {
 			style : {
-				font : 'bold 16px "Roboto Condensed", sans-serif'
+				font : 'bold 16px "Roboto Condensed", sans-serif',
+				cursor : 'not-allowed'
 			},
 			backgroundColor : 'transparent',
 			plotBorderWidth : null,
@@ -63,7 +66,9 @@ var pieChart = function(jsonData, chartId){
 				shadow : false,
 				dataLabels : {
 					enabled : true,
-					format : '{point.percentage:.1f} %'
+					format : '{point.percentage} %',
+					distance: -30,
+					color:'black'
 				}
 			}
 		},
@@ -76,7 +81,7 @@ var pieChart = function(jsonData, chartId){
 	});
 }
 
-//Ajax Call for chart
+// Ajax Call for chart
 function drawChart(chartId) {
 	$.ajax({
 		url : "/test?topicId=" + chartId,
@@ -98,10 +103,10 @@ function drawChart(chartId) {
 	})
 }
 
-//app for angularJs
+// app for angularJs
 var testM = angular.module("MyApp", []);
 
-//directive to render chart.
+// directive to render chart.
 testM.directive('myChart', function($interval) {
 	return {
 		restrict : 'E',
@@ -111,7 +116,6 @@ testM.directive('myChart', function($interval) {
 		},
 		template : '<div id="pieContainer{{chartid}}"></div>',
 		link : function($scope) {
-			
 			$scope.$watch($scope.chartid, function() {
 				drawChart($scope.chartid);
 				$interval(function() {
@@ -124,24 +128,27 @@ testM.directive('myChart', function($interval) {
 	}
 });
 
-//directive to render button for modal.
-testM.directive('myLink',function() {
-	return {
-		restrict : 'E',
-		replace : true,
-		scope : {
-			linkid : '='
-		},
-		template : '<a class="btn btn-primary btn-custom" data-toggle="modal" data-target="#myModal{{linkid}}">Show Details</a>',
-		link : function($scope, element) {
-			element.bind('click', function() {
-				getTweetDetail($scope.linkid);
-			});
-		}
-	}
-});
+// directive to render button for modal.
+testM
+		.directive(
+				'myLink',
+				function() {
+					return {
+						restrict : 'E',
+						//replace : true,
+						scope : {
+							linkid : '='
+						},
+						//template : '<a class="btn btn-primary btn-custom" data-toggle="modal" data-target="#myModal{{linkid}}">Show Details</a>',
+						link : function($scope, element) {
+							element.bind('click', function() {
+								getTweetDetail($scope.linkid);
+							});
+						}
+					}
+				});
 
-//directive to render table row wise.
+// directive to render table row wise.
 testM.directive('scaladaySessionData', function() {
 	return {
 		restrict : 'E',
@@ -152,10 +159,11 @@ testM.directive('scaladaySessionData', function() {
 		templateUrl : 'userDetails.htm',
 		controller : function($scope) {
 			$scope.userinfos = [];
+			$scope.images = [];
 			var sessions = $scope.sessiondata.Session;
 			for (var i = 0; i < sessions.length; i++) {
 				$scope.userinfos.push({
-					"image" : sessions[i].Image,
+					"image" : sessions[i].Image.split("~"),
 					"name" : sessions[i].Name.split("~"),
 					"twitterId" : sessions[i].TwitterID.split("~"),
 					"room" : sessions[i].Room,
@@ -167,8 +175,11 @@ testM.directive('scaladaySessionData', function() {
 		}
 	}
 })
-//controller for table
-testM.controller("MyController",function($scope, $log, $filter) {
+// controller for table
+testM
+		.controller(
+				"MyController",
+				function($scope, $log, $filter) {
 					$scope.details = [
 							{
 								"Date" : "2015-06-08",

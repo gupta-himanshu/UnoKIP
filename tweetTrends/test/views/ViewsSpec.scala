@@ -23,7 +23,7 @@ class ViewsSpec extends PlaySpecification {
     
     "render header template" in new WithApplication {
       val html = views.html.header()
-      contentAsString(html) must contain("images/twitter.jpg")
+      contentAsString(html) must contain("navbar navbar-default")
     }
     
     "render menubar template" in new WithApplication {

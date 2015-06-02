@@ -1,26 +1,29 @@
 @* recordTemplate Template File *@
-<div class="col-md-12 col-xs-12" style="background: #61C9E6;">
-	<div class="col-md-12 col-xs-12" style="padding: 10px; background: #4695AE; color: #FFF;"> 
+<div class="col-md-12 col-xs-12">
+	<div class="col-md-12 col-xs-12" style="padding: 10px; background: rgba(70,149,174,0.8); color: #FFF;"> 
 		<b>Date:</b> {{sessiondata.Date}} 
 		<b>Time:</b> {{sessiondata.Time}}
 	</div>
-	<div data-ng-repeat="infos in userDetails" style="vertical-align:top;">
+	<div data-ng-repeat="infos in userDetails" style="vertical-align:top;cursor: pointer;">
 		@modal()
-		<div class="col-md-3 col-xs-12" id="record{{infos.topicId}}" style="text-align:center; background:#55B2CE; padding: 5px; border-left: solid 1px #61C9E6; border-right: solid 1px #61C9E6;">
-			<div data-ng-bind="infos.topic" class="col-md-12 col-xs-12" style="color: #FFF; height: 60px;"  ></div>
-			<div class="col-md-12 col-xs-12" style="font-size: 10px;">
-				 {{infos.room}} 
+		<my-link linkid="infos.topicId" data-toggle="modal" data-target="#myModal{{infos.topicId}}">
+			<div class="col-md-3 col-xs-12" id="record{{infos.topicId}}" style="text-align:center; background:rgba(85,178,206,0.6); padding: 5px; border-left: solid 1px #61C9E6; border-right: solid 1px #61C9E6;">
+				<div data-ng-bind="infos.topic" class="col-md-12 col-xs-12" style="color: #FFF; height: 60px; background: rgba(70,149,174,0.8);"  ></div>
+				<div class="col-md-12 col-xs-12" style="font-size: 10px;">
+					 {{infos.room}} 
+				</div>
+				<div class="col-md-12 col-xs-12" style="height: 95px;">
+					<div data-ng-repeat="img in infos.image" style="display: inline-block;">
+						<img data-ng-if="img" width="50px" height="50" style="margin: 5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;"
+		   	    			src="{{img}}">
+					</div>
+					<div data-ng-bind="infos.name" style="font-size: 12px;"></div>
+					<div data-ng-bind="infos.twitterId" style="font-size: 12px;"></div>
+				</div>
+				<div class="col-md-12 col-xs-12">
+					<my-chart chartid="infos.topicId"></my-chart>
+				</div>
 			</div>
-			<div class="col-md-12 col-xs-12" style="height: 100px;">
-				<img data-ng-if="infos.image" title={{infos.name}} width="50px" height="50" style="margin: 5px; border-radius: 50% 50% 50% 50%; border: solid 2px white;"
-   	    			src="{{infos.image}}">
-				<div data-ng-bind="infos.name" style="font-size: 12px;"></div>
-				<div data-ng-bind="infos.twitterId" style="font-size: 12px;"></div>
-			</div>
-			<div class="col-md-12 col-xs-12">
-				<my-chart chartid="infos.topicId"></my-chart>
-				<my-link linkid="infos.topicId"></my-link>
-			</div>
-		</div>
+		</my-link>
 	</div>
 </div>

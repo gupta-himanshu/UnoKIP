@@ -112,4 +112,8 @@ trait Application extends Controller {
     } yield (otherAnalysis)
     otherAnalysis.map { x => Ok(Json.toJson(x)) }.recover { case ex:Any => Ok("not") }
   }
+  
+  def contact = Action{
+    Ok(views.html.contactUs("Contact Us"))
+  }
 }
